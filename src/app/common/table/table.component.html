@@ -1,0 +1,25 @@
+<table>
+  <tr class="thead">
+    @for (item of header; track $index) {
+      <th>{{item}}</th>
+    }
+    @if(router.url !== "/application") {
+      <th>Action</th>
+    }
+  </tr>
+  <ng-container *ngFor="let row of rows; let idx = index">
+
+    <tr class="row">
+      @for (item of row; track $index) {
+        <td>{{item}}</td>
+      }
+      @if(router.url === "/forward") {
+        <button (click)="navigateRoute(row[0])">View</button>
+      } @else if(router.url === "/payment") {
+        <button (click)="openDialog(row[0])">Pay</button>
+      }
+    </tr>
+
+</ng-container>
+
+</table>

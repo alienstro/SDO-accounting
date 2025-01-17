@@ -1,0 +1,47 @@
+<div class="details_container">
+  <button>Back</button>
+  <div class="overview_container">
+    <div class="profile">
+
+    </div>
+    <div class="parent">
+      <div>
+        Employee Number
+      </div>
+      <div>
+        {{applicantDetail.applicant_id}}
+      </div>
+      <div>
+        Fullname
+      </div>
+      <div>
+        {{parseName}}
+      </div>
+      <div>
+        Designation
+      </div>
+      <div>
+        {{applicantDetail.designation}}
+      </div>
+      <div>
+        Email
+      </div>
+      <div>
+        {{applicantDetail.email}}
+      </div>
+    </div>
+  </div>
+
+  <div class="detail_container">
+    <mat-tab-group>
+      <mat-tab label="Loan Details"> <app-loan-details [loanDetail]="loanDetail"></app-loan-details> </mat-tab>
+      <mat-tab label="Applicant's Details"> <app-employee-details [borrowerInfo]="borrowerInfo"></app-employee-details> </mat-tab>
+      <mat-tab label="Co-maker's Details"> <app-comaker-details [comakerInfo]="coMakerInfo"> </app-comaker-details> </mat-tab>
+      <mat-tab label="Document"> Content 3 </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div>
+    <button (click)="forwardApplication()">Forward to secretariat</button>
+  </div>
+</div>

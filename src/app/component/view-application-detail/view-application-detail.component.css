@@ -1,0 +1,47 @@
+.details_container {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: repeat(4, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  width: 100%;
+  }
+
+  .parent   div {
+    border: 0.5px black solid;
+    display: flex;
+    padding: .25em 0.5em;
+
+  }
+
+
+  .profile {
+    width: 80px;
+    height: 80px;
+    background: tomato;
+  }
+
+  .overview_container {
+    display: flex;
+    flex-direction: row;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+    -webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+    -moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+
+  }
+
+  .detail_container {
+    border-radius: 8px;
+
+    box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+    -webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+    -moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+  }

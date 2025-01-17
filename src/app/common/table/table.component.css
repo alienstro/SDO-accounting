@@ -1,0 +1,24 @@
+.thead {
+  background-color: #0165B2;
+  color: white;
+  border-top-right-radius: 8px;
+}
+
+table {
+  table-layout: auto; /* Allow columns to adjust based on content */
+  border-collapse: collapse;
+  box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+-webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+-moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
+width: 100%;
+}
+
+td, th {
+  padding: 1em 0.5em;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.row:nth-child(odd) {
+  background-color: #f2f2f2; /* Light gray background for even columns */
+}

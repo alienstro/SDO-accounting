@@ -1,0 +1,14 @@
+.parent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: repeat(5, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  }
+
+
+  div {
+    border: 0.5px black solid;
+    display: flex;
+    padding: 1em 0.5em;
+  }
