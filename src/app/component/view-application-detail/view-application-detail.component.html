@@ -37,7 +37,13 @@
       <mat-tab label="Loan Details"> <app-loan-details [loanDetail]="loanDetail"></app-loan-details> </mat-tab>
       <mat-tab label="Applicant's Details"> <app-employee-details [borrowerInfo]="borrowerInfo"></app-employee-details> </mat-tab>
       <mat-tab label="Co-maker's Details"> <app-comaker-details [comakerInfo]="coMakerInfo"> </app-comaker-details> </mat-tab>
-      <mat-tab label="Document"> Content 3 </mat-tab>
+      <mat-tab label="CSC"> <app-pdf-view [src]="documents.cscAppointment_path"></app-pdf-view> </mat-tab>
+      <mat-tab label="Medical Emergency Proof"> <app-pdf-view [src]="documents.emergency_path"></app-pdf-view> </mat-tab>
+      <mat-tab label="ID of Co-maker"> <app-pdf-view [src]="documents.idComaker_path"></app-pdf-view> </mat-tab>
+      <mat-tab label="ID of applicant"> <app-pdf-view [src]="documents.idApplicant_path"></app-pdf-view> </mat-tab>
+      <mat-tab label="Authority to Deduct"> <app-pdf-view [src]="documents.authorityToDeduct_path"></app-pdf-view> </mat-tab>
+      <mat-tab label="Payslip of applicant"> <app-pdf-view [src]="documents.payslipApplicant_path"></app-pdf-view> </mat-tab>
+      <mat-tab label="Payslip of comaker"> <app-pdf-view [src]="documents.payslipComaker_path"></app-pdf-view> </mat-tab>
     </mat-tab-group>
   </div>
 

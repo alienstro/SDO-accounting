@@ -43,7 +43,8 @@ export class SidebarComponent {
     "signature",
     "endorsement",
     "payment",
-    "reject"
+    "reject",
+    "paid"
   ]
 
   logout(): void {

@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RequestService } from '../../service/request.service';
-import { BorrowersInformation, CoMakersInformation, LoanApplicant, LoanDetails } from '../../interface';
+import { BorrowersInformation, CoMakersInformation, Documents, LoanApplicant, LoanDetails } from '../../interface';
 import { LoanDetailsComponent } from '../loan-details/loan-details.component';
 import { EmployeeDetailsComponent } from '../employee-details/employee-details.component';
 import { ComakerDetailsComponent } from '../comaker-details/comaker-details.component';
 import { SnackbarService } from '../../service/snackbar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModelComponent } from '../confirmation-model/confirmation-model.component';
+import { PdfViewComponent } from '../../common/pdf-view/pdf-view.component';
 
 @Component({
   selector: 'app-view-application-detail',
@@ -17,7 +18,8 @@ import { ConfirmationModelComponent } from '../confirmation-model/confirmation-m
     MatTabsModule,
     LoanDetailsComponent,
     EmployeeDetailsComponent,
-    ComakerDetailsComponent
+    ComakerDetailsComponent,
+    PdfViewComponent
   ],
   templateUrl: './view-application-detail.component.html',
   styleUrl: './view-application-detail.component.css'
@@ -29,6 +31,7 @@ export class ViewApplicationDetailComponent {
   loanDetail!: LoanDetails
   coMakerInfo!: CoMakersInformation
   borrowerInfo!: BorrowersInformation
+  documents!: Documents
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +58,16 @@ export class ViewApplicationDetailComponent {
 
     this.requestService.get<BorrowersInformation>(`/borrowersInformationById/${this.applicationId}`).subscribe({
       next: res => this.borrowerInfo = res as any,
+      error: error => console.log(error)
+    })
+
+    this.requestService.get<BorrowersInformation>(`/borrowersInformationById/${this.applicationId}`).subscribe({
+      next: res => this.borrowerInfo = res as any,
+      error: error => console.log(error)
+    })
+
+    this.requestService.get<Documents>(`/documents/${this.applicationId}`).subscribe({
+      next: res => this.documents = res.message,
       error: error => console.log(error)
     })
   }

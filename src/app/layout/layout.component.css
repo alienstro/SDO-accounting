@@ -8,10 +8,11 @@ body {
 }
 
 .sidebar-container {
-  width: 10rem;
+  width: 12rem;
   border: none;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
+  overflow: hidden;
 }
 
 .main-content-container {

@@ -177,3 +177,8 @@ interface ApplicationDetails {
     office: string
   }
 }
+
+
+export interface PaidApplication extends Application {
+  paid_date: Date
+}

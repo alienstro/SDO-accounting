@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Application } from '../interface';
+import { Application, PaidApplication } from '../interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,14 +16,15 @@ export class UtilsService {
     "loan_type": "Type of Loan",
     "status": "Status",
     "office_name": "Office",
-    "purpose": "purpose"
+    "purpose": "purpose",
+    "paid_date": "Paid Date"
   }
 
   constructor() { }
 
 
   // Can filter now
-  parseHeader(data: Application[], status?: string, office?: string, offices?: string[]) {
+  parseHeader(data: Application[] | PaidApplication[], status?: string, office?: string, offices?: string[]) {
 
     let filterData
 

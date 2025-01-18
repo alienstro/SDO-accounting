@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Application } from '../interface';
+import { Application, PaidApplication } from '../interface';
 import { RequestService } from './request.service';
 import { API_URL } from '../env';
 import { SnackbarService } from './snackbar.service';
@@ -15,11 +15,16 @@ export class ApplicationService {
 
   applications$ = this._applications.asObservable()
 
+  private _paidApplications = new BehaviorSubject<PaidApplication[]>([])
+
+  paidApplications$ = this._paidApplications.asObservable()
+
   constructor(
     private requestService: RequestService,
     private snackbarService: SnackbarService
   ) {
     this.initApplication()
+    this.initPaidApplication()
   }
 
   initApplication() {
@@ -28,6 +33,15 @@ export class ApplicationService {
         this._applications.next(res.message); // Assuming `message` is the correct property
       },
       error: err => this.snackbarService.showSnackbar(`Error fetching applications`)
+    });
+  }
+
+  initPaidApplication() {
+    this.requestService.get<PaidApplication[]>('/paidApplication').subscribe({
+      next: res => {
+        this._paidApplications.next(res.message); // Assuming `message` is the correct property
+      },
+      error: err => this.snackbarService.showSnackbar(`Error fetching paid applications`)
     });
   }
 

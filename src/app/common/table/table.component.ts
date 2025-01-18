@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { UtilsService } from '../../service/utils.service';
-import { Application } from '../../interface';
+import { Application, PaidApplication } from '../../interface';
 import { Router } from '@angular/router';
 import {
   MAT_DIALOG_DATA,
@@ -22,7 +22,7 @@ import { ConfirmationModelComponent } from '../../component/confirmation-model/c
   styleUrl: './table.component.css'
 })
 export class TableComponent {
-  @Input() data: Application[] | null = null
+  @Input() data: Application[] | PaidApplication[] | null = null
   @Input() status = ''
   @Input() office = ''
   @Input() offices: string[] = []
