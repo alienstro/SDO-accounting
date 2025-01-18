@@ -45,3 +45,19 @@
     -webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
     -moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
   }
+
+  .forward_container {
+    display: flex;
+    justify-content: end;
+  }
+
+  .forward_container button {
+    background-color: transparent;
+    border: none;
+    background-color: #0165B2;
+    color: white;
+    font-size: 1rem;
+    padding: 0.5em;
+    border-radius: 4px;
+    cursor: pointer;
+  }

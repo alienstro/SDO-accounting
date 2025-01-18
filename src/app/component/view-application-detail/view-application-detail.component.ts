@@ -7,6 +7,8 @@ import { LoanDetailsComponent } from '../loan-details/loan-details.component';
 import { EmployeeDetailsComponent } from '../employee-details/employee-details.component';
 import { ComakerDetailsComponent } from '../comaker-details/comaker-details.component';
 import { SnackbarService } from '../../service/snackbar.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationModelComponent } from '../confirmation-model/confirmation-model.component';
 
 @Component({
   selector: 'app-view-application-detail',
@@ -31,7 +33,8 @@ export class ViewApplicationDetailComponent {
   constructor(
     private route: ActivatedRoute,
     private requestService: RequestService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private dialog: MatDialog
   ) {
     this.applicationId = this.route.snapshot.paramMap.get('id') || "0"
 
@@ -75,5 +78,16 @@ export class ViewApplicationDetailComponent {
         this.snackbarService.showSnackbar('Failed to forward')
       }
     })
+  }
+
+  openDialog(application_id: string): void {
+    const dialogRef = this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'forward' } });
+
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('The dialog was closed');
+    //   if (result !== undefined) {
+    //     this.animal.set(result);
+    //   }
+    // });
   }
 }

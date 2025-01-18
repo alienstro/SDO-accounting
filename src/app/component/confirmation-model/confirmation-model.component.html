@@ -1,6 +1,23 @@
-<div>
-
-  <p>Confirm to pay x amount?</p>
-  <button (click)="forwardApplication()">Confirm</button>
-  <button (click)="close()">Cancel</button>
+<div class="modal_container">
+  <div class="modal_header">
+      <p>{{data.view}}</p>
+    <button class="close_button" (click)="close()">
+      <img src="/assets/close.svg" alt="close">
+    </button>
+  </div>
+  <div class="modal_body">
+    @if(data.view === 'payment') {
+      <p>Confirm to pay x amount?</p>
+    } @else if (data.view === 'forward') {
+      <p>Confirm to forward #</p>
+    }
+  </div>
+  <div class="modal_footer">
+    @if(data.view === 'payment') {
+      <button id="pay_button" (click)="payApplication()">Confirm</button>
+    } @else if (data.view === 'forward') {
+      <button id="pay_button" (click)="forwardApplication()">Confirm</button>
+    }
+    <button id="cancel_button" (click)="close()">Cancel</button>
+  </div>
 </div>

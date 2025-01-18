@@ -48,7 +48,7 @@ export class TableComponent {
   }
 
   openDialog(application_id: string): void {
-    const dialogRef = this.dialog.open(ConfirmationModelComponent, { data: { application_id } });
+    const dialogRef = this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'payment' } });
 
     // dialogRef.afterClosed().subscribe(result => {
     //   console.log('The dialog was closed');
