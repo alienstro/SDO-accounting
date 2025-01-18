@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MenuItemComponent } from '../component/menu-item/menu-item.component';
+import { AuthService } from '../service/auth/auth.service';
+import { UserService } from '../service/user.service';
+import { StaffProfile, UserProfile } from '../interface';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -10,30 +13,30 @@ import { MenuItemComponent } from '../component/menu-item/menu-item.component';
 })
 export class SidebarComponent {
 
-  // userProfile!: UserProfile
+  userProfile!: StaffProfile
 
-  // constructor(
-  //   private userService: UserService,
-  //   private router: Router,
-  //   private authService: AuthService
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private authService: AuthService
 
-  // ) {
-  //   this.userService.userProfile$.subscribe(
-  //     res => {
-  //       this.userProfile = res
-  //     }
-  //   )
-  // }
+  ) {
+    this.userService.userProfile$.subscribe(
+      res => {
+        this.userProfile = res
+      }
+    )
+  }
 
-  // get parseUsername() {
+  get parseUsername() {
 
-  //   return this.userProfile.first_name + ' ' +
-  //     (this.userProfile.middle_name ? this.userProfile.middle_name : '')
-  //     + ' ' +
-  //     this.userProfile.last_name
-  //     + ' ' +
-  //     (this.userProfile.ext_name ? this.userProfile.ext_name : '')
-  // }
+    return this.userProfile.first_name + ' ' +
+      (this.userProfile.middle_name ? this.userProfile.middle_name : '')
+      + ' ' +
+      this.userProfile.last_name
+      + ' ' +
+      (this.userProfile.ext_name ? this.userProfile.ext_name : '')
+  }
 
   paths = [
     "application",
@@ -48,7 +51,7 @@ export class SidebarComponent {
   ]
 
   logout(): void {
-    // this.authService.flushToken()
-    // this.router.navigate(['/login']);
+    this.authService.flushToken()
+    this.router.navigate(['/login']);
   }
 }

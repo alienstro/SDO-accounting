@@ -26,22 +26,15 @@ export class LoginComponent {
   errMessage = ''
 
   constructor(
-    private router: Router,
     private requestService: RequestService,
     private tokenService: TokenService,
-    private authService: AuthService
-  ) {
-    // For now a remedy but improve this
-    // this.authService.flushToken()
-
-  }
-
+    private router: Router
+  ) { }
 
   userLogin = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
   })
-
 
   onLogin() {
     this.errMessage = ''
@@ -53,13 +46,11 @@ export class LoginComponent {
       email: inputCred.email as string,
       password: inputCred.password as string
     };
-    // For now a remedy but improve this
-    // this.authService.flushToken()
 
     this.requestService.login(loginCred).subscribe({
       next: (res: LoginResponse) => {
         this.tokenService.setTokenInCookie(res.token);
-        this.router.navigate(['/forward-view']);
+        this.router.navigate(['/application']);
       },
       error: err => {
         if (err.status === 401) {
@@ -69,12 +60,6 @@ export class LoginComponent {
         }
       }
     });
-  }
-
-
-  redirectToForward(): void {
-    console.log('Login successful, navigating to forward-view');
-    this.router.navigate(['/forward-view']);
   }
 
 }

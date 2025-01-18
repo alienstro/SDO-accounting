@@ -97,4 +97,8 @@ export class ViewApplicationDetailComponent {
   openDialog(application_id: string): void {
     this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'forward' } });
   }
+
+  back() {
+    this.router.navigate(['/forward'])
+  }
 }

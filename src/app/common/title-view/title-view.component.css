@@ -4,3 +4,10 @@ p {
   opacity: 50%;
   text-transform: uppercase;
 }
+
+hr {
+  border: 1px solid black;
+  opacity: 50%;
+  margin-bottom: 1rem;
+
+}

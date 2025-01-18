@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { StaffProfile } from '../interface';
+import { StaffProfile, UserProfile } from '../interface';
 import { RequestService } from './request.service';
 import { SnackbarService } from './snackbar.service';
 
@@ -10,7 +10,7 @@ import { SnackbarService } from './snackbar.service';
 export class UserService {
 
 
-  private _staffProfile = new BehaviorSubject<StaffProfile>({
+  private _userProfile = new BehaviorSubject<StaffProfile>({
     staff_id: 0,
     email: '',
     first_name: '',
@@ -20,28 +20,29 @@ export class UserService {
     department_name: ''
   });
 
-  staffProfile$ = this._staffProfile.asObservable();
+
+  userProfile$ = this._userProfile.asObservable();
 
   constructor(
     private requestService: RequestService,
     private snackbarService: SnackbarService
   ) {
-    this.initStaffProfile()
+    this.initUserProfile()
   }
 
 
-  initStaffProfile() {
+  initUserProfile() {
 
     this.requestService.get<StaffProfile>('user').subscribe({
       next: res => {
-        this.setStaffProfile(res.message)
+        this.setUserProfile(res.message)
       },
       error: error =>
         this.snackbarService.showSnackbar('Error fetching user profile')
     })
   }
 
-  setStaffProfile(data: StaffProfile) {
-    this._staffProfile.next(data)
+  setUserProfile(data: StaffProfile) {
+    this._userProfile.next(data)
   }
 }

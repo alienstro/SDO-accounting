@@ -7,12 +7,14 @@ body {
   height: 100vh;
 }
 
+
 .sidebar-container {
   width: 12rem;
   border: none;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   overflow: hidden;
+  background-color: #0165B2;
 }
 
 .main-content-container {

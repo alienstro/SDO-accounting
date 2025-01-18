@@ -61,3 +61,24 @@
     border-radius: 4px;
     cursor: pointer;
   }
+
+
+  .toggle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f8f8;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    padding: 1rem 0.5rem;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .toggle-button img {
+    width: 3rem;
+    height: 3rem;
+  }

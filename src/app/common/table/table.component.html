@@ -1,7 +1,14 @@
+<div class="input_container">
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search Employee">
+  <button (click)="searchEmployee()">
+    <img src="/assets/Search.svg" alt="">
+  </button>
+</div>
 @if(rows.length < 1) {
   <p id="empty">No Records!</p>
 } @else {
-<table>
+
+  <table>
   <tr class="thead">
     @for (item of header; track $index) {
       <th>{{item}}</th>

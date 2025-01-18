@@ -13,11 +13,12 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { ConfirmationModelComponent } from '../../component/confirmation-model/confirmation-model.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css'
 })
@@ -27,11 +28,12 @@ export class TableComponent {
   @Input() office = ''
   @Input() offices: string[] = []
 
+  searchTerm = ''
   readonly dialog = inject(MatDialog);
 
   header: string[] = []
   rows: string[][] = []
-
+  baseRows: string[][] = []
   constructor(
     private utilService: UtilsService,
     public router: Router
@@ -45,6 +47,7 @@ export class TableComponent {
       const parseRes = this.utilService.parseData(changes['data'].currentValue, this.status, this.office, this.offices)
       this.header = parseRes.headers
       this.rows = parseRes.rows
+      this.baseRows = parseRes.rows
     }
   }
 
@@ -54,12 +57,15 @@ export class TableComponent {
 
   openDialog(application_id: string): void {
     const dialogRef = this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'payment' } });
+  }
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('The dialog was closed');
-    //   if (result !== undefined) {
-    //     this.animal.set(result);
-    //   }
-    // });
+  searchEmployee() {
+    this.rows = this.baseRows
+
+    if (this.searchTerm) {
+      this.rows = this.rows.filter(item => item.includes(this.searchTerm))
+    } else {
+      this.rows = this.baseRows
+    }
   }
 }

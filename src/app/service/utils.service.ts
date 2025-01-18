@@ -91,6 +91,7 @@ export class UtilsService {
     // Extract rows
     const rows = reorderedData.map(item => Object.values(item)) as string[][];
 
+    console.log(rows)
     return {
       headers: headerTranslate,
       rows: rows

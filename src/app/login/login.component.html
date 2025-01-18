@@ -1,7 +1,32 @@
+<!-- <div class="login-container">
+  <div class="div1">
+    <img src="DEPED.png" alt="" />
+  </div>
+  <div class="div2">
+    <form class="form-container" (ngSubmit)="onLogin()" [formGroup]="userLogin">
+      <p>Welcome</p>
+      <p>Login to your account to continue</p>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="email" />
+        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="password" />
+        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      </mat-form-field>
+      @if(errMessage) {
+      <p class="err__msg">{{ errMessage }}</p>
+      }
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div> -->
 <div class="body">
   <div class="left-container">
     <div class="img-container">
-      <img src="/DEPEDLOGO.svg" alt="deped logo" />
+      <img src="/assets/DEPEDLOGO.svg" alt="deped logo" />
     </div>
   </div>
 
@@ -14,11 +39,11 @@
 
       <div class="inputs">
         <div class="group">
-          <img src="/maleuser.svg" alt="" class="icon" />
+          <img src="/assets/maleuser.svg" alt="" class="icon" />
           <input placeholder="Email" class="input" formControlName="email" />
         </div>
         <div class="group">
-          <img src="/lock.svg" alt="" class="icon" />
+          <img src="/assets/lock.svg" alt="" class="icon" />
           <input
             placeholder="Password"
             class="input"
@@ -27,7 +52,6 @@
           />
         </div>
       </div>
-
       <div>
         @if(errMessage) {
           <p class="err__msg">{{errMessage}}</p>

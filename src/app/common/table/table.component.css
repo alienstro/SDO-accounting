@@ -35,3 +35,41 @@ button  {
   font-weight: bold;
   opacity: 50%;
 }
+
+.input_container {
+  background-color: white;
+  width: 30%;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  min-width: 120px;
+  max-width: 250px;
+  padding: 0.2em;
+  margin-bottom: 1rem;
+}
+
+.input_container button {
+  height: 100%;
+  border-left: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input {
+  background-color: transparent;
+  border: none;
+  height: 32px;
+  flex: 1;
+}
+
+input:focus {
+  border: none;
+  outline: none;
+}
+
+.input_container img {
+  width: 2rem;
+  height: 2rem;
+}

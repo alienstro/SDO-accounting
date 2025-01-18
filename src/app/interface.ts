@@ -161,6 +161,16 @@ export interface Application {
   purpose: string
 }
 
+export interface UserProfile {
+  applicant_id: number;
+  email: string;
+  first_name: string;
+  middle_name: string;
+  ext_name: string | null;
+  last_name: string;
+  designation: string;
+}
+
 
 interface ApplicationDetails {
   application_id: string,
