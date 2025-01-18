@@ -23,41 +23,80 @@ export class UtilsService {
   constructor() { }
 
 
-  // Can filter now
-  parseHeader(data: Application[] | PaidApplication[], status?: string, office?: string, offices?: string[]) {
+  parseData(
+    data: Application[] | PaidApplication[],
+    status?: string,
+    office?: string,
+    offices?: string[]
+  ) {
+    let filterData;
 
-    let filterData
-
+    // Filter
     if (status && (office || offices)) {
-
       if (office) {
-        filterData = data.filter(item => item.office_name.toLowerCase() === office.toLowerCase() && item.status.toLowerCase() === status.toLowerCase())
+        filterData = data.filter(
+          item =>
+            item.office_name.toLowerCase() === office.toLowerCase() &&
+            item.status.toLowerCase() === status.toLowerCase()
+        );
       } else {
-        filterData = data.filter(item => offices!.includes(item.office_name.toLowerCase()) && item.status.toLowerCase() === status.toLowerCase())
+        filterData = data.filter(
+          item =>
+            offices!.map(o => o.toLowerCase()).includes(item.office_name.toLowerCase()) &&
+            item.status.toLowerCase() === status.toLowerCase()
+        );
       }
     } else {
-      filterData = [...data]
+      filterData = [...data];
     }
 
     if (filterData.length < 1) {
       return {
-        headers: [],  // Table headers
-        rows: []         // Table rows
+        headers: [],
+        rows: []
       };
     }
 
-    const headerTranslate = Object.keys(filterData[0]).map((item: string) => this.headerDict[item])
+    // data sequence
+    const baseSequence: string[] = [
+      "application_id",
+      "applicant_id",
+      "first_name",
+      "last_name",
+      "loan_type",
+      "amount",
+      "application_date",
+      "status",
+      "office_name",
+      "purpose",
+      "paid_date"
+    ];
 
-    const rows: any = [];
+    // Filter sequence based on available keys in data
+    const availableKeys = Object.keys(filterData[0]);
+    const sequence = baseSequence.filter(key => availableKeys.includes(key));
 
-    filterData.forEach((item: any) => rows.push(Object.values(item)))
+    // Reordering data based on sequence
+    const reorderedData = filterData.map((item: any) => {
+      const reorderedItem: any = {};
+      sequence.forEach(key => {
+        reorderedItem[key] = item[key] ?? null;
+      });
+      return reorderedItem;
+    });
+
+    // Map headers using sequence
+    const headerTranslate = sequence.map(key => this.headerDict[key]).filter(Boolean);
+
+    // Extract rows
+    const rows = reorderedData.map(item => Object.values(item)) as string[][];
 
     return {
-      headers: headerTranslate,  // Table headers
-      rows: rows         // Table rows
+      headers: headerTranslate,
+      rows: rows
     };
-
   }
 
-  parseBody() { }
+
+
 }

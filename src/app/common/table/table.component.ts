@@ -39,7 +39,7 @@ export class TableComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'].currentValue) {
-      const parseRes = this.utilService.parseHeader(changes['data'].currentValue, this.status, this.office, this.offices)
+      const parseRes = this.utilService.parseData(changes['data'].currentValue, this.status, this.office, this.offices)
       this.header = parseRes.headers
       this.rows = parseRes.rows
     }

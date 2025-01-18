@@ -29,3 +29,9 @@ button  {
   border: none;
   cursor: pointer;
 }
+
+#empty {
+  font-size: 1.5rem;
+  font-weight: bold;
+  opacity: 50%;
+}
