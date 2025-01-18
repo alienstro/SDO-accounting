@@ -180,5 +180,5 @@ interface ApplicationDetails {
 
 
 export interface PaidApplication extends Application {
-  paid_date: Date
+  paid_date: string
 }

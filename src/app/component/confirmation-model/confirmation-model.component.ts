@@ -4,6 +4,7 @@ import { SnackbarService } from '../../service/snackbar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ApplicationService } from '../../service/application.service';
 
 @Component({
   selector: 'app-confirmation-model',
@@ -20,6 +21,7 @@ export class ConfirmationModelComponent {
   constructor(
     private requestService: RequestService,
     private snackbarService: SnackbarService,
+    private applicationService: ApplicationService,
     public router: Router
   ) { }
 
@@ -27,6 +29,7 @@ export class ConfirmationModelComponent {
     this.requestService.patch('/paid', { id: this.data.application_id }).subscribe({
       next: res => {
         this.snackbarService.showSnackbar('Payment confirmed')
+        this.applicationService.updatePayment(this.data.application_id)
         this.dialogRef.close()
       },
       error: error => {
@@ -40,7 +43,9 @@ export class ConfirmationModelComponent {
     this.requestService.patch('/forward', { id: this.data.application_id }).subscribe({
       next: res => {
         this.snackbarService.showSnackbar('Forwarded to secretariat')
+        this.applicationService.updateStatus(this.data.application_id, 'Paid', 'Secretariat')
         this.dialogRef.close()
+        this.router.navigate(['/forward'])
       },
       error: error => {
         this.snackbarService.showSnackbar('Failed to forward')

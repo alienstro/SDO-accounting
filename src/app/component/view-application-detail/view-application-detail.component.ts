@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RequestService } from '../../service/request.service';
 import { BorrowersInformation, CoMakersInformation, Documents, LoanApplicant, LoanDetails } from '../../interface';
@@ -37,7 +37,8 @@ export class ViewApplicationDetailComponent {
     private route: ActivatedRoute,
     private requestService: RequestService,
     private snackbarService: SnackbarService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this.applicationId = this.route.snapshot.paramMap.get('id') || "0"
 
@@ -94,13 +95,6 @@ export class ViewApplicationDetailComponent {
   }
 
   openDialog(application_id: string): void {
-    const dialogRef = this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'forward' } });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('The dialog was closed');
-    //   if (result !== undefined) {
-    //     this.animal.set(result);
-    //   }
-    // });
+    this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'forward' } });
   }
 }
