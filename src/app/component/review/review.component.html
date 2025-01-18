@@ -1,1 +1,14 @@
-<p>review works!</p>
+<div>
+  <app-title-view
+  [title]="'Pending (OSDS)'"
+  >
+
+  </app-title-view>
+    <app-table
+    [data]="applications"
+    [status]="'pending'"
+    [office]="'osds'"
+    >
+
+    </app-table>
+  </div>

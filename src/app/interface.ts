@@ -150,19 +150,30 @@ export interface DisplayDocuments {
 }
 
 export interface Application {
-  [id: number]: {
-    application_id: string,
-    applicant_id: string,
-    application_date: string,
-    amount: string,
-    loan_type: string,
-    first_name: string,
-    last_name: string,
-    statuses: {
-      office_id: string,
-      status: string,
-      updated_at: Date | null,
-      office: string
-    }
+  application_id: string,
+  status: string,
+  office_name: string,
+  amount: string,
+  loan_type: string,
+  application_date: string,
+  first_name: string,
+  last_name: string,
+  purpose: string
+}
+
+
+interface ApplicationDetails {
+  application_id: string,
+  applicant_id: string,
+  application_date: string,
+  amount: string,
+  loan_type: string,
+  first_name: string,
+  last_name: string,
+  statuses: {
+    office_id: string,
+    status: string,
+    updated_at: Date | null,
+    office: string
   }
 }

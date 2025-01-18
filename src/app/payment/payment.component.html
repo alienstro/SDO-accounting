@@ -4,7 +4,11 @@
   >
 
   </app-title-view>
-    <app-table [data]="applications">
+    <app-table
+    [data]="applications"
+    [status]="'pending'"
+    [office]="'payment'"
+    >
 
     </app-table>
   </div>

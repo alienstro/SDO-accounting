@@ -1,1 +1,14 @@
-<p>signature works!</p>
+<div>
+  <app-title-view
+  [title]="'Signature'"
+  >
+
+  </app-title-view>
+    <app-table
+    [data]="applications"
+    [status]="'pending'"
+    [offices]="['legal', 'hr', 'admin']"
+    >
+
+    </app-table>
+  </div>

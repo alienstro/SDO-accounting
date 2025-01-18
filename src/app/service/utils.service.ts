@@ -14,28 +14,42 @@ export class UtilsService {
     "first_name": "First Name",
     "last_name": "Last Name",
     "loan_type": "Type of Loan",
-    "status": "Status"
+    "status": "Status",
+    "office_name": "Office",
+    "purpose": "purpose"
   }
 
   constructor() { }
 
 
-  parseHeader(data: Application[]) {
+  // Can filter now
+  parseHeader(data: Application[], status?: string, office?: string, offices?: string[]) {
 
-    console.log(data)
-    const headers = Object.keys(data[Object.keys(data)[0] as any]).filter(key => key !== "statuses");  // Get the headers by filtering out the "statuses" field
+    let filterData
 
-    const headerTranslate = headers.map(item => this.headerDict[item])
-    const rows = [];
+    if (status && (office || offices)) {
 
-    // Iterate through each application and extract the data into rows
-    for (const key in data) {
-      const row = [] as any[];
-      headers.forEach((header: any) => {
-        row.push(data[key][header] as any);  // Push the corresponding value to the row
-      });
-      rows.push(row);
+      if (office) {
+        filterData = data.filter(item => item.office_name.toLowerCase() === office.toLowerCase() && item.status.toLowerCase() === status.toLowerCase())
+      } else {
+        filterData = data.filter(item => offices!.includes(item.office_name.toLowerCase()) && item.status.toLowerCase() === status.toLowerCase())
+      }
+    } else {
+      filterData = [...data]
     }
+
+    if (filterData.length < 1) {
+      return {
+        headers: [],  // Table headers
+        rows: []         // Table rows
+      };
+    }
+
+    const headerTranslate = Object.keys(filterData[0]).map((item: string) => this.headerDict[item])
+
+    const rows: any = [];
+
+    filterData.forEach((item: any) => rows.push(Object.values(item)))
 
     return {
       headers: headerTranslate,  // Table headers

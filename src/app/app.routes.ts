@@ -23,7 +23,7 @@ export const routes: Routes = [
       { path: 'signature', component: SignatureComponent },
       { path: 'endorsement', component: EndorsementComponent },
       { path: 'payment', component: PaymentComponent },
-      { path: 'decline', component: DeclineComponent },
+      { path: 'reject', component: DeclineComponent },
       { path: '**', redirectTo: '/application' },
     ]
   }

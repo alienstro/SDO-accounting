@@ -23,6 +23,9 @@ import { ConfirmationModelComponent } from '../../component/confirmation-model/c
 })
 export class TableComponent {
   @Input() data: Application[] | null = null
+  @Input() status = ''
+  @Input() office = ''
+  @Input() offices: string[] = []
 
   readonly dialog = inject(MatDialog);
 
@@ -36,10 +39,9 @@ export class TableComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'].currentValue) {
-      const parseRes = this.utilService.parseHeader(changes['data'].currentValue)
+      const parseRes = this.utilService.parseHeader(changes['data'].currentValue, this.status, this.office, this.offices)
       this.header = parseRes.headers
       this.rows = parseRes.rows
-      console.log(this.rows[0][0])
     }
   }
 
