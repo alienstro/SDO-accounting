@@ -15,7 +15,7 @@ export class UtilsService {
     "last_name": "Last Name",
     "loan_type": "Type of Loan",
     "status": "Status",
-    "office_name": "Office",
+    "department_name": "Office",
     "purpose": "purpose",
     "paid_date": "Paid Date"
   }
@@ -36,13 +36,13 @@ export class UtilsService {
       if (office) {
         filterData = data.filter(
           item =>
-            item.office_name.toLowerCase() === office.toLowerCase() &&
+            item.department_name.toLowerCase() === office.toLowerCase() &&
             item.status.toLowerCase() === status.toLowerCase()
         );
       } else {
         filterData = data.filter(
           item =>
-            offices!.map(o => o.toLowerCase()).includes(item.office_name.toLowerCase()) &&
+            offices!.map(o => o.toLowerCase()).includes(item.department_name.toLowerCase()) &&
             item.status.toLowerCase() === status.toLowerCase()
         );
       }
@@ -67,7 +67,7 @@ export class UtilsService {
       "amount",
       "application_date",
       "status",
-      "office_name",
+      "department_name",
       "purpose",
       "paid_date"
     ];
