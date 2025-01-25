@@ -26,7 +26,7 @@ export const routes: Routes = [
       { path: 'payment', component: PaymentComponent },
       { path: 'reject', component: DeclineComponent },
       { path: 'paid', component: PaidComponent },
-      { path: '**', redirectTo: '/application' },
+      { path: '**', redirectTo: '/login' },
     ]
   }
 ];

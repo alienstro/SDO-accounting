@@ -4,10 +4,12 @@ import { MenuItemComponent } from '../component/menu-item/menu-item.component';
 import { AuthService } from '../service/auth/auth.service';
 import { UserService } from '../service/user.service';
 import { StaffProfile, UserProfile } from '../interface';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, MenuItemComponent],
+  imports: [CommonModule, RouterLink, MenuItemComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
