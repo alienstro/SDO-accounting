@@ -54,7 +54,7 @@ export class ApplicationService {
     let oldState = [...this._applications.getValue()]
 
     let currData = oldState.find(item => item.application_id === application_id)!
-    currData = { ...currData, office_name: office ? office : currData.office_name, status: 'Pending' }
+    currData = { ...currData, department_name: office ? office : currData.department_name, status: 'Pending' }
 
     oldState = oldState.filter(item => item.application_id !== application_id)
 

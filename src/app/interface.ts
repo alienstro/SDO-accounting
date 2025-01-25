@@ -152,7 +152,7 @@ export interface DisplayDocuments {
 export interface Application {
   application_id: string,
   status: string,
-  office_name: string,
+  department_name: string,
   amount: string,
   loan_type: string,
   application_date: string,
