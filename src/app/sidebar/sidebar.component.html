@@ -6,8 +6,10 @@
       </div>
 
       <div class="profile-info">
-        <p class="profile-name">{{ parseUsername }}</p>
-        <p>{{ userProfile.department_name }}</p>
+        <p class="profile-name">{{ firstName }} {{ lastName }}</p>
+        <p class="profile-department" *ngIf="department_id === 2">Accounting</p>
+        <p class="profile-department" *ngIf="department_id !== 2">No Access</p>
+
       </div>
 
 

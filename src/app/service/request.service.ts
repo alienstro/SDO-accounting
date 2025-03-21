@@ -20,7 +20,7 @@ export class RequestService {
   constructor(private http: HttpClient) { }
 
   login(data: LoginRequest) {
-    return this.http.post<LoginResponse>(API_URL + 'login', data);
+    return this.http.post<LoginResponse>(API_URL + '/login', data);
   }
 
   updateApprovalAccounting(data: any): Observable<any> {

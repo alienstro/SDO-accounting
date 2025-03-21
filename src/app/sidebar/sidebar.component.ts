@@ -1,43 +1,33 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MenuItemComponent } from '../component/menu-item/menu-item.component';
-import { AuthService } from '../service/auth/auth.service';
-import { UserService } from '../service/user.service';
-import { StaffProfile, UserProfile } from '../interface';
+
 import { CommonModule } from '@angular/common';
+import { TokenService } from '../service/token.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink, MenuItemComponent],
+  imports: [CommonModule, MenuItemComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
 
-  userProfile!: StaffProfile
+  firstName!: string;
+  lastName!: string;
+  department_id!: any;
 
   constructor(
-    private userService: UserService,
     private router: Router,
-    private authService: AuthService
+    private tokenService: TokenService
 
   ) {
-    this.userService.userProfile$.subscribe(
-      res => {
-        this.userProfile = res
-      }
-    )
-  }
+    this.firstName = this.tokenService.firstNameToken(this.tokenService.decodeToken());
+    this.lastName = this.tokenService.lastNameToken(this.tokenService.decodeToken());
+    this.department_id = this.tokenService.userRoleToken(this.tokenService.decodeToken());
 
-  get parseUsername() {
-
-    return this.userProfile.first_name + ' ' +
-      (this.userProfile.middle_name ? this.userProfile.middle_name : '')
-      + ' ' +
-      this.userProfile.last_name
-      + ' ' +
-      (this.userProfile.ext_name ? this.userProfile.ext_name : '')
+    console.log("department id: ", this.department_id)
   }
 
   paths = [
@@ -53,7 +43,7 @@ export class SidebarComponent {
   ]
 
   logout(): void {
-    this.authService.flushToken()
+    this.tokenService.flushToken()
     this.router.navigate(['/login']);
   }
 }

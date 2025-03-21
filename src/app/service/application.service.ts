@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { Application, PaidApplication } from '../interface';
 import { RequestService } from './request.service';
 import { API_URL } from '../env';
@@ -21,28 +22,46 @@ export class ApplicationService {
 
   constructor(
     private requestService: RequestService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private http: HttpClient
   ) {
-    this.initApplication()
-    this.initPaidApplication()
+    forkJoin({
+      application: this.getApplication(),
+      paidApplication: this.getPaidApplication()
+    }).subscribe(({ application, paidApplication }) => {
+      this._applications.next(application);
+      this._paidApplications.next(paidApplication);
+    })
+    // this.initApplication()
+    // this.initPaidApplication()
   }
 
-  initApplication() {
-    this.requestService.get<Application[]>('/loanApplication').subscribe({
-      next: res => {
-        this._applications.next(res.message); // Assuming `message` is the correct property
-      },
-      error: err => this.snackbarService.showSnackbar(`Error fetching applications`)
-    });
+  private apiLoanApplication = `${API_URL}/loanApplication`;
+
+  // initApplication() {
+  //   this.requestService.get<Application[]>('/loanApplication/getLoanApplicationAccounting').subscribe({
+  //     next: res => {
+  //       this._applications.next(res.message); // Assuming `message` is the correct property
+  //     },
+  //     error: err => this.snackbarService.showSnackbar(`Error fetching applications`)
+  //   });
+  // }
+
+  getApplication(): Observable<Application[]> {
+    return this.http.get<Application[]>(`${this.apiLoanApplication}/getLoanApplicationAccounting`);
   }
 
-  initPaidApplication() {
-    this.requestService.get<PaidApplication[]>('/paidApplication').subscribe({
-      next: res => {
-        this._paidApplications.next(res.message); // Assuming `message` is the correct property
-      },
-      error: err => this.snackbarService.showSnackbar(`Error fetching paid applications`)
-    });
+  // initPaidApplication() {
+  //   this.requestService.get<PaidApplication[]>('/paidApplication').subscribe({
+  //     next: res => {
+  //       this._paidApplications.next(res.message); // Assuming `message` is the correct property
+  //     },
+  //     error: err => this.snackbarService.showSnackbar(`Error fetching paid applications`)
+  //   });
+  // }
+
+  getPaidApplication(): Observable<PaidApplication[]> {
+    return this.http.get<PaidApplication[]>(`${this.apiLoanApplication}/getPaidApplication`);
   }
 
 

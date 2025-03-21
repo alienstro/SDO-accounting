@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../service/auth/auth.service';
-import { TokenService } from '../service/auth/token.service';
+import { AuthService } from '../service/auth.service';
+import { TokenService } from '../service//token.service';
 import { RequestService } from '../service/request.service';
 import { Router } from '@angular/router';
 interface LoginRequest {
@@ -49,7 +49,7 @@ export class LoginComponent {
 
     this.requestService.login(loginCred).subscribe({
       next: (res: LoginResponse) => {
-        this.tokenService.setTokenInCookie(res.token);
+        this.tokenService.setToken(res.token);
         this.router.navigate(['/application']);
       },
       error: err => {
