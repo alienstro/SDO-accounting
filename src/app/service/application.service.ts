@@ -34,6 +34,7 @@ export class ApplicationService {
     })
     // this.initApplication()
     // this.initPaidApplication()
+
   }
 
   private apiLoanApplication = `${API_URL}/loanApplication`;
