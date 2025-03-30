@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { UtilsService } from '../../service/utils.service';
-import { Application, PaidApplication } from '../../interface';
+import { Application, LoanDetails, PaidApplication } from '../../interface';
 import { Router } from '@angular/router';
 import {
   MAT_DIALOG_DATA,
@@ -51,8 +51,8 @@ export class TableComponent {
     }
   }
 
-  navigateRoute(route: string) {
-    this.router.navigate([`/forward/${route}`])
+  navigateRoute(route: string, loan: any) {
+    this.router.navigate([`/forward/${route}`], { state: { loanDetails: loan } })
   }
 
   openDialog(application_id: string): void {

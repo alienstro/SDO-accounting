@@ -1,84 +1,138 @@
-.details_container {
-  display: flex;
-  gap: 2rem;
-  flex-direction: column;
-}
-
-.parent {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  width: 100%;
+.user-view {
+    padding: 1rem 2rem 1rem 2rem;
+    /* height: 100%; */
   }
-
-  .parent   div {
-    border: 0.5px black solid;
-    display: flex;
-    padding: .25em 0.5em;
-
+  
+  .header-text {
+    font-size: 2rem;
+    opacity: 60%;
   }
-
-
-  .profile {
-    width: 80px;
-    height: 80px;
-    background: tomato;
-  }
-
-  .overview_container {
-    display: flex;
-    flex-direction: row;
-    padding: 1em;
-    border-radius: 8px;
-    box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-    -webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-    -moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-
-  }
-
-  .detail_container {
-    border-radius: 8px;
-
-    box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-    -webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-    -moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-  }
-
-  .forward_container {
-    display: flex;
-    justify-content: end;
-  }
-
-  .forward_container button {
-    background-color: transparent;
-    border: none;
-    background-color: #0165B2;
-    color: white;
-    font-size: 1rem;
-    padding: 0.5em;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-
-  .toggle-button {
+  
+  .table {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f8f8f8;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    padding: 1rem 0.5rem;
-    margin: 0;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s ease;
+    flex-direction: column;
+    gap: 2rem;
   }
-
-  .toggle-button img {
-    width: 3rem;
-    height: 3rem;
+  
+  .back:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .profile-body {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    /* width: 100%; */
+    height: auto;
+    border-radius: 10px;
+    padding: 1rem 1rem 1rem 2rem;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+  }
+  
+  .profile-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-image {
+    border: 1px solid #ccc;
+    height: 8.7rem;
+    width: 10rem;
+  }
+  
+  .profile-image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  .profile-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-left: 1rem;
+  }
+  
+  .profile-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  
+  .profile-table td:first-child {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+  
+  .profile-table td:nth-child(2) {
+    background-color: #f9f9f9;
+    width: 100rem;
+  }
+  
+  .details {
+    width: 100%;
+    height: 50rem;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 10px;
+  }
+  
+  .mat-mdc-tab-body-content.ng-tns-c1615493245-0.ng-trigger.ng-trigger-translateTab {
+    padding: 1rem;
+  }
+  
+  .details-table {
+    border-collapse: collapse;
+    margin-left: 1rem;
+    margin: 1rem;
+  }
+  
+  .details-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  
+  .details-table td:first-child {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+  
+  .details-table td:nth-child(2) {
+    background-color: #f9f9f9;
+    width: 100rem;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  
+  .button-action {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    border: none;
+    background-color: #0165b2;
+    color: white;
+    padding: 0.6rem 1.5rem 0.6rem 1.5rem;
+    border-radius: 5px;
+    transition: 0.2s ease;
+    gap: 0.3rem;
+  }
+  
+  .button-action:hover {
+      cursor: pointer;
+      background-color: #004e89;
+  }
+  
+  iframe {
+    width: 100%;
+    height: 44rem;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
   }

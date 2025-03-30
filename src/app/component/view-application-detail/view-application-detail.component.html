@@ -1,55 +1,233 @@
-<div class="details_container">
-  <button (click)="back()" class="toggle-button">
-    <img src="/assets/Left.svg" alt="">
-  </button>
-  <div class="overview_container">
-    <div class="profile">
+<div class="user-view">
+    <div class="main">
+        <div class="header">
+            <h1 class="header-text"><span class="back" (click)="goBack()">Forward</span> > 12345</h1>
+        </div>
+
+        <div class="table">
+            <div class="profile">
+                <div class="profile-body">
+                    <div class="profile-content">
+                        <div class="profile-image">
+                            <img src="../../../assets/chad.svg" alt="profile picture">
+                        </div>
+                        <table class="profile-table">
+                            <tr>
+                                <td>Employee Number</td>
+                                <td>{{ this.loanDetails[0].applicant_id}}</td>
+                            </tr>
+                            <tr>
+                                <td>Fullname</td>
+                                <td>{{ this.loanDetails[0].first_name}} {{ this.loanDetails[0].last_name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Designation</td>
+                                <td>{{this.loanDetails[0].designation}}</td>
+                            </tr>
+                            <tr>
+                                <td>Contact #</td>
+                                <td>-----</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details">
+                <mat-tab-group clas="tab">
+
+
+                    <mat-tab label="Loan Application Form">
+
+                        <mat-tab-group>
+                            <mat-tab label="Loan Details">
+
+                                <table class="details-table">
+
+                                    <tr>
+                                        <td>Application Number</td>
+                                        <td>{{this.loanDetails[0].application_id}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Loan Amount</td>
+                                        <td>PHP {{this.loanDetails[0].loan_amount}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Loan Type</td>
+                                        <td>{{this.loanDetails[0].type_of_loan}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Term</td>
+                                        <td>{{this.loanDetails[0].term}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Purpose</td>
+                                        <td>{{this.loanDetails[0].purpose}}</td>
+                                    </tr>
+
+                                </table>
+
+                            </mat-tab>
+                            <mat-tab label="Borrower's Information">
+                                <table class="details-table">
+                                    <tr>
+                                        <td>Employee Number</td>
+                                        <td>{{this.borrowersInformation[0].employee_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Employee Name</td>
+                                        <td>{{this.borrowersInformation[0].first_name}}
+                                            {{this.borrowersInformation[0].last_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mobile No.</td>
+                                        <td>{{this.borrowersInformation[0].mobile_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td>{{this.borrowersInformation[0].region}},
+                                            {{this.borrowersInformation[0].province}},
+                                            {{this.borrowersInformation[0].street}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Employment Status</td>
+                                        <td>{{this.borrowersInformation[0].employment_status}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date of Birth</td>
+                                        <td>{{this.borrowersInformation[0].date_of_birth}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Age</td>
+                                        <td>{{this.borrowersInformation[0].age}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Office</td>
+                                        <td>{{this.borrowersInformation[0].office}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Office Tel No.</td>
+                                        <td>{{this.borrowersInformation[0].office_tel_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Monthy Salary</td>
+                                        <td>{{this.borrowersInformation[0].monthly_salary}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Years In Service</td>
+                                        <td>{{this.borrowersInformation[0].years_in_service}}</td>
+                                    </tr>
+                                </table>
+                            </mat-tab>
+                            <mat-tab label="CoWorker's Information">
+                                <table class="details-table">
+                                    <tr>
+                                        <td>Employee Number</td>
+                                        <td>{{this.coMakersInformation[0].co_employee_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Employee Name</td>
+                                        <td>{{this.coMakersInformation[0].co_first_name}}
+                                            {{this.coMakersInformation[0].co_last_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mobile No.</td>
+                                        <td>{{this.coMakersInformation[0].co_mobile_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td>{{this.coMakersInformation[0].co_region}},
+                                            {{this.coMakersInformation[0].co_province}},
+                                            {{this.coMakersInformation[0].co_street}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Employment Status</td>
+                                        <td>{{this.coMakersInformation[0].co_employment_status}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date of Birth</td>
+                                        <td>{{this.coMakersInformation[0].co_date_of_birth}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Age</td>
+                                        <td>{{this.coMakersInformation[0].co_age}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Office</td>
+                                        <td>{{this.coMakersInformation[0].co_office}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Office Tel No.</td>
+                                        <td>{{this.coMakersInformation[0].co_office_tel_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Monthy Salary</td>
+                                        <td>{{this.coMakersInformation[0].co_monthly_salary}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Years In Service</td>
+                                        <td>{{this.coMakersInformation[0].co_years_in_service}}</td>
+                                    </tr>
+                                </table>
+                            </mat-tab>
+
+                            <mat-tab label="Loan Application PDF">
+
+                                pdf
+
+                            </mat-tab>
+                        </mat-tab-group>
+
+                    </mat-tab>
+
+                    <!-- LIVE VIEW OF DOCUMENTS -->
+
+                    <mat-tab label="Uploaded Documents">
+                        <mat-tab-group>
+                            <mat-tab label="Authority To Deduct">
+                                <iframe [src]="url.authorityToDeduct" frameborder="0"></iframe>
+                            </mat-tab>
+
+                            <mat-tab label="Payslip of Applicant">
+                                <iframe [src]="url.payslipApplicant" frameborder="0"></iframe>
+                            </mat-tab>
+
+                            <mat-tab label="Payslip of CoMaker">
+                                <iframe [src]="url.payslipComaker" frameborder="0"></iframe>
+                            </mat-tab>
+
+                            <mat-tab label="Id of Applicant">
+                                <iframe [src]="url.idApplicant" frameborder="0"></iframe>
+                            </mat-tab>
+
+                            <mat-tab label="Id of CoMaker">
+                                <iframe [src]="url.idComaker" frameborder="0"></iframe>
+                            </mat-tab>
+
+                            <mat-tab label="CSC Appointment">
+                                <iframe [src]="url.csc" frameborder="0"></iframe>
+                            </mat-tab>
+
+                            <mat-tab label="Emergency Loan">
+                                <iframe [src]="url.emergency" frameborder="0"></iframe>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </mat-tab>
+
+                </mat-tab-group>
+            </div>
+
+            <div class="buttons">
+                <button class="button-action" (click)="openEndorse()">
+                    <span>Forward to Accounting</span>
+                </button>
+            </div>
+
+        </div>
 
     </div>
-    <div class="parent">
-      <div>
-        Employee Number
-      </div>
-      <div>
-        {{applicantDetail.applicant_id}}
-      </div>
-      <div>
-        Fullname
-      </div>
-      <div>
-        {{parseName}}
-      </div>
-      <div>
-        Designation
-      </div>
-      <div>
-        {{applicantDetail.designation}}
-      </div>
-      <div>
-        Email
-      </div>
-      <div>
-        {{applicantDetail.email}}
-      </div>
-    </div>
-  </div>
-
-  <div class="detail_container">
-    <mat-tab-group>
-      <mat-tab label="Loan Details"> <app-loan-details [loanDetail]="loanDetail"></app-loan-details> </mat-tab>
-      <mat-tab label="Applicant's Details"> <app-employee-details [borrowerInfo]="borrowerInfo"></app-employee-details> </mat-tab>
-      <mat-tab label="Co-maker's Details"> <app-comaker-details [comakerInfo]="coMakerInfo"> </app-comaker-details> </mat-tab>
-      <mat-tab label="CSC"> <app-pdf-view [src]="documents.cscAppointment_path"></app-pdf-view> </mat-tab>
-      <mat-tab label="Medical Emergency Proof"> <app-pdf-view [src]="documents.emergency_path"></app-pdf-view> </mat-tab>
-      <mat-tab label="ID of Co-maker"> <app-pdf-view [src]="documents.idComaker_path"></app-pdf-view> </mat-tab>
-      <mat-tab label="ID of applicant"> <app-pdf-view [src]="documents.idApplicant_path"></app-pdf-view> </mat-tab>
-      <mat-tab label="Authority to Deduct"> <app-pdf-view [src]="documents.authorityToDeduct_path"></app-pdf-view> </mat-tab>
-      <mat-tab label="Payslip of applicant"> <app-pdf-view [src]="documents.payslipApplicant_path"></app-pdf-view> </mat-tab>
-      <mat-tab label="Payslip of comaker"> <app-pdf-view [src]="documents.payslipComaker_path"></app-pdf-view> </mat-tab>
-    </mat-tab-group>
-  </div>
-
-  <div class="forward_container">
-    <button (click)="openDialog(applicationId)">Forward to secretariat</button>
-  </div>
 </div>

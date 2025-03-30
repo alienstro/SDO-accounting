@@ -1,104 +1,108 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatTabsModule } from '@angular/material/tabs';
-import { RequestService } from '../../service/request.service';
-import { BorrowersInformation, CoMakersInformation, Documents, LoanApplicant, LoanDetails } from '../../interface';
-import { LoanDetailsComponent } from '../loan-details/loan-details.component';
-import { EmployeeDetailsComponent } from '../employee-details/employee-details.component';
-import { ComakerDetailsComponent } from '../comaker-details/comaker-details.component';
-import { SnackbarService } from '../../service/snackbar.service';
+import { Applicant, Assessment, BorrowersInformation, CoMakersInformation, LoanDetails } from '../../interface';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModelComponent } from '../confirmation-model/confirmation-model.component';
-import { PdfViewComponent } from '../../common/pdf-view/pdf-view.component';
+import { ApplicationService } from '../../service/application.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DOC_URL } from '../../env';
+import { EndorseComponent } from '../../endorse/endorse.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-application-detail',
   standalone: true,
-  imports: [
-    MatTabsModule,
-    LoanDetailsComponent,
-    EmployeeDetailsComponent,
-    ComakerDetailsComponent,
-    PdfViewComponent
-  ],
+  imports: [MatTabsModule],
   templateUrl: './view-application-detail.component.html',
   styleUrl: './view-application-detail.component.css'
 })
 export class ViewApplicationDetailComponent {
+  application_id!: any;
+  applicant_id!: any;
 
-  applicationId: string
-  applicantDetail!: LoanApplicant
-  loanDetail!: LoanDetails
-  coMakerInfo!: CoMakersInformation
-  borrowerInfo!: BorrowersInformation
-  documents!: Documents
+  loanDetails: any[] = [];
+  borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
+  coMakersInformation: CoMakersInformation[] = [{} as CoMakersInformation];
+  assessmentDetails: Assessment[] = [{} as Assessment];
+  applicantDetails: Applicant[] = [{} as Applicant];
 
   constructor(
-    private route: ActivatedRoute,
-    private requestService: RequestService,
-    private snackbarService: SnackbarService,
+    private router: Router,
     private dialog: MatDialog,
-    private router: Router
+    private applicationService: ApplicationService,
+    private domSanitizer: DomSanitizer,
+    private route: ActivatedRoute
   ) {
-    this.applicationId = this.route.snapshot.paramMap.get('id') || "0"
 
-    this.requestService.get<LoanApplicant>(`/applicantDetail/${this.applicationId}`).subscribe({
-      next: res => this.applicantDetail = res.message,
-      error: error => console.log(error)
-    })
-
-    this.requestService.get<LoanDetails>(`/applicationDetail/${this.applicationId}`).subscribe({
-      next: res => this.loanDetail = res.message,
-      error: error => console.log(error)
-    })
-
-    this.requestService.get<CoMakersInformation>(`/coMakersInformationById/${this.applicationId}`).subscribe({
-      next: res => this.coMakerInfo = res as any,
-      error: error => console.log(error)
-    })
-
-    this.requestService.get<BorrowersInformation>(`/borrowersInformationById/${this.applicationId}`).subscribe({
-      next: res => this.borrowerInfo = res as any,
-      error: error => console.log(error)
-    })
-
-    this.requestService.get<BorrowersInformation>(`/borrowersInformationById/${this.applicationId}`).subscribe({
-      next: res => this.borrowerInfo = res as any,
-      error: error => console.log(error)
-    })
-
-    this.requestService.get<Documents>(`/documents/${this.applicationId}`).subscribe({
-      next: res => this.documents = res.message,
-      error: error => console.log(error)
-    })
   }
 
-
-  get parseName() {
-    const firstN = this.applicantDetail.first_name
-    const lastN = this.applicantDetail.last_name
-    const middleN = this.applicantDetail.middle_name ? this.applicantDetail.middle_name : ''
-    const extN = this.applicantDetail.ext_name ? this.applicantDetail.ext_name : ''
-
-    return firstN + ' ' + middleN + ' ' + lastN + ' ' + extN
+  goBack(): void {
+    this.router.navigate(['/forward']);
   }
 
-  forwardApplication() {
-    this.requestService.patch('/forward', { id: this.applicationId }).subscribe({
-      next: res => {
-        this.snackbarService.showSnackbar('Forwarded to secretariat')
-      },
-      error: error => {
-        this.snackbarService.showSnackbar('Failed to forward')
+  openEndorse(): void {
+    this.dialog.open(EndorseComponent, { width: '40rem', maxWidth: '40rem', height: '12.5rem', data: { application_id: this.application_id } })
+  }
+
+  transform(url: string) {
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  url: {
+    authorityToDeduct: SafeResourceUrl,
+    csc: SafeResourceUrl,
+    emergency: SafeResourceUrl,
+    idApplicant: SafeResourceUrl,
+    idComaker: SafeResourceUrl,
+    payslipApplicant: SafeResourceUrl,
+    payslipComaker: SafeResourceUrl
+  } = {
+    authorityToDeduct: '',
+    csc: '',
+    emergency: '',
+    idApplicant: '',
+    idComaker: '',
+    payslipApplicant: '',
+    payslipComaker: ''
+  };
+
+  ngOnInit(): void {
+    this.application_id = this.route.snapshot.paramMap.get('id');
+
+    this.applicationService.getLoanDetailsById(this.application_id).subscribe(loanDetails => {
+      this.loanDetails = Array.isArray(loanDetails) ? loanDetails : [loanDetails];
+      console.log('loan details: ',this.loanDetails);
+      this.applicant_id = this.loanDetails[0].applicant_id;
+      console.log(this.applicant_id);
+
+      const baseUrl = `${DOC_URL}/${this.applicant_id}/documents/${this.application_id}`;
+
+      this.url = {
+        authorityToDeduct: this.transform(`${baseUrl}/authorityToDeduct.pdf`),
+        csc:  this.transform(`${baseUrl}/csc.pdf`),
+        emergency:  this.transform(`${baseUrl}/emergency.pdf`),
+        idApplicant:  this.transform(`${baseUrl}/idApplicant.pdf`),
+        idComaker:  this.transform(`${baseUrl}/idComaker.pdf`),
+        payslipApplicant:  this.transform(`${baseUrl}/payslipApplicant.pdf`),
+        payslipComaker:  this.transform(`${baseUrl}/payslipComaker.pdf`),
       }
     })
-  }
 
-  openDialog(application_id: string): void {
-    this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'forward' } });
-  }
+    console.log('view application: ', this.application_id);
+  
+    this.applicationService.getBorrowersInformationById(this.application_id).subscribe(borrowers => {
+      this.borrowersInformation = Array.isArray(borrowers) ? borrowers : [borrowers];
+    })
 
-  back() {
-    this.router.navigate(['/forward'])
+
+    this.applicationService.getCoMakersInformationById(this.application_id).subscribe(comakers => {
+      this.coMakersInformation = Array.isArray(comakers) ? comakers : [comakers];
+    })
+
+    // this.applicationService.getLoanApplicantById(this.applicant_id).subscribe(applicant => {
+    //   this.applicantDetails = Array.isArray(applicant) ? applicant : [applicant];
+    // })
+
+    console.log(this.assessmentDetails[0]);
   }
 }
