@@ -120,8 +120,8 @@ export class ApplicationService {
     return this.http.get<Applicant[]>(`${this.apiLoanApplication}/getApplicant/${applicantId}`);
   }
 
-  getLoanDetailsById(applicationId: number): Observable<Applicant[]> {
-    return this.http.get<Applicant[]>(`${this.apiLoanApplication}/getLoanDetailsById/${applicationId}`);
+  getLoanDetailsById(applicationId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiLoanApplication}/getLoanDetailsById/${applicationId}`);
   }
 
   /// GET DATA IN THE STATE

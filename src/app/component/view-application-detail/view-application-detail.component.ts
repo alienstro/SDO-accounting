@@ -6,13 +6,14 @@ import { ApplicationService } from '../../service/application.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DOC_URL } from '../../env';
 import { EndorseComponent } from '../../endorse/endorse.component';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTab, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-view-application-detail',
   standalone: true,
-  imports: [MatTabsModule],
+  imports: [MatTabsModule, CommonModule, MatTabsModule],
   templateUrl: './view-application-detail.component.html',
   styleUrl: './view-application-detail.component.css'
 })
@@ -20,7 +21,7 @@ export class ViewApplicationDetailComponent {
   application_id!: any;
   applicant_id!: any;
 
-  loanDetails: any[] = [];
+  loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
   coMakersInformation: CoMakersInformation[] = [{} as CoMakersInformation];
   assessmentDetails: Assessment[] = [{} as Assessment];
@@ -70,7 +71,9 @@ export class ViewApplicationDetailComponent {
     this.application_id = this.route.snapshot.paramMap.get('id');
 
     this.applicationService.getLoanDetailsById(this.application_id).subscribe(loanDetails => {
+      // this.loanDetails = Array.isArray(loanDetails) ? loanDetails : [loanDetails];
       this.loanDetails = Array.isArray(loanDetails) ? loanDetails : [loanDetails];
+      // this.loanDetails = this.loanDetails[0];
       console.log('loan details: ',this.loanDetails);
       this.applicant_id = this.loanDetails[0].applicant_id;
       console.log(this.applicant_id);
@@ -86,23 +89,20 @@ export class ViewApplicationDetailComponent {
         payslipApplicant:  this.transform(`${baseUrl}/payslipApplicant.pdf`),
         payslipComaker:  this.transform(`${baseUrl}/payslipComaker.pdf`),
       }
-    })
 
-    console.log('view application: ', this.application_id);
+      console.log('view application: ', this.application_id);
+
+      this.applicationService.getBorrowersInformationById(this.application_id).subscribe(borrowers => {
+        this.borrowersInformation = Array.isArray(borrowers) ? borrowers : [borrowers];
+      })
   
-    this.applicationService.getBorrowersInformationById(this.application_id).subscribe(borrowers => {
-      this.borrowersInformation = Array.isArray(borrowers) ? borrowers : [borrowers];
+      this.applicationService.getCoMakersInformationById(this.application_id).subscribe(comakers => {
+        this.coMakersInformation = Array.isArray(comakers) ? comakers : [comakers];
+      })
+  
+      console.log(this.assessmentDetails[0]);
     })
 
 
-    this.applicationService.getCoMakersInformationById(this.application_id).subscribe(comakers => {
-      this.coMakersInformation = Array.isArray(comakers) ? comakers : [comakers];
-    })
-
-    // this.applicationService.getLoanApplicantById(this.applicant_id).subscribe(applicant => {
-    //   this.applicantDetails = Array.isArray(applicant) ? applicant : [applicant];
-    // })
-
-    console.log(this.assessmentDetails[0]);
   }
 }
