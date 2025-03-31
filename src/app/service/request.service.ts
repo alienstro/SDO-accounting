@@ -25,7 +25,7 @@ export class RequestService {
 
   updateApprovalAccounting(data: any): Observable<any> {
     console.log(data);
-    return this.http.patch(`${API_URL}` + `updateApprovalAccounting`, data);
+    return this.http.patch(`${API_URL}` + `/loanApplication/updateApprovalAccounting`, data);
   }
 
   get<T>(endpoint: string) {
