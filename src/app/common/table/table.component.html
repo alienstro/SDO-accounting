@@ -1,41 +1,38 @@
 <div class="input_container">
-  <input type="text" [(ngModel)]="searchTerm" placeholder="Search Employee">
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search Employee" />
   <button (click)="searchEmployee()">
-    <img src="/assets/Search.svg" alt="">
+    <img src="/assets/Search.svg" alt="" />
   </button>
 </div>
 @if(rows.length < 1) {
-  <p id="empty">No Records!</p>
+<p id="empty">No Records!</p>
 } @else {
 
-  <table>
+<table>
   <tr class="thead">
     @for (item of header; track $index) {
-      <th>{{item}}</th>
-    }
-    @if(router.url === "/forward" || router.url === "/payment") {
-      <th>Action</th>
+    <th>{{ item }}</th>
+    } @if(router.url === "/forward" || router.url === "/payment") {
+    <th>Action</th>
     }
   </tr>
   <ng-container *ngFor="let row of rows; let idx = index">
-
     <tr class="row">
       @for (item of row; track $index) {
-        <td>{{item}}</td>
-      }
-      @if(router.url === "/forward") {
+      <td>{{ item }}</td>
+      } @if(router.url === "/forward") {
       <td>
-        <button (click)="navigateRoute(row[0], row[0])">View</button>
+        <button (click)="navigateRoute(row[0], row[0])" class="button-action">
+          <img src="../../../assets/previewpane.svg" alt="eye button icon" />
+          <span>View</span>
+        </button>
       </td>
-        } @else if(router.url === "/payment") {
-           <td>
-             <button (click)="openDialog(row[0])">Pay</button>
-
-           </td>
-        }
+      } @else if(router.url === "/payment") {
+      <td>
+        <button (click)="openDialog(row[0])">Pay</button>
+      </td>
+      }
     </tr>
-
-</ng-container>
-
+  </ng-container>
 </table>
 }

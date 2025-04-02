@@ -1,30 +1,40 @@
 .thead {
-  background-color: #0165B2;
+  background-color: #0165b2;
   color: white;
   border-top-right-radius: 8px;
+  font-size: 14px;
+  font-weight: normal;
+  
+}
+
+.thead th {
+  font-weight: 600;
 }
 
 table {
   table-layout: auto; /* Allow columns to adjust based on content */
   border-collapse: collapse;
-  box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
--webkit-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
--moz-box-shadow: 6px 9px 21px -4px rgba(0,0,0,0.39);
-width: 100%;
+  box-shadow: 6px 9px 21px -4px rgba(0, 0, 0, 0.39);
+  -webkit-box-shadow: 6px 9px 21px -4px rgba(0, 0, 0, 0.39);
+  -moz-box-shadow: 6px 9px 21px -4px rgba(0, 0, 0, 0.39);
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-td, th {
+td,
+th {
   padding: 1em 0.5em;
   text-align: center;
   text-transform: capitalize;
+
 }
 
 .row:nth-child(odd) {
   background-color: #f2f2f2; /* Light gray background for even columns */
 }
 
-
-button  {
+button {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -72,4 +82,25 @@ input:focus {
 .input_container img {
   width: 2rem;
   height: 2rem;
+}
+
+.button-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: white;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  border-radius: 5px;
+  transition: 0.2s ease;
+  gap: 0.3rem;
+}
+
+.button-action:hover {
+  background-color: #0165b2;
+  color: white;
+}
+
+.button-action:active {
+  background-color: #005493;
 }
