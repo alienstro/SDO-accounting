@@ -9,15 +9,17 @@ import { TableComponent } from '../common/table/table.component';
   standalone: true,
   imports: [TitleViewComponent, TableComponent],
   templateUrl: './paid.component.html',
-  styleUrl: './paid.component.css'
+  styleUrl: './paid.component.css',
 })
 export class PaidComponent {
+  paidApplications: PaidApplication[] = [];
 
-  paidApplications: PaidApplication[] = []
+  constructor(private applicationService: ApplicationService) {}
 
-  constructor(private applicationService: ApplicationService) {
-    this.applicationService.paidApplications$.subscribe(res => {
-      this.paidApplications = res
-    })
+  ngOnInit(): void {
+    this.applicationService.getPaidApplication().subscribe((res) => {
+      this.applicationService.setPaidApplications(res); 
+      this.paidApplications = res; 
+    });
   }
 }
