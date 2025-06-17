@@ -12,8 +12,8 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { ConfirmationModelComponent } from '../../component/confirmation-model/confirmation-model.component';
 import { FormsModule } from '@angular/forms';
+import { ConfirmationDialogComponent } from '../../component/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-table',
@@ -55,8 +55,8 @@ export class TableComponent {
     this.router.navigate([`/forward/${route}`], { state: { loanDetails: loan } })
   }
 
-  openDialog(application_id: string): void {
-    const dialogRef = this.dialog.open(ConfirmationModelComponent, { data: { application_id, view: 'payment' } });
+  openDialog(application_id: string, loan_amount: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { application_id, loan_amount, view: 'payment' }, width: '30%' });
   }
 
   searchEmployee() {
