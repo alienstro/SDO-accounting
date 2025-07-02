@@ -42,22 +42,40 @@ export interface LoanApplicant {
   email: string
 }
 
+// export interface LoanDetails {
+//   loan_details_id: number;
+//   loan_amount: number;
+//   type_of_loan: string;
+//   term: number;
+//   loan_application_number: number;
+//   purpose: string;
+//   borrowers_agreement: string;
+//   co_makers_agreement: string;
+//   applicant_id: number;
+//   application_id: number;
+//   last_name: string;
+//   first_name: string;
+//   middle_name: string;
+//   date_submitted: Date;
+//   is_approved_osds: string;
+// }
+
 export interface LoanDetails {
-  loan_details_id: number;
-  loan_amount: number;
-  type_of_loan: string;
-  term: number;
-  loan_application_number: number;
-  purpose: string;
-  borrowers_agreement: string;
-  co_makers_agreement: string;
-  applicant_id: number;
-  application_id: number;
-  last_name: string;
-  first_name: string;
-  middle_name: string;
-  date_submitted: Date;
-  is_approved_osds: string;
+    loan_details_id: number;
+    loan_amount: number;
+    type_of_loan: string;
+    term: number;
+    loan_application_number: number;
+    purpose: string;
+    borrowers_agreement: string;
+    co_makers_agreement: string;
+    applicant_id: number;
+    application_id: number;
+    last_name: string;
+    first_name: string;
+    middle_name: string;
+    date_submitted: Date;
+    status: string;
 }
 
 export interface CoMakersInformation {

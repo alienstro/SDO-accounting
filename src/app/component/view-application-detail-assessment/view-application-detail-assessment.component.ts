@@ -19,19 +19,18 @@ import { AssessFormComponent } from '../../assess-form/assess-form.component';
 import { TokenService } from '../../service/token.service';
 
 @Component({
-  selector: 'app-view-application-detail',
+  selector: 'app-view-application-detail-application',
   standalone: true,
   imports: [MatTabsModule, CommonModule, MatTabsModule],
-  templateUrl: './view-application-detail.component.html',
-  styleUrl: './view-application-detail.component.css',
+  templateUrl: './view-application-detail-assessment.component.html',
+  styleUrl: './view-application-detail-assessment.component.css',
 })
-export class ViewApplicationDetailComponent {
+export class ViewApplicationDetailComponentAssessment {
   application_id!: any;
   applicant_id!: any;
+  roleId: string = '';
 
   currentUrl = '';
-
-  roleId: string = '';
 
   loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
@@ -45,7 +44,7 @@ export class ViewApplicationDetailComponent {
     private applicationService: ApplicationService,
     private domSanitizer: DomSanitizer,
     private route: ActivatedRoute,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {
     this.roleId = this.tokenService.userRoleToken(
       this.tokenService.decodeToken()

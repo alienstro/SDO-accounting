@@ -20,52 +20,73 @@ import { ConfirmationDialogComponent } from '../../component/confirmation-dialog
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './table.component.html',
-  styleUrl: './table.component.css'
+  styleUrl: './table.component.css',
 })
 export class TableComponent {
-  @Input() data: Application[] | PaidApplication[] | null = null
-  @Input() status = ''
-  @Input() office = ''
-  @Input() offices: string[] = []
+  @Input() data: Application[] | PaidApplication[] | null = null;
+  @Input() status = '';
+  @Input() office = '';
+  @Input() offices: string[] = [];
 
-  searchTerm = ''
+  searchTerm = '';
   readonly dialog = inject(MatDialog);
 
-  header: string[] = []
-  rows: string[][] = []
-  baseRows: string[][] = []
-  constructor(
-    private utilService: UtilsService,
-    public router: Router
-  ) { }
+  header: string[] = [];
+  rows: string[][] = [];
+  baseRows: string[][] = [];
+  constructor(private utilService: UtilsService, public router: Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'].currentValue) {
-      console.log('Change:')
-      console.log(changes['data'].currentValue)
+      console.log('Change:');
+      console.log(changes['data'].currentValue);
 
-      const parseRes = this.utilService.parseData(changes['data'].currentValue, this.status, this.office, this.offices)
-      this.header = parseRes.headers
-      this.rows = parseRes.rows
-      this.baseRows = parseRes.rows
+      const parseRes = this.utilService.parseData(
+        changes['data'].currentValue,
+        this.status,
+        this.office,
+        this.offices
+      );
+      this.header = parseRes.headers;
+      this.rows = parseRes.rows;
+      this.baseRows = parseRes.rows;
     }
   }
 
   navigateRoute(route: string, loan: any) {
-    this.router.navigate([`/forward/${route}`], { state: { loanDetails: loan } })
+    const currentUrl = this.router.url;
+
+    console.log(currentUrl);
+
+    if (currentUrl === '/application') {
+      this.router.navigate([`/application/${route}`], {
+        state: { loanDetails: loan },
+      });
+    } else if (currentUrl === '/assessment') {
+      this.router.navigate([`/assessment/${route}`], {
+        state: { loanDetails: loan },
+      });
+    } else if (currentUrl === '/forward') {
+      this.router.navigate([`/forward/${route}`], {
+        state: { loanDetails: loan },
+      });
+    }
   }
 
   openDialog(application_id: string, loan_amount: string): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { application_id, loan_amount, view: 'payment' }, width: '30%' });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { application_id, loan_amount, view: 'payment' },
+      width: '30%',
+    });
   }
 
   searchEmployee() {
-    this.rows = this.baseRows
+    this.rows = this.baseRows;
 
     if (this.searchTerm) {
-      this.rows = this.rows.filter(item => item.includes(this.searchTerm))
+      this.rows = this.rows.filter((item) => item.includes(this.searchTerm));
     } else {
-      this.rows = this.baseRows
+      this.rows = this.baseRows;
     }
   }
 }

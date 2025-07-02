@@ -327,4 +327,25 @@ export class ApplicationService {
 
     this.setDepartmentStatusState(newState);
   }
+
+  updateAssessStatus(status: string, application_id: number): void {
+    const currentLoanDetails = this._loanDetails.getValue();
+
+    console.log(currentLoanDetails);
+
+    const index = currentLoanDetails.findIndex(
+      (loan) => loan.application_id === application_id
+    );
+
+    console.log(index);
+
+    if (index !== -1) {
+      currentLoanDetails[index] = {
+        ...currentLoanDetails[index],
+        status: status,
+      };
+    } else {
+      console.log('Error Updating Assess Loan Details');
+    }
+  }
 }

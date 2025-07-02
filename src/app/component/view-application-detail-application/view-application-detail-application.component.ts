@@ -16,22 +16,19 @@ import { MatTab, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AssessFormComponent } from '../../assess-form/assess-form.component';
-import { TokenService } from '../../service/token.service';
 
 @Component({
-  selector: 'app-view-application-detail',
+  selector: 'app-view-application-detail-application',
   standalone: true,
   imports: [MatTabsModule, CommonModule, MatTabsModule],
-  templateUrl: './view-application-detail.component.html',
-  styleUrl: './view-application-detail.component.css',
+  templateUrl: './view-application-detail-application.component.html',
+  styleUrl: './view-application-detail-application.component.css',
 })
-export class ViewApplicationDetailComponent {
+export class ViewApplicationDetailComponentApplication {
   application_id!: any;
   applicant_id!: any;
 
   currentUrl = '';
-
-  roleId: string = '';
 
   loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
@@ -44,13 +41,8 @@ export class ViewApplicationDetailComponent {
     private dialog: MatDialog,
     private applicationService: ApplicationService,
     private domSanitizer: DomSanitizer,
-    private route: ActivatedRoute,
-    private tokenService: TokenService,
-  ) {
-    this.roleId = this.tokenService.userRoleToken(
-      this.tokenService.decodeToken()
-    );
-  }
+    private route: ActivatedRoute
+  ) {}
 
   goBack(): void {
     this.router.navigate(['/forward']);
@@ -99,11 +91,11 @@ export class ViewApplicationDetailComponent {
   ngOnInit(): void {
     this.currentUrl = this.router.url;
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.currentUrl = event.urlAfterRedirects;
-      }
-    });
+     this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      this.currentUrl = event.urlAfterRedirects;
+    }
+  });
 
     this.application_id = this.route.snapshot.paramMap.get('id');
 
