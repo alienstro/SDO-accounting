@@ -40,6 +40,7 @@ export class AssessFormComponent {
   thirdFormGroup!: FormGroup;
   fourthFormGroup!: FormGroup;
 
+
   constructor(
     public dialogRef: MatDialogRef<AssessFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -131,6 +132,12 @@ export class AssessFormComponent {
 
   closeDialog(): void {
     this.dialogRef.close();
+    const loanApplications = this.applicationService.getApplicationState();
+    console.log(loanApplications);
+    
+    const application = loanApplications.find((app) => Number(app.application_id) === this.application_id);
+
+    console.log("current application: ", application);
   }
 
   confirmDialog(): void {
@@ -160,7 +167,7 @@ export class AssessFormComponent {
             'Approved',
             this.application_id
           );
-          this.router.navigate(['/forward-view']);
+          this.dialogRef.close(assessment);
         } else {
           this.snackbarService.showSnackbar(
             'Failed to assess loan application. Please try again.'

@@ -111,6 +111,7 @@ export class EndorseComponent {
 
     const department_id = this.department_id;
     const staff_id = this.staff_id;
+    const departmentId = parseInt(department_id);
 
     const signatureImage = this.signaturePad.toDataURL('image/png');
 
@@ -122,77 +123,99 @@ export class EndorseComponent {
       staff_id: staff_id,
     };
 
-    const departmentId = parseInt(department_id);
+    this.applicationService.getLoanAssessment(this.application_id).subscribe({
+      next: (loanAssessment) => {
+        if (loanAssessment && loanAssessment.length > 0) {
+          if (departmentId === 1) {
+            console.log('Accounting');
+            this.requestService.updateApprovalAccounting(data).subscribe({
+              next: (res) => {
+                console.log(res);
 
-    if (departmentId === 1) {
-      console.log('Accounting');
-      this.requestService.updateApprovalAccounting(data).subscribe({
-        next: (res) => {
-          console.log(res);
-
-          if (res.success) {
-            this.snackbar.open('Forwarded to Accounting successfully!', '', {
-              duration: 3000,
+                if (res.success) {
+                  this.snackbar.open(
+                    'Forwarded to Accounting successfully!',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  // this.applicationService.updateDepartmentStatus(data.application_id)
+                  this.dialogRef.close();
+                  this.router.navigate(['/forward']);
+                } else {
+                  this.snackbar.open(
+                    'Failed to forward to Accounting. Please try again.',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
+                }
+              },
+              error: (err) => {
+                console.error(err);
+                this.snackbar.open(
+                  'An error occurred while forwarding the application.',
+                  '',
+                  {
+                    duration: 3000,
+                  }
+                );
+              },
             });
-            // this.applicationService.updateDepartmentStatus(data.application_id)
-            this.dialogRef.close();
-            this.router.navigate(['/forward']);
-          } else {
-            this.snackbar.open(
-              'Failed to forward to Accounting. Please try again.',
-              '',
-              {
-                duration: 3000,
-              }
-            );
-          }
-        },
-        error: (err) => {
-          console.error(err);
-          this.snackbar.open(
-            'An error occurred while forwarding the application.',
-            '',
-            {
-              duration: 3000,
-            }
-          );
-        },
-      });
-    } else if (departmentId === 3) {
-      console.log("Secretariat")
-         this.requestService.updateApprovalSecretariat(data).subscribe({
-        next: (res) => {
-          console.log(res);
+          } else if (departmentId === 3) {
+            console.log('Secretariat');
+            this.requestService.updateApprovalSecretariat(data).subscribe({
+              next: (res) => {
+                console.log(res);
 
-          if (res.success) {
-            this.snackbar.open('Forwarded to Signature successfully!', '', {
-              duration: 3000,
+                if (res.success) {
+                  this.snackbar.open(
+                    'Forwarded to Signature successfully!',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  // this.applicationService.updateDepartmentStatus(data.application_id)
+                  this.dialogRef.close();
+                  this.router.navigate(['/forward']);
+                } else {
+                  this.snackbar.open(
+                    'Failed to forward to Accounting. Please try again.',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
+                }
+              },
+              error: (err) => {
+                console.error(err);
+                this.snackbar.open(
+                  'An error occurred while forwarding the application.',
+                  '',
+                  {
+                    duration: 3000,
+                  }
+                );
+              },
             });
-            // this.applicationService.updateDepartmentStatus(data.application_id)
-            this.dialogRef.close();
-            this.router.navigate(['/forward']);
-          } else {
-            this.snackbar.open(
-              'Failed to forward to Accounting. Please try again.',
-              '',
-              {
-                duration: 3000,
-              }
-            );
           }
-        },
-        error: (err) => {
-          console.error(err);
-          this.snackbar.open(
-            'An error occurred while forwarding the application.',
-            '',
-            {
-              duration: 3000,
-            }
-          );
-        },
-      });
-    }
+        } else {
+          this.snackbar.open('Fill out the assessment form', 'Close', {
+            duration: 3000,
+          });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.snackbar.open('Error checking assessment form.', 'Close', {
+          duration: 3000,
+        });
+      },
+    });
   }
 
   // confirm(): void {
@@ -246,5 +269,13 @@ export class EndorseComponent {
 
   cancel(): void {
     this.dialogRef.close();
+
+    const loanApplications = this.applicationService.getApplicationState();
+
+    const application = loanApplications.find(
+      (app) => Number(app.application_id) === Number(this.application_id)
+    );
+
+    console.log('current application: ', application);
   }
 }

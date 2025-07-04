@@ -10,7 +10,7 @@ interface LoginRequest {
 }
 
 interface LoginResponse {
-  token: string
+  token: string;
 }
 
 @Component({
@@ -18,48 +18,54 @@ interface LoginResponse {
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-
-
-  errMessage = ''
+  errMessage = '';
 
   constructor(
     private requestService: RequestService,
     private tokenService: TokenService,
     private router: Router
-  ) { }
+  ) {}
 
   userLogin = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
-  })
+  });
 
   onLogin() {
-    this.errMessage = ''
+    this.errMessage = '';
     const inputCred = this.userLogin.getRawValue();
 
     if (!inputCred.email || !inputCred.password) return;
 
     const loginCred: LoginRequest = {
       email: inputCred.email as string,
-      password: inputCred.password as string
+      password: inputCred.password as string,
     };
 
     this.requestService.login(loginCred).subscribe({
       next: (res: LoginResponse) => {
         this.tokenService.setToken(res.token);
-        this.router.navigate(['/application']);
-      },
-      error: err => {
-        if (err.status === 401) {
-          this.errMessage = 'Invalid Credentials'
+        const roleId = this.tokenService.userIDToken(
+          this.tokenService.decodeToken()
+        );
+
+        // console.log('roleId: ', roleId);
+        if (roleId === 3 || roleId === 1) {
+          this.router.navigate(['/application']);
         } else {
-          this.errMessage = 'Error Logging in'
+          this.errMessage = 'No Access';
         }
-      }
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.errMessage = 'Invalid Credentials';
+        } else {
+          this.errMessage = 'Error Logging in';
+        }
+      },
     });
   }
-
 }

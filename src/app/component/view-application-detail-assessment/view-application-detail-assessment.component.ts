@@ -28,7 +28,7 @@ import { TokenService } from '../../service/token.service';
 export class ViewApplicationDetailComponentAssessment {
   application_id!: any;
   applicant_id!: any;
-  roleId: string = '';
+  roleId: number = 0;
 
   currentUrl = '';
 
@@ -46,9 +46,11 @@ export class ViewApplicationDetailComponentAssessment {
     private route: ActivatedRoute,
     private tokenService: TokenService
   ) {
-    this.roleId = this.tokenService.userRoleToken(
+    const id = this.tokenService.userRoleToken(
       this.tokenService.decodeToken()
     );
+    this.roleId = Number(id)
+    
   }
 
   goBack(): void {

@@ -6,6 +6,7 @@ import {
   Application,
   ApprovalDetails,
   Assessment,
+  AssessmentForm,
   BorrowersInformation,
   CoMakersInformation,
   DepartmentStatus,
@@ -86,6 +87,12 @@ export class ApplicationService {
     return this.http.get<LoanApplication[]>(
       `${this.apiLoanApplication}/loanApplication`
     );
+  }
+
+  getLoanAssessment(applicationId: number): Observable<AssessmentForm[]> {
+    return this.http.get<AssessmentForm[]>(
+      `${this.apiLoanApplication}/getAssessmentDetailsById/${applicationId}`
+    )
   }
 
   getDepartmentStatusById(
@@ -177,6 +184,10 @@ export class ApplicationService {
   }
 
   /// GET DATA IN THE STATE
+
+  getApplicationState() {
+    return this._applications.getValue();
+  }
 
   getLoanApplicationState() {
     return this._loanApplication.getValue();

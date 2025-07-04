@@ -409,3 +409,45 @@ export interface DepartmentStatus {
   status: string;
   updated_at: Date;
 }
+
+export interface AssessmentForm {
+  assessment_id: number;
+  application_id: number;
+  loan_application_form: string;
+  authorization_to_deduct: string;
+  latest_pay_slip: string;
+  photocopy_deped_id: string;
+  approved_appointment: string;
+  proof_co_terminus: string;
+  others: string;
+  letter_of_request: string;
+  hospitalization: string;
+  medical_abstract: string;
+  barangay: string;
+  signed_filled_laf: string;
+  complete_supporting_documents: string;
+  authorized_signature_laf: string;
+  borrower_reaches_retirement: string;
+  borrowers_age: number;
+  comakers_reaches_retirement: string;
+  comakers_age: number;
+  borrowers_has_outstanding_balance: string;
+  current_loan_balance: number;
+  past_due_loan: string;
+  number_of_years_past_due: number;
+  number_of_months_past_due: number;
+  borrowers_take_home_pay: number;
+  paid_30_percent: string;
+  percentage_of_principal_paid: number;
+  principal_loan_amount: number;
+  principal: number;
+  interest: number;
+  net_proceeds: number;
+  net_take_home_pay_after_deduction: number;
+  monthly_amortization: number;
+  period_of_loan: number;
+  date_processed: Date;
+  processed_by: string;
+  reviewed_by: string;
+  remarks: string;
+}
