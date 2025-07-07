@@ -7,9 +7,9 @@
 
       <div class="profile-info">
         <p class="profile-name">{{ firstName }} {{ lastName }}</p>
-        <p class="profile-department" *ngIf="department_id === 1">Accounting</p>
+        <p class="profile-department" *ngIf="department_id === 2">Accounting</p>
         <p class="profile-department" *ngIf="department_id === 3">Secretariat</p>
-        <p class="profile-department" *ngIf="department_id !== 1 && department_id !== 3">No Access</p>
+        <p class="profile-department" *ngIf="department_id !== 2 && department_id !== 3">No Access</p>
 
       </div>
 

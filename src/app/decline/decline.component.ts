@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TableComponent } from '../common/table/table.component';
 import { TitleViewComponent } from '../common/title-view/title-view.component';
 import { Application } from '../interface';
@@ -11,7 +11,7 @@ import { ApplicationService } from '../service/application.service';
   templateUrl: './decline.component.html',
   styleUrl: './decline.component.css'
 })
-export class DeclineComponent {
+export class DeclineComponent implements OnInit{
 
   applications: Application[] = []
   constructor(private applicationService: ApplicationService, private cdr: ChangeDetectorRef) {
@@ -20,5 +20,11 @@ export class DeclineComponent {
       this.applications = res
       this.cdr.markForCheck(); // This helps notify Angular to check for changes
     })
+  }
+
+   ngOnInit(): void {
+      this.applicationService.getApplication().subscribe(res => {
+        this.applications = res;
+      })
   }
 }

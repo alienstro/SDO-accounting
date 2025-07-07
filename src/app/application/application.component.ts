@@ -10,27 +10,24 @@ import { TitleViewComponent } from '../common/title-view/title-view.component';
   standalone: true,
   imports: [CommonModule, TableComponent, TitleViewComponent],
   templateUrl: './application.component.html',
-  styleUrl: './application.component.css'
+  styleUrl: './application.component.css',
 })
-export class ApplicationComponent implements OnInit{
-
-  applications: Application[] = []
-  constructor(private applicationService: ApplicationService, private cdr: ChangeDetectorRef) {
+export class ApplicationComponent implements OnInit {
+  applications: Application[] = [];
+  constructor(
+    private applicationService: ApplicationService,
+    private cdr: ChangeDetectorRef
+  ) {
     // this.applicationService.applications$.subscribe(res => {
     //   console.log(res)
     //   this.applications = res
     //   this.cdr.markForCheck(); // This helps notify Angular to check for changes
     // })
-
-    
   }
 
   ngOnInit(): void {
-      this.applicationService.getApplication()
-
-      this.applicationService.applications$.subscribe(applications => {
-        this.applications = applications;
-        console.log("application data: ", this.applications);
-      })
+    this.applicationService.getApplication().subscribe((res) => {
+      this.applications = res;
+    });
   }
 }
