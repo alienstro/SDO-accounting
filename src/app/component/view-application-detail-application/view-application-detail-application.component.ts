@@ -136,8 +136,8 @@ export class ViewApplicationDetailComponentApplication {
       purpose_house_repair_minor: this.loanDetails[0].purpose.includes('House Repair - Minor'),
       purpose_payment: this.loanDetails[0].purpose.includes('Payment of Loans from Private Institution'),
       purpose_calamity: this.loanDetails[0].purpose.includes('Calamity'),
-      purpose_others: this.loanDetails[0].purpose.includes('NA'),
-      purpose_others_text: 'PLACEHOLDER ADD IN DATABASE',
+      purpose_others: this.loanDetails[0].purpose.includes('Others (specify)'),
+      purpose_others_text: this.loanDetails[0].other_purpose,
 
       borrower_surname: this.borrowersInformation[0].last_name,
       borrower_first_name: this.borrowersInformation[0].first_name,
