@@ -100,6 +100,7 @@ export interface CoMakersInformation {
   co_mobile_number: string;
   co_applicant_id: number;
   co_application_id: number;
+  position: string;
 }
 
 export interface BorrowersInformation {
@@ -124,6 +125,7 @@ export interface BorrowersInformation {
   mobile_number: string;
   applicant_id: number;
   application_id: number;
+  position: string;
 }
 
 export interface Staff {

@@ -38,7 +38,7 @@ export class ViewApplicationDetailComponent {
 
   currentUrl = '';
 
-  roleId: string = '';
+  roleId: number = 0;
 
   loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
@@ -55,8 +55,8 @@ export class ViewApplicationDetailComponent {
     private tokenService: TokenService,
     private http: HttpClient
   ) {
-    this.roleId = this.tokenService.userRoleToken(
-      this.tokenService.decodeToken()
+    this.roleId = Number(this.tokenService.userRoleToken(
+      this.tokenService.decodeToken())
     );
 
     this.http
@@ -380,6 +380,7 @@ export class ViewApplicationDetailComponent {
         console.log('loan details: ', this.loanDetails);
         this.applicant_id = this.loanDetails[0].applicant_id;
         console.log(this.applicant_id);
+        console.log('department number', this.roleId)
 
         const baseUrl = `${DOC_URL}/${this.applicant_id}/documents/${this.application_id}`;
 

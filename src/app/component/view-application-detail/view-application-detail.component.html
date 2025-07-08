@@ -250,7 +250,7 @@
           </mat-tab-group>
         </div>
 
-        <div class="buttons" *ngIf="roleId === '1'">
+        <div class="buttons" *ngIf="roleId === 2">
           <button
             class="button-action"
             (click)="openEndorse()"
@@ -259,22 +259,13 @@
           >
             <span>Forward to Assessment</span>
           </button>
-
           <button
             class="button-action"
-            *ngIf="this.loanDetails[0].status !== 'Approved'"
-            (click)="openAssessmentForm()"
-            style="margin-top: 1rem; margin-bottom: 1rem"
+            (click)="openEndorse()"
+            D
+            style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem;"
           >
-            <span>Assess</span>
-          </button>
-
-          <button
-            class="button-action"
-            *ngIf="this.loanDetails[0].status === 'Approved'"
-            style="margin-top: 1rem; margin-bottom: 1rem"
-          >
-            <span>Assesed Already</span>
+            <span>Reject</span>
           </button>
         </div>
       </div>
