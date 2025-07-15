@@ -101,6 +101,8 @@ export interface CoMakersInformation {
   co_applicant_id: number;
   co_application_id: number;
   position: string;
+  co_signature: string;
+  co_date: Date;
 }
 
 export interface BorrowersInformation {
@@ -126,6 +128,8 @@ export interface BorrowersInformation {
   applicant_id: number;
   application_id: number;
   position: string;
+  signature: string;
+  date: Date;
 }
 
 export interface Staff {

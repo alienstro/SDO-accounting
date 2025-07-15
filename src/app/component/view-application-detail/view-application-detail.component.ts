@@ -55,8 +55,8 @@ export class ViewApplicationDetailComponent {
     private tokenService: TokenService,
     private http: HttpClient
   ) {
-    this.roleId = Number(this.tokenService.userRoleToken(
-      this.tokenService.decodeToken())
+    this.roleId = Number(
+      this.tokenService.userRoleToken(this.tokenService.decodeToken())
     );
 
     this.http
@@ -314,6 +314,8 @@ export class ViewApplicationDetailComponent {
     this.pdfPreview.nativeElement.src = url;
   }
 
+  
+
   goBack(): void {
     this.router.navigate(['/forward']);
   }
@@ -380,7 +382,7 @@ export class ViewApplicationDetailComponent {
         console.log('loan details: ', this.loanDetails);
         this.applicant_id = this.loanDetails[0].applicant_id;
         console.log(this.applicant_id);
-        console.log('department number', this.roleId)
+        console.log('department number', this.roleId);
 
         const baseUrl = `${DOC_URL}/${this.applicant_id}/documents/${this.application_id}`;
 
