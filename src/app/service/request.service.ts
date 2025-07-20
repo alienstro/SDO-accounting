@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { API_URL } from '../env';
 import { Response } from '../interface';
 interface LoginResponse {
-  token: string
+  token: string;
 }
 
 interface LoginRequest {
@@ -13,11 +13,10 @@ interface LoginRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RequestService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(data: LoginRequest) {
     return this.http.post<LoginResponse>(API_URL + '/login', data);
@@ -25,24 +24,50 @@ export class RequestService {
 
   updateApprovalAccounting(data: any): Observable<any> {
     console.log(data);
-    return this.http.post(`${API_URL}` + `/loanApplication/submitSignatureAccounting`, data);
+    return this.http.post(
+      `${API_URL}` + `/loanApplication/submitSignatureAccounting`,
+      data
+    );
+  }
+
+  rejectApprovalAccounting(data: any): Observable<any> {
+    console.log(data);
+    return this.http.post(
+      `${API_URL}` + `/loanApplication/rejectAccounting`,
+      data
+    );
   }
 
   updateApprovalSecretariat(data: any): Observable<any> {
     console.log(data);
-    return this.http.post(`${API_URL}` + `/loanApplication/submitSignatureSecretariat`, data);
+    return this.http.post(
+      `${API_URL}` + `/loanApplication/submitSignatureSecretariat`,
+      data
+    );
+  }
+
+  rejectApprovalSecretariat(data: any): Observable<any> {
+    console.log(data);
+    return this.http.post(
+      `${API_URL}` + `/loanApplication/rejectSecretariat`,
+      data
+    );
   }
 
   get<T>(endpoint: string) {
-    return this.http.get<Response<T>>(`${API_URL}` + `${endpoint}`)
+    return this.http.get<Response<T>>(`${API_URL}` + `${endpoint}`);
   }
 
   patch(endpoint: string, data: object) {
     return this.http.patch(`${API_URL}` + `${endpoint}`, data);
   }
 
-   assessLoanApplication(data: any): Observable<any> {
+  assessLoanApplication(data: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${API_URL}/loanApplication/assessLoanApplication`, data, { headers });
+    return this.http.post(
+      `${API_URL}/loanApplication/assessLoanApplication`,
+      data,
+      { headers }
+    );
   }
 }

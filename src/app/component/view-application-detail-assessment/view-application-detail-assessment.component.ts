@@ -17,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AssessFormComponent } from '../../assess-form/assess-form.component';
 import { TokenService } from '../../service/token.service';
+import { RejectDialogComponent } from '../reject-dialog/reject-dialog.component';
 
 @Component({
   selector: 'app-view-application-detail-application',
@@ -46,11 +47,8 @@ export class ViewApplicationDetailComponentAssessment {
     private route: ActivatedRoute,
     private tokenService: TokenService
   ) {
-    const id = this.tokenService.userRoleToken(
-      this.tokenService.decodeToken()
-    );
-    this.roleId = Number(id)
-    
+    const id = this.tokenService.userRoleToken(this.tokenService.decodeToken());
+    this.roleId = Number(id);
   }
 
   goBack(): void {
@@ -94,6 +92,15 @@ export class ViewApplicationDetailComponentAssessment {
       maxWidth: '90rem',
       height: '55rem',
       data: { loan: this.loanDetails[0] },
+    });
+  }
+
+  openReject(): void {
+    this.dialog.open(RejectDialogComponent, {
+      width: '50rem',
+      maxWidth: '50rem',
+      height: '16rem',
+      data: { application_id: this.application_id },
     });
   }
 

@@ -19,6 +19,7 @@ import { AssessFormComponent } from '../../assess-form/assess-form.component';
 import { TokenService } from '../../service/token.service';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import { HttpClient } from '@angular/common/http';
+import { RejectDialogComponent } from '../reject-dialog/reject-dialog.component';
 
 @Component({
   selector: 'app-view-application-detail',
@@ -325,6 +326,15 @@ export class ViewApplicationDetailComponent {
       width: '50rem',
       maxWidth: '50rem',
       height: '21.5rem',
+      data: { application_id: this.application_id },
+    });
+  }
+
+  openReject(): void {
+    this.dialog.open(RejectDialogComponent, {
+      width: '50rem',
+      maxWidth: '50rem',
+      height: '16rem',
       data: { application_id: this.application_id },
     });
   }
