@@ -36,6 +36,7 @@ export class ViewApplicationDetailComponent {
 
   application_id!: any;
   applicant_id!: any;
+  noData: string = 'No Data Yet';
 
   currentUrl = '';
 
@@ -67,83 +68,238 @@ export class ViewApplicationDetailComponent {
       .subscribe((bytes) => (this.formPdfBytes = bytes));
   }
 
+  numberToWords(num: number): string {
+    const a = [
+      '',
+      'one',
+      'two',
+      'three',
+      'four',
+      'five',
+      'six',
+      'seven',
+      'eight',
+      'nine',
+      'ten',
+      'eleven',
+      'twelve',
+      'thirteen',
+      'fourteen',
+      'fifteen',
+      'sixteen',
+      'seventeen',
+      'eighteen',
+      'nineteen',
+    ];
+    const b = [
+      '',
+      '',
+      'twenty',
+      'thirty',
+      'forty',
+      'fifty',
+      'sixty',
+      'seventy',
+      'eighty',
+      'ninety',
+    ];
+
+    const g = ['', 'thousand', 'million', 'billion', 'trillion'];
+
+    const makeGroup = ([ones, tens, huns]: number[]): string => {
+      return [
+        huns === 0 ? '' : a[huns] + ' hundred ',
+        tens === 0
+          ? ''
+          : tens === 1
+          ? a[10 + ones]
+          : b[tens] + (ones === 0 ? '' : '-' + a[ones]),
+        tens === 1 ? '' : ones === 0 ? '' : tens === 0 ? a[ones] : '',
+      ].join('');
+    };
+
+    const chunk = (n: number): number[][] => {
+      const result = [];
+      while (n > 0) {
+        result.push([n % 10, ((n % 100) / 10) | 0, ((n % 1000) / 100) | 0]);
+        n = Math.floor(n / 1000);
+      }
+      return result;
+    };
+
+    if (num === 0) return 'zero';
+
+    return chunk(num)
+      .map(makeGroup)
+      .map((str, i) => (str ? str + ' ' + g[i] : ''))
+      .filter(Boolean)
+      .reverse()
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toUpperCase();
+  }
+
+  formatDateToLong(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+
+  async convertBase64ToImage(pdfDoc: PDFDocument, base64: string) {
+    if (!base64) return null;
+
+    try {
+      const imageData = base64.split(',')[1];
+      const byteArray = Uint8Array.from(atob(imageData), (c) =>
+        c.charCodeAt(0)
+      );
+
+      if (base64.includes('jpeg') || base64.includes('jpg')) {
+        return await pdfDoc.embedJpg(byteArray);
+      } else {
+        return await pdfDoc.embedPng(byteArray);
+      }
+    } catch (error) {
+      console.error('Error converting base64 to image:', error);
+      return null;
+    }
+  }
+
   async generateAndPreviewPdf() {
     if (!this.formPdfBytes) {
       console.error('PDF template not loaded yet.');
       return;
     }
 
+    const pdfDoc = await PDFDocument.load(this.formPdfBytes);
+    const page = pdfDoc.getPages()[0];
+    const { width, height } = page.getSize();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    // Embed images first - make sure to await and handle null values
+    const borrowerSignature = this.borrowersInformation[0]?.signature;
+    const coMakerSignature = this.coMakersInformation[0]?.co_signature;
+
+    const borrowerSignatureImage = borrowerSignature
+      ? await this.convertBase64ToImage(pdfDoc, borrowerSignature)
+      : null;
+    const coMakerSignatureImage = coMakerSignature
+      ? await this.convertBase64ToImage(pdfDoc, coMakerSignature)
+      : null;
+
     const data = {
-      date_submitted: '25/06/2025',
-      loan_amount: '15000',
-      term: '5',
-      loan_application_number: '202500001',
-      multi_purpose: true,
-      multi_purpose_new: true,
-      multi_purpose_renewal: true,
-      additional: true,
-      purpose_educational: true,
-      purpose_hospitalization: true,
-      purpose_long_medication: true,
-      purpose_house_arrears: true,
-      purpose_house_repair_major: true,
-      purpose_house_repair_minor: true,
-      purpose_payment: true,
-      purpose_calamity: true,
-      purpose_others: true,
-      purpose_others_text: 'Car Payments',
+      date_submitted: this.formatDateToLong(this.loanDetails[0].date_submitted),
+      loan_amount: this.loanDetails[0].loan_amount,
+      term: this.loanDetails[0].term,
+      loan_application_number: this.loanDetails[0].loan_application_number,
+      multi_purpose: this.loanDetails[0].type_of_loan.includes(
+        'Multi-Purpose (new)'
+      ),
+      multi_purpose_new: this.loanDetails[0].type_of_loan.includes(
+        'Multi-Purpose (new)'
+      ),
+      multi_purpose_renewal: this.loanDetails[0].type_of_loan.includes(
+        'Multi-Purpose (renewal)'
+      ),
+      additional: this.loanDetails[0].type_of_loan.includes('Additional'),
+      purpose_educational: this.loanDetails[0].purpose.includes('Educational'),
+      purpose_hospitalization: this.loanDetails[0].purpose.includes(
+        'Hospitalization/Medical'
+      ),
+      purpose_long_medication: this.loanDetails[0].purpose.includes(
+        'Long Medication/Rehabilitation'
+      ),
+      purpose_house_arrears: this.loanDetails[0].purpose.includes(
+        'House Repairs/Equity'
+      ),
+      purpose_house_repair_major: this.loanDetails[0].purpose.includes(
+        'House Repair - Major'
+      ),
+      purpose_house_repair_minor: this.loanDetails[0].purpose.includes(
+        'House Repair - Minor'
+      ),
+      purpose_payment: this.loanDetails[0].purpose.includes(
+        'Payment of Loans from Private Institution'
+      ),
+      purpose_calamity: this.loanDetails[0].purpose.includes('Calamity'),
+      purpose_others: this.loanDetails[0].purpose.includes('Others (specify)'),
+      purpose_others_text: this.loanDetails[0].other_purpose,
 
-      borrower_surname: 'Dela Cruz',
-      borrower_first_name: 'Juan',
-      borrower_mi: 'P',
-      borrower_address: '123 Rizal St., Olongapo City',
-      borrower_position: 'Teacher I',
-      borrower_employee_no: '202210599',
-      borrower_employment_status: 'Employed',
-      borrower_office: 'Deped Olongapo',
-      borrower_date_of_birth: 'Sept 1, 2003',
-      borrower_age: '26',
-      borrower_monthly_salary: '50000',
-      borrower_office_tel_no: '213-2323',
-      borrower_years_in_service: '10 years',
-      borrower_mobile_no: '09563453334',
-      borrower_specimen_signature_1: 'signature',
-      borrower_specimen_signature_2: 'signature1',
+      borrower_surname: this.borrowersInformation[0].last_name,
+      borrower_first_name: this.borrowersInformation[0].first_name,
+      borrower_mi: this.borrowersInformation[0].middle_initial,
+      borrower_address:
+        this.borrowersInformation[0].street +
+        ', ' +
+        this.borrowersInformation[0].province +
+        ', ' +
+        this.borrowersInformation[0].region,
+      borrower_position: this.borrowersInformation[0].position,
+      borrower_employee_no: this.borrowersInformation[0].employee_number,
+      borrower_employment_status:
+        this.borrowersInformation[0].employment_status,
+      borrower_office: this.borrowersInformation[0].office,
+      borrower_date_of_birth: this.borrowersInformation[0].date_of_birth,
+      borrower_age: this.borrowersInformation[0].age,
+      borrower_monthly_salary: this.borrowersInformation[0].monthly_salary,
+      borrower_office_tel_no: this.borrowersInformation[0].office_tel_number,
+      borrower_years_in_service: this.borrowersInformation[0].years_in_service,
+      borrower_mobile_no: this.borrowersInformation[0].mobile_number,
+      borrower_specimen_signature_1: borrowerSignatureImage,
+      borrower_specimen_signature_2: borrowerSignatureImage,
 
-      co_makers_surname: 'Dela Cruz',
-      co_makers_first_name: 'Juan',
-      co_makers_mi: 'P',
-      co_makers_address: '123 Rizal St., Olongapo City',
-      co_makers_position: 'Teacher I',
-      co_makers_employee_no: '202210599',
-      co_makers_employment_status: 'Employed',
-      co_makers_office: 'Deped Olongapo',
-      co_makers_date_of_birth: 'Sept 1, 2003',
-      co_makers_age: '26',
-      co_makers_monthly_salary: '50000',
-      co_makers_office_tel_no: '213-2323',
-      co_makers_years_in_service: '10 years',
-      co_makers_mobile_no: '09563453334',
-      co_makers_specimen_signature_1: 'signature',
-      co_makers_specimen_signature_2: 'signature1',
+      co_makers_surname: this.coMakersInformation[0].co_last_name,
+      co_makers_first_name: this.coMakersInformation[0].co_first_name,
+      co_makers_mi: this.coMakersInformation[0].co_middle_initial,
+      co_makers_address:
+        this.coMakersInformation[0].co_street +
+        ', ' +
+        this.coMakersInformation[0].co_province +
+        ', ' +
+        this.coMakersInformation[0].co_region,
+      co_makers_position: this.coMakersInformation[0].position,
+      co_makers_employee_no: this.coMakersInformation[0].co_employee_number,
+      co_makers_employment_status:
+        this.coMakersInformation[0].co_employment_status,
+      co_makers_office: this.coMakersInformation[0].co_office,
+      co_makers_date_of_birth: this.coMakersInformation[0].co_date_of_birth,
+      co_makers_age: this.coMakersInformation[0].co_age,
+      co_makers_monthly_salary: this.coMakersInformation[0].co_monthly_salary,
+      co_makers_office_tel_no: this.coMakersInformation[0].co_office_tel_number,
+      co_makers_years_in_service:
+        this.coMakersInformation[0].co_years_in_service,
+      co_makers_mobile_no: this.coMakersInformation[0].co_mobile_number,
+      co_makers_specimen_signature_1: coMakerSignatureImage,
+      co_makers_specimen_signature_2: coMakerSignatureImage,
 
-      pesos_word: 'Fifteen Thousand',
-      pesos_number: '15000',
-      borrower_signature: 'borrower_signature',
-      borrower_date: '25/06/2025',
-      co_makers_signature: 'co_makers_signature',
-      co_makers_date: '25/06/2025',
+      pesos_word: this.numberToWords(this.loanDetails[0].loan_amount),
+      pesos_number: this.loanDetails[0].loan_amount,
+      borrower_signature: borrowerSignatureImage,
+      borrower_date: this.formatDateToLong(
+        this.borrowersInformation[0]?.date.toString()
+      ),
+      co_makers_signature: coMakerSignatureImage,
+      co_makers_date: this.coMakersInformation[0]?.co_date
+        ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString())
+        : 'No Date Yet',
 
-      personnel_signature: 'signature',
-      personnel_designation: 'Teacher',
-      personnel_date: '25/06/2025',
-      permanent: true,
-      net_pay: '18,500',
-      year_of: 'June 2025',
+      personnel_signature: 'PLACEHOLDER',
+      personnel_designation: 'PLACEHOLDER',
+      personnel_date: 'PLACEHOLDER',
+      permanent:
+        this.borrowersInformation[0].employment_status.includes('Permanent'),
+      co_terminus:
+        this.borrowersInformation[0].employment_status.includes('Co-Terminus'),
+      net_pay: 'PLACEHOLDER',
+      year_of: 'PLACEHOLDER',
 
-      legal_signature: 'signature',
-      legal_designation: 'Teacher',
-      legal_date: '25/06/2025',
+      legal_signature: 'PLACEHOLDER',
+      legal_designation: 'PLACEHOLDER',
+      legal_date: 'PLACEHOLDER',
     };
 
     const fields = [
@@ -227,7 +383,7 @@ export class ViewApplicationDetailComponent {
       { name: 'purpose_others_text', x: 582, y: 307.5, fontSize: 8 },
 
       { name: 'borrower_surname', x: 78, y: 348, fontSize: 8 },
-      { name: 'borrower_first_name', x: 230, y: 346, fontSize: 8 },
+      { name: 'borrower_first_name', x: 230, y: 348, fontSize: 8 },
       { name: 'borrower_mi', x: 370, y: 348, fontSize: 8 },
       { name: 'borrower_address', x: 130, y: 378, fontSize: 8 },
       { name: 'borrower_position', x: 110, y: 405, fontSize: 8 },
@@ -237,57 +393,103 @@ export class ViewApplicationDetailComponent {
       { name: 'borrower_date_of_birth', x: 120, y: 463, fontSize: 8 },
       { name: 'borrower_age', x: 310, y: 464, fontSize: 8 },
       { name: 'borrower_monthly_salary', x: 145, y: 483, fontSize: 8 },
-      { name: 'borrower_office_tel_no', x: 285, y: 474, fontSize: 8 },
+      { name: 'borrower_office_tel_no', x: 288, y: 474, fontSize: 8 },
       { name: 'borrower_years_in_service', x: 130, y: 502, fontSize: 8 },
       { name: 'borrower_mobile_no', x: 280, y: 493, fontSize: 8 },
-      { name: 'borrower_specimen_signature_1', x: 100, y: 530, fontSize: 8 },
-      { name: 'borrower_specimen_signature_2', x: 300, y: 530, fontSize: 8 },
+      {
+        name: 'borrower_specimen_signature_1',
+        x: 90,
+        y: 520,
+        fontSize: 8,
+        isImage: true,
+      },
+      {
+        name: 'borrower_specimen_signature_2',
+        x: 266,
+        y: 520,
+        fontSize: 8,
+        isImage: true,
+      },
 
       { name: 'co_makers_surname', x: 420, y: 348, fontSize: 8 },
-      { name: 'co_makers_first_name', x: 570, y: 346, fontSize: 8 },
+      { name: 'co_makers_first_name', x: 570, y: 348, fontSize: 8 },
       { name: 'co_makers_mi', x: 707, y: 348, fontSize: 8 },
-      { name: 'co_makers_address', x: 480, y: 374, fontSize: 8 },
+      { name: 'co_makers_address', x: 480, y: 378, fontSize: 8 },
       { name: 'co_makers_position', x: 460, y: 405, fontSize: 8 },
-      { name: 'co_makers_employee_no', x: 470, y: 425, fontSize: 8 },
+      { name: 'co_makers_employee_no', x: 472, y: 425, fontSize: 8 },
       { name: 'co_makers_employment_status', x: 660, y: 425, fontSize: 8 },
       { name: 'co_makers_office', x: 450, y: 443, fontSize: 8 },
       { name: 'co_makers_date_of_birth', x: 470, y: 463, fontSize: 8 },
-      { name: 'co_makers_age', x: 660, y: 463, fontSize: 8 },
-      { name: 'co_makers_monthly_salary', x: 495, y: 483, fontSize: 8 },
-      { name: 'co_makers_office_tel_no', x: 635, y: 473, fontSize: 8 },
+      { name: 'co_makers_age', x: 662, y: 464, fontSize: 8 },
+      { name: 'co_makers_monthly_salary', x: 497, y: 482, fontSize: 8 },
+      { name: 'co_makers_office_tel_no', x: 638, y: 473, fontSize: 8 },
       { name: 'co_makers_years_in_service', x: 480, y: 502, fontSize: 8 },
       { name: 'co_makers_mobile_no', x: 630, y: 493, fontSize: 8 },
-      { name: 'co_makers_specimen_signature_1', x: 460, y: 530, fontSize: 8 },
-      { name: 'co_makers_specimen_signature_2', x: 660, y: 530, fontSize: 8 },
+      {
+        name: 'co_makers_specimen_signature_1',
+        x: 450,
+        y: 520,
+        fontSize: 8,
+        isImage: true,
+      },
+      {
+        name: 'co_makers_specimen_signature_2',
+        x: 625,
+        y: 520,
+        fontSize: 8,
+        isImage: true,
+      },
 
       { name: 'pesos_word', x: 65, y: 584, fontSize: 8 },
       { name: 'pesos_number', x: 280, y: 584, fontSize: 8 },
-      { name: 'borrower_signature', x: 100, y: 726, fontSize: 8 },
-      { name: 'borrower_date', x: 320, y: 726, fontSize: 8 },
-      { name: 'co_makers_signature', x: 450, y: 726, fontSize: 8 },
-      { name: 'co_makers_date', x: 670, y: 726, fontSize: 8 },
+      { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true },
+      { name: 'borrower_date', x: 310, y: 726, fontSize: 8 },
+      { name: 'co_makers_signature', x: 440, y: 715, fontSize: 8 },
+      { name: 'co_makers_date', x: 665, y: 728, fontSize: 8 },
 
       { name: 'permanent', x: 100, y: 838, fontSize: 8, checkbox: true },
+      { name: 'co-terminus', x: 175, y: 838, fontSize: 8, checkbox: true },
       { name: 'net_pay', x: 150, y: 862.5, fontSize: 8 },
       { name: 'year_of', x: 65, y: 874, fontSize: 8 },
-      { name: 'personnel_signature', x: 210, y: 920, fontSize: 8 },
+      {
+        name: 'personnel_signature',
+        x: 190,
+        y: 910,
+        fontSize: 8,
+        isImage: true,
+      },
       { name: 'personnel_designation', x: 205, y: 945, fontSize: 8 },
       { name: 'personnel_date', x: 180, y: 957, fontSize: 8 },
-      { name: 'legal_signature', x: 560, y: 920, fontSize: 8 },
+      { name: 'legal_signature', x: 545, y: 910, fontSize: 8, isImage: true },
       { name: 'legal_designation', x: 555, y: 945, fontSize: 8 },
       { name: 'legal_date', x: 530, y: 957, fontSize: 8 },
     ];
-
-    const pdfDoc = await PDFDocument.load(this.formPdfBytes);
-    const page = pdfDoc.getPages()[0];
-    const { width, height } = page.getSize();
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
     const scaleX = width / 800;
     const scaleY = height / 1100;
 
     fields.forEach((f) => {
       let val = (data as any)[f.name];
+
+      // HANDLE IMAGE EMBEDDING FOR SIGNATURE AND ADJUST HEIGHT AND WIDTH
+      if (f.isImage && val) {
+        const xPt = f.x * scaleX;
+        const yPt = height - f.y * scaleY - 20;
+
+        if (typeof val !== 'object' || typeof val.embed !== 'function') {
+          console.warn(`Expected PDFImage for ${f.name}, but got`, val);
+          return;
+        }
+
+        page.drawImage(val, {
+          x: xPt,
+          y: yPt,
+          width: 80 * 0.8,
+          height: 30 * 0.8,
+        });
+        return;
+      }
+
       if (f.checkbox) {
         if (!val) return;
         val = 'X';
@@ -314,8 +516,6 @@ export class ViewApplicationDetailComponent {
     // set iframe source
     this.pdfPreview.nativeElement.src = url;
   }
-
-  
 
   goBack(): void {
     this.router.navigate(['/forward']);

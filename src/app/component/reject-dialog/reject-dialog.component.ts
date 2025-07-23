@@ -58,7 +58,7 @@ export class RejectDialogComponent {
       remarks: remarks,
     };
 
-    if (departmentId === 2) {
+    if (departmentId === 5) {
       console.log('Accounting');
       this.requestService.rejectApprovalAccounting(data).subscribe({
         next: (res) => {
@@ -87,7 +87,7 @@ export class RejectDialogComponent {
           );
         },
       });
-    } else if (departmentId === 3) {
+    } else if (departmentId === 1) {
       console.log('Secretariat');
       this.requestService.rejectApprovalSecretariat(data).subscribe({
         next: (res) => {

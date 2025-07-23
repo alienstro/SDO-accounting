@@ -48,40 +48,58 @@ button {
 
 .input_container {
   background-color: white;
-  width: 30%;
-  border: 1px solid black;
+  width: 100%;
+  max-width: 350px;
+  min-width: 180px;
+  border: 1px solid #0165b2;
   display: flex;
   align-items: center;
-  border-radius: 8px;
-  min-width: 120px;
-  max-width: 250px;
-  padding: 0.2em;
-  margin-bottom: 1rem;
+  border-radius: 24px;
+  padding: 0.2em 0.5em;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(1, 101, 178, 0.08);
+  transition: box-shadow 0.2s;
 }
 
-.input_container button {
-  height: 100%;
-  border-left: 1px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.input_container:focus-within {
+  box-shadow: 0 4px 16px rgba(1, 101, 178, 0.15);
+  border-color: #005493;
 }
 
-input {
+.input_container input {
   background-color: transparent;
   border: none;
-  height: 32px;
+  height: 40px;
   flex: 1;
+  font-size: 1rem;
+  padding: 0 0.5em;
 }
 
-input:focus {
-  border: none;
+.input_container input:focus {
   outline: none;
 }
 
+.input_container button {
+  height: 36px;
+  width: 36px;
+  border-left: none;
+  background: #0165b2;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.5em;
+  transition: background 0.2s;
+}
+
+.input_container button:hover {
+  background: #005493;
+}
+
 .input_container img {
-  width: 2rem;
-  height: 2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: invert(1);
 }
 
 .button-action {

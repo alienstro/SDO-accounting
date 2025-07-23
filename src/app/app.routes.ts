@@ -9,7 +9,7 @@ import { SignatureComponent } from './signature/signature.component';
 import { EndorsementComponent } from './endorsement/endorsement.component';
 import { PaymentComponent } from './payment/payment.component';
 import { DeclineComponent } from './decline/decline.component';
-import { ViewApplicationDetailComponent } from './component/view-application-detail/view-application-detail.component';
+import { ViewApplicationDetailComponent } from './component/view-application-detail-accounting/view-application-detail.component';
 import { PaidComponent } from './paid/paid.component';
 import { ViewApplicationDetailComponentApplication } from './component/view-application-detail-application/view-application-detail-application.component';
 import { ViewApplicationDetailComponentAssessment } from './component/view-application-detail-assessment/view-application-detail-assessment.component';

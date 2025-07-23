@@ -12,15 +12,23 @@
   <tr class="thead">
     @for (item of header; track $index) {
     <th>{{ item }}</th>
-    } @if(router.url === "/forward" || router.url === "/payment" || router.url === "/assessment" || router.url === "/application") {
+    } @if(router.url === "/forward" || router.url === "/payment" || router.url
+    === "/assessment" || router.url === "/application") {
     <th>Action</th>
     }
   </tr>
   <ng-container *ngFor="let row of rows; let idx = index">
     <tr class="row">
       @for (item of row; track $index) {
-      <td>{{ item }}</td>
-      } @if(router.url === "/forward" || router.url === "/assessment" || router.url === "/application") {
+      <td>
+        {{
+          header[$index] === "Date Submitted"
+            ? (item | date : "MMMM d, y")
+            : item
+        }}
+      </td>
+      } @if(router.url === "/forward" || router.url === "/assessment" ||
+      router.url === "/application") {
       <td>
         <button (click)="navigateRoute(row[0], row[0])" class="button-action">
           <img src="../../../assets/previewpane.svg" alt="eye button icon" />

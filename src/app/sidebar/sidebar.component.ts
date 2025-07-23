@@ -30,13 +30,25 @@ export class SidebarComponent {
     console.log("department id: ", this.department_id)
   }
 
+  // paths = [
+  //   "application",
+  //   "pending",
+  //   "forward",
+  //   "assessment",
+  //   "signature",
+  //   "endorsement",
+  //   "payment",
+  //   "reject",
+  //   "paid"
+  // ]
+
   paths = [
     "application",
-    "pending",
-    "forward",
     "assessment",
     "signature",
+    "forward",
     "endorsement",
+    "pending",
     "payment",
     "reject",
     "paid"

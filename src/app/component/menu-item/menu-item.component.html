@@ -1,4 +1,4 @@
-<div class="nav-div">
- <img src="../../../assets/panel.svg" alt="panel.svg">
-  <a class="nav-text" href="" [routerLink]="['/'+path]" class="pathname"> {{path}} </a>
+<div class="nav-div" [routerLink]="['/' + path]" style="cursor: pointer;">
+  <img src="../../../assets/panel.svg" alt="panel.svg">
+  <span class="nav-text pathname">{{ path }}</span>
 </div>

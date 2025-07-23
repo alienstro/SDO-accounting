@@ -48,12 +48,12 @@ export class LoginComponent {
     this.requestService.login(loginCred).subscribe({
       next: (res: LoginResponse) => {
         this.tokenService.setToken(res.token);
-        const roleId = this.tokenService.userIDToken(
+        const roleId = Number(this.tokenService.userRoleToken(
           this.tokenService.decodeToken()
-        );
+        ));
 
-        // console.log('roleId: ', roleId);
-        if (roleId === 3 || roleId === 1) {
+        console.log('roleId accounting page: ', roleId);
+        if (roleId === 6 || roleId === 1) {
           this.router.navigate(['/application']);
         } else {
           this.errMessage = 'No Access';

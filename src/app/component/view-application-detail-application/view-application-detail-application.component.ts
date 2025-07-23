@@ -37,6 +37,7 @@ export class ViewApplicationDetailComponentApplication {
   applicant_id!: any;
 
   currentUrl = '';
+  noData: string = 'No Data Yet'
 
   loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
@@ -250,9 +251,13 @@ export class ViewApplicationDetailComponentApplication {
       pesos_word: this.numberToWords(this.loanDetails[0].loan_amount),
       pesos_number: this.loanDetails[0].loan_amount,
       borrower_signature: borrowerSignatureImage,
-      borrower_date: this.formatDateToLong(this.borrowersInformation[0]?.date.toString()),
+      borrower_date: this.formatDateToLong(
+        this.borrowersInformation[0]?.date.toString()
+      ),
       co_makers_signature: coMakerSignatureImage,
-      co_makers_date: this.coMakersInformation[0]?.co_date ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString()) : 'No Date Yet',
+      co_makers_date: this.coMakersInformation[0]?.co_date
+        ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString())
+        : 'No Date Yet',
 
       personnel_signature: 'PLACEHOLDER',
       personnel_designation: 'PLACEHOLDER',
@@ -409,19 +414,25 @@ export class ViewApplicationDetailComponentApplication {
 
       { name: 'pesos_word', x: 65, y: 584, fontSize: 8 },
       { name: 'pesos_number', x: 280, y: 584, fontSize: 8 },
-      { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true},
+      { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true },
       { name: 'borrower_date', x: 310, y: 726, fontSize: 8 },
-      { name: 'co_makers_signature', x: 440, y: 715, fontSize: 8 },
+      { name: 'co_makers_signature', x: 440, y: 715, fontSize: 8, isImage: true },
       { name: 'co_makers_date', x: 665, y: 728, fontSize: 8 },
 
       { name: 'permanent', x: 100, y: 838, fontSize: 8, checkbox: true },
       { name: 'co-terminus', x: 175, y: 838, fontSize: 8, checkbox: true },
       { name: 'net_pay', x: 150, y: 862.5, fontSize: 8 },
       { name: 'year_of', x: 65, y: 874, fontSize: 8 },
-      { name: 'personnel_signature', x: 190, y: 910, fontSize: 8, isImage: true},
+      {
+        name: 'personnel_signature',
+        x: 190,
+        y: 910,
+        fontSize: 8,
+        isImage: true,
+      },
       { name: 'personnel_designation', x: 205, y: 945, fontSize: 8 },
       { name: 'personnel_date', x: 180, y: 957, fontSize: 8 },
-      { name: 'legal_signature', x: 545, y: 910, fontSize: 8, isImage: true},
+      { name: 'legal_signature', x: 545, y: 910, fontSize: 8, isImage: true },
       { name: 'legal_designation', x: 555, y: 945, fontSize: 8 },
       { name: 'legal_date', x: 530, y: 957, fontSize: 8 },
     ];

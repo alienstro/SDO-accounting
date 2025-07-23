@@ -81,10 +81,17 @@ export class TableComponent {
   }
 
   searchEmployee() {
-    this.rows = this.baseRows;
+    const search = this.searchTerm.trim().toLowerCase();
 
-    if (this.searchTerm) {
-      this.rows = this.rows.filter((item) => item.includes(this.searchTerm));
+    if (search) {
+      this.rows = this.baseRows.filter((row) =>
+        row.some(
+          (cell) =>
+            cell !== null &&
+            cell !== undefined &&
+            cell.toString().toLowerCase().includes(search)
+        )
+      );
     } else {
       this.rows = this.baseRows;
     }

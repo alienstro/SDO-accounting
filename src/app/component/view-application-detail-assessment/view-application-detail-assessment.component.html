@@ -30,10 +30,10 @@
                 <td>Designation</td>
                 <td>{{ this.loanDetails[0].designation }}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td>Contact #</td>
                 <td>-----</td>
-              </tr>
+              </tr> -->
             </table>
           </div>
         </div>
@@ -68,11 +68,27 @@
                       <td>Purpose</td>
                       <td>{{ loanDetails[0].purpose }}</td>
                     </tr>
+                    <tr>
+                      <td>Other Purpose</td>
+                      <td>
+                        {{
+                          loanDetails[0].other_purpose
+                            ? loanDetails[0].other_purpose
+                            : "No Other Purpose"
+                        }}
+                      </td>
+                    </tr>
                   </table>
 
                   <!-- Borrower's Information -->
                   <h3>Borrower's Information</h3>
-                  <table class="details-table">
+                  <table
+                    class="details-table"
+                    *ngIf="
+                      borrowersInformation && borrowersInformation.length > 0;
+                      else noBorrowerInfo
+                    "
+                  >
                     <tr>
                       <td>Employee Number</td>
                       <td>{{ borrowersInformation[0].employee_number }}</td>
@@ -83,6 +99,10 @@
                         {{ borrowersInformation[0].first_name }}
                         {{ borrowersInformation[0].last_name }}
                       </td>
+                    </tr>
+                    <tr>
+                      <td>Employee Position</td>
+                      <td>{{ borrowersInformation[0].position }}</td>
                     </tr>
                     <tr>
                       <td>Mobile No.</td>
@@ -125,65 +145,142 @@
                       <td>{{ borrowersInformation[0].years_in_service }}</td>
                     </tr>
                   </table>
+                  <ng-template #noBorrowerInfo>
+                    <p>No Data Yet</p>
+                  </ng-template>
 
                   <!-- CoMaker's Information -->
                   <h3>CoMaker's Information</h3>
                   <table class="details-table">
                     <tr>
                       <td>Employee Number</td>
-                      <td>{{ coMakersInformation[0].co_employee_number }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_employee_number
+                            ? coMakersInformation[0].co_employee_number
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Employee Name</td>
                       <td>
-                        {{ coMakersInformation[0].co_first_name }}
+                        {{
+                          coMakersInformation[0].co_first_name
+                            ? coMakersInformation[0].co_first_name
+                            : noData
+                        }}
                         {{ coMakersInformation[0].co_last_name }}
                       </td>
                     </tr>
                     <tr>
+                      <td>Employee Position</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].position
+                            ? coMakersInformation[0].position
+                            : noData
+                        }}
+                      </td>
+                    </tr>
+                    <tr>
                       <td>Mobile No.</td>
-                      <td>{{ coMakersInformation[0].co_mobile_number }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_mobile_number
+                            ? coMakersInformation[0].co_mobile_number
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Address</td>
                       <td>
-                        {{ coMakersInformation[0].co_region }},
-                        {{ coMakersInformation[0].co_province }},
-                        {{ coMakersInformation[0].co_street }}
+                        {{
+                          coMakersInformation[0].co_region
+                            ? coMakersInformation[0].co_region +
+                              ", " +
+                              coMakersInformation[0].co_province +
+                              ", " +
+                              coMakersInformation[0].co_street
+                            : noData
+                        }}
                       </td>
                     </tr>
                     <tr>
                       <td>Employment Status</td>
-                      <td>{{ coMakersInformation[0].co_employment_status }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_employment_status
+                            ? coMakersInformation[0].co_employment_status
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Date of Birth</td>
-                      <td>{{ coMakersInformation[0].co_date_of_birth }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_date_of_birth
+                            ? coMakersInformation[0].co_date_of_birth
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Age</td>
-                      <td>{{ coMakersInformation[0].co_age }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_age
+                            ? coMakersInformation[0].co_age
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Office</td>
-                      <td>{{ coMakersInformation[0].co_office }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_office
+                            ? coMakersInformation[0].co_office
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Office Tel No.</td>
-                      <td>{{ coMakersInformation[0].co_office_tel_number }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_office_tel_number
+                            ? coMakersInformation[0].co_office_tel_number
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Monthly Salary</td>
-                      <td>{{ coMakersInformation[0].co_monthly_salary }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_monthly_salary
+                            ? coMakersInformation[0].co_monthly_salary
+                            : noData
+                        }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Years In Service</td>
-                      <td>{{ coMakersInformation[0].co_years_in_service }}</td>
+                      <td>
+                        {{
+                          coMakersInformation[0].co_years_in_service
+                            ? coMakersInformation[0].co_years_in_service
+                            : noData
+                        }}
+                      </td>
                     </tr>
                   </table>
                 </mat-tab>
 
-                <!-- <mat-tab label="Loan Application PDF">
+                <mat-tab label="Loan Application PDF">
                   <div class="pdf-preview-container">
                     <button
                       mat-raised-button
@@ -202,10 +299,11 @@
                         border: 1px solid #ccc;
                         display: block;
                         margin-top: 1rem;
+                        
                       "
                     ></iframe>
                   </div>
-                </mat-tab> -->
+                </mat-tab>
               </mat-tab-group>
             </mat-tab>
 
@@ -246,7 +344,7 @@
           </mat-tab-group>
         </div>
 
-        <div class="buttons" *ngIf="roleId === 3">
+        <div class="buttons" *ngIf="roleId === 1">
           <button
             class="button-action"
             (click)="openEndorse()"
@@ -276,7 +374,7 @@
             class="button-action"
             (click)="openReject()"
             D
-            style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem;"
+            style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem"
           >
             <span>Reject</span>
           </button>
