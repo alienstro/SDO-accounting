@@ -33,7 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class AssessFormComponent {
   isLinear = true;
-  reviewedBy: string = '';
+  // reviewedBy: string = '';
   application_id: number = 0;
   roleId: string = '';
 
@@ -53,10 +53,12 @@ export class AssessFormComponent {
     private applicationService: ApplicationService,
     private router: Router
   ) {
-    this.reviewedBy =
-      this.tokenService.firstNameToken(this.tokenService.decodeToken()) +
-      ' ' +
-      this.tokenService.lastNameToken(this.tokenService.decodeToken());
+    // this.reviewedBy =
+    //   this.tokenService.firstNameToken(this.tokenService.decodeToken()) +
+    //   ' ' +
+    //   this.tokenService.lastNameToken(this.tokenService.decodeToken());
+
+
     this.application_id = data.loan.application_id;
     this.roleId = this.tokenService.userRoleToken(
       this.tokenService.decodeToken()
@@ -76,7 +78,7 @@ export class AssessFormComponent {
       hospitalization: ['', Validators.required],
       medicalAbstract: ['', Validators.required],
       barangayCertificate: ['', Validators.required],
-      reviewedBy: [this.reviewedBy, Validators.required],
+      reviewedBy: ['', Validators.required],
       reviewDate: [
         new Date().toISOString().substring(0, 16),
         Validators.required,
@@ -87,7 +89,7 @@ export class AssessFormComponent {
       signedFilledLaf: ['', Validators.required],
       completeSupportingDocs: ['', Validators.required],
       authorizedSignatureLaf: ['', Validators.required],
-      reviewedBy: [this.reviewedBy, Validators.required],
+      reviewedBy: ['', Validators.required],
       reviewDate: [
         new Date().toISOString().substring(0, 16),
         Validators.required,
@@ -107,7 +109,7 @@ export class AssessFormComponent {
       borrowersTakeHomePay: ['', Validators.required],
       paid30Percent: [''],
       percentageOfPrincipalPaid: [0],
-      reviewedBy: [this.reviewedBy, Validators.required],
+      reviewedBy: ['', Validators.required],
       reviewDate: [
         new Date().toISOString().substring(0, 16),
         Validators.required,
@@ -126,8 +128,8 @@ export class AssessFormComponent {
         new Date().toISOString().substring(0, 16),
         Validators.required,
       ],
-      processedBy: [this.reviewedBy, Validators.required],
-      reviewedBy: [this.reviewedBy, Validators.required],
+      processedBy: ['', Validators.required],
+      reviewedBy: ['', Validators.required],
       remarks: [''],
     });
   }

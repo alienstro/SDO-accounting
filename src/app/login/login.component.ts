@@ -53,7 +53,7 @@ export class LoginComponent {
         ));
 
         console.log('roleId accounting page: ', roleId);
-        if (roleId === 6 || roleId === 1) {
+        if (roleId === 5 || roleId === 1) {
           this.router.navigate(['/application']);
         } else {
           this.errMessage = 'No Access';

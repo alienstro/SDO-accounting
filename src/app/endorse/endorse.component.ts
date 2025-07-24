@@ -122,10 +122,14 @@ export class EndorseComponent {
       department_id: department_id,
       staff_id: staff_id,
     };
+    
+    console.log(data);
+
+    // return;
 
     this.applicationService.getLoanAssessment(this.application_id).subscribe({
       next: (loanAssessment) => {
-        if (departmentId === 2) {
+        if (departmentId === 5) {
           console.log('Accounting');
           this.requestService.updateApprovalAccounting(data).subscribe({
             next: (res) => {
@@ -163,7 +167,7 @@ export class EndorseComponent {
               );
             },
           });
-        } else if (departmentId === 3) {
+        } else if (departmentId === 1) {
           console.log('Secretariat');
           if (loanAssessment && loanAssessment.length > 0) {
             this.requestService.updateApprovalSecretariat(data).subscribe({

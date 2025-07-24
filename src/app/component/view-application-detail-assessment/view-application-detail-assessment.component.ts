@@ -496,7 +496,7 @@ export class ViewApplicationDetailComponentAssessment {
       { name: 'pesos_number', x: 280, y: 584, fontSize: 8 },
       { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true },
       { name: 'borrower_date', x: 310, y: 726, fontSize: 8 },
-      { name: 'co_makers_signature', x: 440, y: 715, fontSize: 8 },
+      { name: 'co_makers_signature', x: 440, y: 715, fontSize: 8, isImage: true },
       { name: 'co_makers_date', x: 665, y: 728, fontSize: 8 },
 
       { name: 'permanent', x: 100, y: 838, fontSize: 8, checkbox: true },
