@@ -13,7 +13,7 @@
     @for (item of header; track $index) {
     <th>{{ item }}</th>
     } @if(router.url === "/forward" || router.url === "/payment" || router.url
-    === "/assessment" || router.url === "/application") {
+    === "/assessment" || router.url === "/application" || router.url === "/paid") {
     <th>Action</th>
     }
   </tr>
@@ -28,7 +28,7 @@
         }}
       </td>
       } @if(router.url === "/forward" || router.url === "/assessment" ||
-      router.url === "/application") {
+      router.url === "/application" || router.url === "/paid") {
       <td>
         <button (click)="navigateRoute(row[0], row[0])" class="button-action">
           <img src="../../../assets/previewpane.svg" alt="eye button icon" />

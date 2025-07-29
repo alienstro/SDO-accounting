@@ -58,11 +58,11 @@ export class ApplicationService {
     private snackbarService: SnackbarService,
     private http: HttpClient
   ) {
-    forkJoin({
-      application: this.getApplication(),
-    }).subscribe(({ application }) => {
-      this._applications.next(application);
-    });
+    // forkJoin({
+    //   application: this.getApplication(),
+    // }).subscribe(({ application }) => {
+    //   this._applications.next(application);
+    // });
     // this.initApplication()
     // this.initPaidApplication()
   }
@@ -92,7 +92,7 @@ export class ApplicationService {
   getLoanAssessment(applicationId: number): Observable<AssessmentForm[]> {
     return this.http.get<AssessmentForm[]>(
       `${this.apiLoanApplication}/getAssessmentDetailsById/${applicationId}`
-    )
+    );
   }
 
   getDepartmentStatusById(
@@ -180,6 +180,14 @@ export class ApplicationService {
   getLoanDetailsById(applicationId: number): Observable<any[]> {
     return this.http.get<any[]>(
       `${this.apiLoanApplication}/getLoanDetailsById/${applicationId}`
+    );
+  }
+
+  getSignatureDetailsByApplicationId(
+    application_id: number
+  ): Observable<SignatureDetails[]> {
+    return this.http.get<SignatureDetails[]>(
+      `${this.apiLoanApplication}/getSignatureDetailsApplicationId/${application_id}`
     );
   }
 

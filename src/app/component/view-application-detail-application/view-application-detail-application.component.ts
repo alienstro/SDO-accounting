@@ -5,6 +5,7 @@ import {
   BorrowersInformation,
   CoMakersInformation,
   LoanDetails,
+  SignatureDetails,
 } from '../../interface';
 import { NavigationEnd, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,11 +20,12 @@ import { AssessFormComponent } from '../../assess-form/assess-form.component';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import { HttpClient } from '@angular/common/http';
 import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-view-application-detail-application',
   standalone: true,
-  imports: [MatTabsModule, CommonModule, MatTabsModule, MatButton],
+  imports: [MatTabsModule, CommonModule, MatTabsModule, MatButton, MatIcon],
   templateUrl: './view-application-detail-application.component.html',
   styleUrl: './view-application-detail-application.component.css',
 })
@@ -31,19 +33,24 @@ export class ViewApplicationDetailComponentApplication {
   @ViewChild('pdfPreview', { static: false })
   pdfPreview!: ElementRef<HTMLIFrameElement>;
 
-  private formPdfBytes: ArrayBuffer | null = null;
+  @ViewChild('pdfPreviewAssessment', { static: false })
+  pdfPreviewAssessment!: ElementRef<HTMLIFrameElement>;
+
+  private formPdfBytesLoan: ArrayBuffer | null = null;
+  private formPdfBytesAssessment: ArrayBuffer | null = null;
 
   application_id!: any;
   applicant_id!: any;
 
   currentUrl = '';
-  noData: string = 'No Data Yet'
+  noData: string = 'No Data Yet';
 
   loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
   coMakersInformation: CoMakersInformation[] = [{} as CoMakersInformation];
   assessmentDetails: Assessment[] = [{} as Assessment];
   applicantDetails: Applicant[] = [{} as Applicant];
+  signatureDetails: SignatureDetails[] = [{} as SignatureDetails];
 
   constructor(
     private router: Router,
@@ -57,7 +64,13 @@ export class ViewApplicationDetailComponentApplication {
       .get('../../../assets/Provident-Loan-Form_New-Template-2025-1.pdf', {
         responseType: 'arraybuffer',
       })
-      .subscribe((bytes) => (this.formPdfBytes = bytes));
+      .subscribe((bytes) => (this.formPdfBytesLoan = bytes));
+
+    this.http
+      .get('../../../assets/Provident-Loan-Form_New-Template-2025-2.pdf', {
+        responseType: 'arraybuffer',
+      })
+      .subscribe((bytes) => (this.formPdfBytesAssessment = bytes));
   }
 
   formatDateToLong(dateString: string): string {
@@ -141,13 +154,389 @@ export class ViewApplicationDetailComponentApplication {
       .toUpperCase();
   }
 
-  async generateAndPreviewPdf() {
-    if (!this.formPdfBytes) {
+  async generateAndPreviewPdfAssessment() {
+    console.log('working assessment button');
+
+    if (!this.formPdfBytesAssessment) {
       console.error('PDF template not loaded yet.');
       return;
     }
 
-    const pdfDoc = await PDFDocument.load(this.formPdfBytes);
+    const pdfDoc = await PDFDocument.load(this.formPdfBytesAssessment);
+    const page = pdfDoc.getPages()[0];
+    const { width, height } = page.getSize();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    // Embed images first - make sure to await and handle null values
+    const d_reviewed_signature = this.signatureDetails[0]?.signature_admin;
+
+    const dReviewedSignatureImage = d_reviewed_signature
+      ? await this.convertBase64ToImage(pdfDoc, d_reviewed_signature)
+      : null;
+
+    // Prepare assessment data only
+    const data = {
+      // Documents Submitted: (Two copies of each)
+      loan_application_form:
+        this.assessmentDetails[0]?.loan_application_form === 'Yes',
+      authorization_to_deduct:
+        this.assessmentDetails[0]?.authorization_to_deduct === 'Yes',
+      latest_pay_slip: this.assessmentDetails[0]?.latest_pay_slip === 'Yes',
+      photocopy_of_id: this.assessmentDetails[0]?.photocopy_deped_id === 'Yes',
+      approved_appointment:
+        this.assessmentDetails[0]?.approved_appointment === 'Yes',
+      document_showing_proof:
+        this.assessmentDetails[0]?.proof_co_terminus === 'Yes',
+      other_specify: !!this.assessmentDetails[0]?.others,
+      other_specify_text: this.assessmentDetails[0]?.others,
+      additional_documents:
+        !!this.assessmentDetails[0]?.additional_documents ||
+        !!this.assessmentDetails[0]?.letter_of_request ||
+        !!this.assessmentDetails[0]?.hospitalization ||
+        !!this.assessmentDetails[0]?.medical_abstract ||
+        !!this.assessmentDetails[0]?.barangay,
+      letter_request: this.assessmentDetails[0]?.letter_of_request === 'Yes',
+      hospitalization: this.assessmentDetails[0]?.hospitalization === 'Yes',
+      medical_abstract: this.assessmentDetails[0]?.medical_abstract === 'Yes',
+      barangay_certificate: this.assessmentDetails[0]?.barangay === 'Yes',
+      d_reviewed_by: [
+        this.signatureDetails[0]?.admin_first_name ?? '',
+        this.signatureDetails[0]?.admin_middle_name ?? '',
+        this.signatureDetails[0]?.admin_last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+      d_reviewed_designation: this.signatureDetails[0]?.admin_designation,
+      d_reviewed_signature: dReviewedSignatureImage,
+      d_date_reviewed: this.signatureDetails[0]?.admin_date
+        ? new Date(this.signatureDetails[0].admin_date).toLocaleDateString(
+            'en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }
+          )
+        : '',
+
+      // Completeness and Veracity of Submitted Documents
+      signed_and_complete:
+        this.assessmentDetails[0]?.signed_filled_laf === 'Yes',
+      complete_supporting_documents:
+        this.assessmentDetails[0]?.complete_supporting_documents === 'Yes',
+      signatures_on_laf:
+        this.assessmentDetails[0]?.authorized_signature_laf === 'Yes',
+      c_reviewed_by: [
+        this.signatureDetails[0]?.admin_first_name ?? '',
+        this.signatureDetails[0]?.admin_middle_name ?? '',
+        this.signatureDetails[0]?.admin_last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+      c_reviewed_designation: this.signatureDetails[0]?.admin_designation,
+      c_reviewed_signature: dReviewedSignatureImage,
+      c_date_reviewed: this.signatureDetails[0]?.admin_date
+        ? new Date(this.signatureDetails[0].admin_date).toLocaleDateString(
+            'en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }
+          )
+        : '',
+
+      // Eligibility of the Borrower and Co-Maker
+      borrower_will_not:
+        this.assessmentDetails[0]?.borrower_reaches_retirement === 'Yes',
+      borrower_age: this.assessmentDetails[0]?.borrowers_age,
+      co_maker_will_not:
+        this.assessmentDetails[0]?.comakers_reaches_retirement === 'Yes',
+      co_maker_age: this.assessmentDetails[0]?.comakers_age,
+      borrower_has_outstanding:
+        this.assessmentDetails[0]?.borrowers_has_outstanding_balance === 'Yes',
+      current_loan: !!this.assessmentDetails[0]?.current_loan_balance,
+      current_loan_balance: this.assessmentDetails[0]?.current_loan_balance,
+      past_due: !!this.assessmentDetails[0]?.past_due_loan,
+      past_due_loans: this.assessmentDetails[0]?.past_due_loan,
+      no_of_years_months:
+        this.assessmentDetails[0]?.number_of_years_past_due > 0 ||
+        this.assessmentDetails[0]?.number_of_months_past_due > 0,
+      no_of_years_text: this.assessmentDetails[0]?.number_of_years_past_due,
+      no_of_months_text: this.assessmentDetails[0]?.number_of_months_past_due,
+      borrower_net:
+        this.assessmentDetails[0]?.borrowers_take_home_pay === 'Yes',
+      for_renewal: this.assessmentDetails[0]?.paid_30_percent === 'Yes',
+      percentage_of_principal:
+        this.assessmentDetails[0]?.percentage_of_principal_paid,
+
+      // Computation of Loan
+      principal_amount: this.assessmentDetails[0]?.principal_loan_amount,
+      outstanding_principal: this.assessmentDetails[0]?.principal,
+      outstanding_interest: this.assessmentDetails[0]?.interest,
+      net_proceeds: this.assessmentDetails[0]?.net_proceeds,
+      net_take_home_pay:
+        this.assessmentDetails[0]?.net_take_home_pay_after_deduction,
+      monthly_amortization: this.assessmentDetails[0]?.monthly_amortization,
+      period_of_loan: this.assessmentDetails[0]?.period_of_loan,
+      date_processed: this.assessmentDetails[0]?.computation_date_processed,
+      remarks: this.assessmentDetails[0]?.remarks,
+    };
+
+    const fields = [
+      {
+        name: 'loan_application_form',
+        x: 144.7,
+        y: 222,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'authorization_to_deduct',
+        x: 144.7,
+        y: 233,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'latest_pay_slip',
+        x: 144.7,
+        y: 244.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'photocopy_of_id',
+        x: 144.7,
+        y: 255.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'approved_appointment',
+        x: 144.7,
+        y: 266.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'document_showing_proof',
+        x: 144.7,
+        y: 289,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'other_specify',
+        x: 144.7,
+        y: 322.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'other_specify_text', x: 235, y: 322.5, fontSize: 8 },
+      {
+        name: 'additional_documents',
+        x: 485,
+        y: 222,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'letter_request', x: 510.4, y: 233, fontSize: 8, checkbox: true },
+      {
+        name: 'hospitalization',
+        x: 510.4,
+        y: 244.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'medical_abstract',
+        x: 510.4,
+        y: 255,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'barangay_certificate',
+        x: 510.4,
+        y: 266.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'd_reviewed_by', x: 525, y: 323, fontSize: 8 },
+      { name: 'd_reviewed_designation', x: 530, y: 331, fontSize: 8 },
+      {
+        name: 'd_reviewed_signature',
+        x: 525,
+        y: 308,
+        fontSize: 8,
+        isImage: true,
+      },
+      { name: 'd_date_reviewed', x: 620, y: 328, fontSize: 8 },
+
+      // completeness and veracity of documents
+      {
+        name: 'signed_and_complete',
+        x: 144.7,
+        y: 376.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'complete_supporting_documents',
+        x: 144.7,
+        y: 387.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      {
+        name: 'signatures_on_laf',
+        x: 144.7,
+        y: 409.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'c_reviewed_by', x: 525, y: 415, fontSize: 8 },
+      { name: 'c_reviewed_designation', x: 530, y: 423, fontSize: 8 },
+      {
+        name: 'c_reviewed_signature',
+        x: 525,
+        y: 398,
+        fontSize: 8,
+        isImage: true,
+      },
+      { name: 'c_date_reviewed', x: 620, y: 418, fontSize: 8 },
+
+      // Eligibility of the Borrower and Co-Maker
+      {
+        name: 'borrower_will_not',
+        x: 145.3,
+        y: 460.5,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'borrower_age', x: 665, y: 460, fontSize: 8 },
+      {
+        name: 'co_maker_will_not',
+        x: 145.3,
+        y: 471.8,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'co_maker_age', x: 665, y: 471.8, fontSize: 8 },
+      {
+        name: 'borrower_has_outstanding',
+        x: 145.3,
+        y: 482.8,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'current_loan', x: 168.5, y: 494, fontSize: 8, checkbox: true },
+      { name: 'current_loan_balance', x: 340, y: 494.5, fontSize: 8 },
+      { name: 'past_due', x: 168.5, y: 505, fontSize: 8, checkbox: true },
+      { name: 'past_due_loans', x: 340, y: 507, fontSize: 8 },
+      {
+        name: 'no_of_years_months',
+        x: 192.5,
+        y: 516.7,
+        fontSize: 8,
+        checkbox: true,
+      },
+      { name: 'no_of_years_text', x: 391, y: 518, fontSize: 8 },
+      { name: 'no_of_months_text', x: 501, y: 518, fontSize: 8 },
+      { name: 'borrower_net', x: 144.3, y: 527.5, fontSize: 8, checkbox: true },
+      { name: 'for_renewal', x: 145.3, y: 549.7, fontSize: 8, checkbox: true },
+      { name: 'percentage_of_principal', x: 301, y: 564, fontSize: 8 },
+      { name: 'c_date_reviewed', x: 620, y: 593, fontSize: 8 },
+
+      // Computation of Loan
+      { name: 'principal_amount', x: 293, y: 637, fontSize: 8 },
+      { name: 'outstanding_principal', x: 207, y: 659, fontSize: 8 },
+      { name: 'outstanding_interest', x: 207, y: 670, fontSize: 8 },
+      { name: 'net_proceeds', x: 307, y: 682, fontSize: 8 },
+
+      { name: 'net_take_home_pay', x: 640, y: 636, fontSize: 8 },
+      { name: 'monthly_amortization', x: 640, y: 648, fontSize: 8 },
+      { name: 'period_of_loan', x: 640, y: 659, fontSize: 8 },
+
+      { name: 'date_processed', x: 485, y: 681, fontSize: 8 },
+      { name: 'remarks', x: 415, y: 715, fontSize: 8 },
+
+      // Action Taken
+      { name: 'approved', x: 438, y: 857, fontSize: 8, checkbox: true },
+      { name: 'disapproved', x: 438, y: 868, fontSize: 8, checkbox: true },
+
+      { name: 'head_signature_date', x: 188, y: 915, fontSize: 8 },
+      { name: 'chairperson_signature_date', x: 538, y: 955.8, fontSize: 8 },
+    ];
+
+    const scaleX = width / 800;
+    const scaleY = height / 1100;
+
+    fields.forEach((f) => {
+      let val = (data as any)[f.name];
+
+      // HANDLE IMAGE EMBEDDING FOR SIGNATURE AND ADJUST HEIGHT AND WIDTH
+      if (f.isImage && val) {
+        const xPt = f.x * scaleX;
+        const yPt = height - f.y * scaleY - 20;
+
+        if (typeof val !== 'object' || typeof val.embed !== 'function') {
+          console.warn(`Expected PDFImage for ${f.name}, but got`, val);
+          return;
+        }
+
+        page.drawImage(val, {
+          x: xPt,
+          y: yPt,
+          width: 80 * 0.8,
+          height: 30 * 0.8,
+        });
+        return;
+      }
+
+      if (f.checkbox) {
+        if (!val) return;
+        val = 'X';
+      } else {
+        if (!val) return;
+      }
+
+      const xPt = f.x * scaleX;
+      const yPt = height - f.y * scaleY - f.fontSize * scaleY;
+
+      const useBold = [
+        'c_reviewed_by',
+        'c_reviewed_designation',
+        'd_reviewed_by',
+        'd_reviewed_designation',
+      ].includes(f.name);
+
+      page.drawText(val.toString(), {
+        x: xPt,
+        y: yPt,
+        size: f.fontSize * scaleY,
+        font: useBold ? boldFont : font,
+      });
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const buffer = pdfBytes.buffer as ArrayBuffer;
+    const blob = new Blob([buffer], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    // set iframe source
+    this.pdfPreviewAssessment.nativeElement.src = url;
+  }
+
+  async generateAndPreviewPdf() {
+    if (!this.formPdfBytesLoan) {
+      console.error('PDF template not loaded yet.');
+      return;
+    }
+
+    const pdfDoc = await PDFDocument.load(this.formPdfBytesLoan);
     const page = pdfDoc.getPages()[0];
     const { width, height } = page.getSize();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -416,7 +805,13 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'pesos_number', x: 280, y: 584, fontSize: 8 },
       { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true },
       { name: 'borrower_date', x: 310, y: 726, fontSize: 8 },
-      { name: 'co_makers_signature', x: 440, y: 715, fontSize: 8, isImage: true },
+      {
+        name: 'co_makers_signature',
+        x: 440,
+        y: 715,
+        fontSize: 8,
+        isImage: true,
+      },
       { name: 'co_makers_date', x: 665, y: 728, fontSize: 8 },
 
       { name: 'permanent', x: 100, y: 838, fontSize: 8, checkbox: true },
@@ -604,6 +999,31 @@ export class ViewApplicationDetailComponentApplication {
             this.coMakersInformation = Array.isArray(comakers)
               ? comakers
               : [comakers];
+          });
+
+        this.applicationService
+          .getAssessmentDetailsById(this.application_id)
+          .subscribe((assessment) => {
+            this.assessmentDetails = Array.isArray(assessment)
+              ? assessment
+              : [assessment];
+            console.log(assessment);
+          });
+
+        this.applicationService
+          .getLoanApplicantById(this.applicant_id)
+          .subscribe((applicant) => {
+            this.applicantDetails = Array.isArray(applicant)
+              ? applicant
+              : [applicant];
+          });
+
+        this.applicationService
+          .getSignatureDetailsByApplicationId(this.application_id)
+          .subscribe((signature) => {
+            this.signatureDetails = Array.isArray(signature)
+              ? signature
+              : [signature];
           });
 
         console.log(this.assessmentDetails[0]);

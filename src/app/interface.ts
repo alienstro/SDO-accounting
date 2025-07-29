@@ -346,6 +346,7 @@ export interface Staff {
 
 export interface Assessment {
   assessment_id: number;
+  application_id: number;
   loan_application_form: string;
   authorization_to_deduct: string;
   latest_pay_slip: string;
@@ -353,25 +354,40 @@ export interface Assessment {
   approved_appointment: string;
   proof_co_terminus: string;
   others: string;
+  others_text: string;
+  additional_documents: string;
   letter_of_request: string;
   hospitalization: string;
   medical_abstract: string;
   barangay: string;
+  documents_reviewed_by: string;
+  documents_date_processed: Date;
+
+  // 
   signed_filled_laf: string;
   complete_supporting_documents: string;
   authorized_signature_laf: string;
+  completeness_reviewed_by: string;
+  completeness_date_processed: Date;
+
+  //
   borrower_reaches_retirement: string;
   borrowers_age: number;
   comakers_reaches_retirement: string;
   comakers_age: number;
   borrowers_has_outstanding_balance: string;
+  current_loan: string;
   current_loan_balance: number;
+  past_due: string;
   past_due_loan: number;
   number_of_years_past_due: number;
   number_of_months_past_due: number;
   borrowers_take_home_pay: string;
   paid_30_percent: string;
   percentage_of_principal_paid: number;
+  eligibility_date_processed: Date;
+
+  //
   principal_loan_amount: number;
   principal: number;
   interest: number;
@@ -379,24 +395,82 @@ export interface Assessment {
   net_take_home_pay_after_deduction: number;
   monthly_amortization: number;
   period_of_loan: number;
-  date_processed: Date;
-  processed_by: string;
-  reviewed_by: string;
+  computation_date_processed: Date;
   remarks: string;
-  application_id: number;
 }
 
 export interface SignatureDetails {
-  signature_id: number;
-  application_id: number;
-  staff_id_hr: number;
-  staff_id_admin: number;
-  staff_id_legal: number;
-  signature_hr: string;
-  signature_admin: string;
-  signature_legal: string;
-  date_submitted: Date;
+    signature_id: number;
+    application_id: number;
+    staff_id_accounting: number;
+    staff_id_secretariat: number;
+    staff_id_hr: number;
+    staff_id_admin: number;
+    staff_id_legal: number;
+    staff_id_asds: number;
+    staff_id_sds: number;
+    signature_accounting: string;
+    signature_secretariat: string;
+    signature_hr: string;
+    signature_admin: string;
+    signature_legal: string;
+    signature_asds: string;
+    signature_sds: string;
+
+    // Add date columns for each signature
+    accounting_date?: Date;
+    secretariat_date?: Date;
+    hr_date?: Date;
+    legal_date?: Date;
+    admin_date?: Date;
+    asds_date?: Date;
+    sds_date?: Date;
+    date_submitted: Date;
+
+    // Staff names and designation for each role
+    accounting_first_name?: string;
+    accounting_middle_name?: string;
+    accounting_last_name?: string;
+    accounting_ext_name?: string;
+    accounting_designation?: string;
+
+    secretariat_first_name?: string;
+    secretariat_middle_name?: string;
+    secretariat_last_name?: string;
+    secretariat_ext_name?: string;
+    secretariat_designation?: string;
+
+    hr_first_name?: string;
+    hr_middle_name?: string;
+    hr_last_name?: string;
+    hr_ext_name?: string;
+    hr_designation?: string;
+
+    admin_first_name?: string;
+    admin_middle_name?: string;
+    admin_last_name?: string;
+    admin_ext_name?: string;
+    admin_designation?: string;
+
+    legal_first_name?: string;
+    legal_middle_name?: string;
+    legal_last_name?: string;
+    legal_ext_name?: string;
+    legal_designation?: string;
+
+    asds_first_name?: string;
+    asds_middle_name?: string;
+    asds_last_name?: string;
+    asds_ext_name?: string;
+    asds_designation?: string;
+
+    sds_first_name?: string;
+    sds_middle_name?: string;
+    sds_last_name?: string;
+    sds_ext_name?: string;
+    sds_designation?: string;
 }
+
 
 export interface ApprovalDetails {
   approval_id: number;
