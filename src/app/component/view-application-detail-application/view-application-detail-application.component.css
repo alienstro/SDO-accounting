@@ -100,19 +100,9 @@
   font-weight: 600;
   background-color: #f2f2f2;
   color: #333;
-  width: 20rem; /* 👈 Set your fixed width here */
-  white-space: normal; /* Allows wrapping if needed */
+  width: 20rem;
+  white-space: normal; 
 }
-
-.profile-table td:first-child {
-  font-weight: 600;
-  background-color: #f2f2f2;
-  color: #333;
-  width: 10rem; /* 👈 Set your fixed width here */
-
-  white-space: normal; /* Allows wrapping if needed */
-}
-
 
 .details-table td:nth-child(2) {
   background-color: #f9f9f9;

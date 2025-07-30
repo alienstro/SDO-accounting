@@ -544,7 +544,7 @@
                   <table class="details-table">
                     <tr>
                       <th>Eligibility Criteria</th>
-                      <th>Status</th>
+                      <th></th>
                       <th>Age</th>
                     </tr>
                     <tr>
@@ -650,7 +650,9 @@
                     </tr>
                     <tr>
                       <td>Remarks</td>
-                      <td>{{ assessmentDetails[0].remarks }}</td>
+                      <td style="white-space: normal; word-break: break-word">
+                        {{ assessmentDetails[0].remarks }}
+                      </td>
                     </tr>
                   </table>
                 </mat-tab>

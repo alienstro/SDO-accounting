@@ -154,6 +154,23 @@ export class ViewApplicationDetailComponentApplication {
       .toUpperCase();
   }
 
+  wrapText(text: string, maxLength: number): string[] {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let currentLine = '';
+
+  words.forEach(word => {
+    if ((currentLine + word).length > maxLength) {
+      lines.push(currentLine.trim());
+      currentLine = word + ' ';
+    } else {
+      currentLine += word + ' ';
+    }
+  });
+  if (currentLine) lines.push(currentLine.trim());
+  return lines;
+}
+
   async generateAndPreviewPdfAssessment() {
     console.log('working assessment button');
 
@@ -473,7 +490,7 @@ export class ViewApplicationDetailComponentApplication {
 
     const scaleX = width / 800;
     const scaleY = height / 1100;
-
+    
     fields.forEach((f) => {
       let val = (data as any)[f.name];
 
@@ -504,7 +521,21 @@ export class ViewApplicationDetailComponentApplication {
       }
 
       const xPt = f.x * scaleX;
-      const yPt = height - f.y * scaleY - f.fontSize * scaleY;
+      let yPt = height - f.y * scaleY - f.fontSize * scaleY;
+
+      // Handle remarks with new lines
+      if (f.name === 'remarks' && val) {
+        const lines = this.wrapText(val.toString(), 80);
+        lines.forEach((line, i) => {
+          page.drawText(line, {
+            x: xPt,
+            y: yPt - (i * (f.fontSize + 0.7)), // 2 is line spacing
+            size: f.fontSize * scaleY,
+            font,
+          });
+        });
+        return;
+      }
 
       const useBold = [
         'c_reviewed_by',
@@ -1030,3 +1061,4 @@ export class ViewApplicationDetailComponentApplication {
       });
   }
 }
+
