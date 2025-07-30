@@ -155,22 +155,23 @@ export class ViewApplicationDetailComponentApplication {
   }
 
   wrapText(text: string, maxLength: number): string[] {
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let currentLine = '';
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
 
-  words.forEach(word => {
-    if ((currentLine + word).length > maxLength) {
-      lines.push(currentLine.trim());
-      currentLine = word + ' ';
-    } else {
-      currentLine += word + ' ';
-    }
-  });
-  if (currentLine) lines.push(currentLine.trim());
-  return lines;
-}
+    words.forEach((word) => {
+      if ((currentLine + word).length > maxLength) {
+        lines.push(currentLine.trim());
+        currentLine = word + ' ';
+      } else {
+        currentLine += word + ' ';
+      }
+    });
+    if (currentLine) lines.push(currentLine.trim());
+    return lines;
+  }
 
+  // For Assessment Form
   async generateAndPreviewPdfAssessment() {
     console.log('working assessment button');
 
@@ -490,7 +491,7 @@ export class ViewApplicationDetailComponentApplication {
 
     const scaleX = width / 800;
     const scaleY = height / 1100;
-    
+
     fields.forEach((f) => {
       let val = (data as any)[f.name];
 
@@ -521,27 +522,14 @@ export class ViewApplicationDetailComponentApplication {
       }
 
       const xPt = f.x * scaleX;
-      let yPt = height - f.y * scaleY - f.fontSize * scaleY;
+      const yPt = height - f.y * scaleY - f.fontSize * scaleY;
 
-      // Handle remarks with new lines
-      if (f.name === 'remarks' && val) {
-        const lines = this.wrapText(val.toString(), 80);
-        lines.forEach((line, i) => {
-          page.drawText(line, {
-            x: xPt,
-            y: yPt - (i * (f.fontSize + 0.7)), // 2 is line spacing
-            size: f.fontSize * scaleY,
-            font,
-          });
-        });
-        return;
-      }
-
+      // Add bold styling for specific fields
       const useBold = [
-        'c_reviewed_by',
-        'c_reviewed_designation',
-        'd_reviewed_by',
-        'd_reviewed_designation',
+        'borrower_name',
+        'co_makers_name',
+        'legal_name',
+        'personnel_name',
       ].includes(f.name);
 
       page.drawText(val.toString(), {
@@ -561,6 +549,7 @@ export class ViewApplicationDetailComponentApplication {
     this.pdfPreviewAssessment.nativeElement.src = url;
   }
 
+  // For Loan Application Form
   async generateAndPreviewPdf() {
     if (!this.formPdfBytesLoan) {
       console.error('PDF template not loaded yet.');
@@ -571,16 +560,25 @@ export class ViewApplicationDetailComponentApplication {
     const page = pdfDoc.getPages()[0];
     const { width, height } = page.getSize();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
     // Embed images first - make sure to await and handle null values
     const borrowerSignature = this.borrowersInformation[0]?.signature;
     const coMakerSignature = this.coMakersInformation[0]?.co_signature;
+    const hrSignature = this.signatureDetails[0]?.signature_hr;
+    const legalSignature = this.signatureDetails[0]?.signature_legal;
 
     const borrowerSignatureImage = borrowerSignature
       ? await this.convertBase64ToImage(pdfDoc, borrowerSignature)
       : null;
     const coMakerSignatureImage = coMakerSignature
       ? await this.convertBase64ToImage(pdfDoc, coMakerSignature)
+      : null;
+    const hrSignatureImage = hrSignature
+      ? await this.convertBase64ToImage(pdfDoc, hrSignature)
+      : null;
+    const legalSignatureImage = legalSignature
+      ? await this.convertBase64ToImage(pdfDoc, legalSignature)
       : null;
 
     const data = {
@@ -671,17 +669,40 @@ export class ViewApplicationDetailComponentApplication {
       pesos_word: this.numberToWords(this.loanDetails[0].loan_amount),
       pesos_number: this.loanDetails[0].loan_amount,
       borrower_signature: borrowerSignatureImage,
+      borrower_name: [
+        this.borrowersInformation[0]?.first_name ?? '',
+        this.borrowersInformation[0]?.middle_initial ?? '',
+        this.borrowersInformation[0]?.last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
       borrower_date: this.formatDateToLong(
         this.borrowersInformation[0]?.date.toString()
       ),
       co_makers_signature: coMakerSignatureImage,
+      co_makers_name: [
+        this.coMakersInformation[0]?.co_first_name ?? '',
+        this.coMakersInformation[0]?.co_middle_initial ?? '',
+        this.coMakersInformation[0]?.co_last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
       co_makers_date: this.coMakersInformation[0]?.co_date
         ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString())
         : 'No Date Yet',
 
-      personnel_signature: 'PLACEHOLDER',
-      personnel_designation: 'PLACEHOLDER',
-      personnel_date: 'PLACEHOLDER',
+      personnel_signature: hrSignatureImage,
+      personnel_name: [
+        this.signatureDetails[0]?.hr_first_name ?? '',
+        this.signatureDetails[0]?.hr_middle_name ?? '',
+        this.signatureDetails[0]?.hr_last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+      personnel_designation: this.signatureDetails[0]?.hr_designation,
+      personnel_date: this.signatureDetails[0]?.hr_date
+        ? this.formatDateToLong(this.signatureDetails[0]?.hr_date.toString())
+        : 'No Date Yet',
       permanent:
         this.borrowersInformation[0].employment_status.includes('Permanent'),
       co_terminus:
@@ -689,9 +710,18 @@ export class ViewApplicationDetailComponentApplication {
       net_pay: 'PLACEHOLDER',
       year_of: 'PLACEHOLDER',
 
-      legal_signature: 'PLACEHOLDER',
-      legal_designation: 'PLACEHOLDER',
-      legal_date: 'PLACEHOLDER',
+      legal_signature: legalSignatureImage,
+      legal_name: [
+        this.signatureDetails[0]?.legal_first_name ?? '',
+        this.signatureDetails[0]?.legal_middle_name ?? '',
+        this.signatureDetails[0]?.legal_last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+      legal_designation: this.signatureDetails[0]?.legal_designation,
+      legal_date: this.signatureDetails[0]?.legal_date
+        ? this.formatDateToLong(this.signatureDetails[0]?.legal_date.toString())
+        : 'No Date Yet',
     };
 
     const fields = [
@@ -835,6 +865,7 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'pesos_word', x: 65, y: 584, fontSize: 8 },
       { name: 'pesos_number', x: 280, y: 584, fontSize: 8 },
       { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true },
+      { name: 'borrower_name', x: 95, y: 727, fontSize: 8 },
       { name: 'borrower_date', x: 310, y: 726, fontSize: 8 },
       {
         name: 'co_makers_signature',
@@ -842,6 +873,12 @@ export class ViewApplicationDetailComponentApplication {
         y: 715,
         fontSize: 8,
         isImage: true,
+      },
+      {
+        name: 'co_makers_name',
+        x: 445,
+        y: 728,
+        fontSize: 8,
       },
       { name: 'co_makers_date', x: 665, y: 728, fontSize: 8 },
 
@@ -856,9 +893,11 @@ export class ViewApplicationDetailComponentApplication {
         fontSize: 8,
         isImage: true,
       },
+      { name: 'personnel_name', x: 210, y: 923, fontSize: 8 },
       { name: 'personnel_designation', x: 205, y: 945, fontSize: 8 },
       { name: 'personnel_date', x: 180, y: 957, fontSize: 8 },
       { name: 'legal_signature', x: 545, y: 910, fontSize: 8, isImage: true },
+      { name: 'legal_name', x: 560, y: 923, fontSize: 8 },
       { name: 'legal_designation', x: 555, y: 945, fontSize: 8 },
       { name: 'legal_date', x: 530, y: 957, fontSize: 8 },
     ];
@@ -898,11 +937,18 @@ export class ViewApplicationDetailComponentApplication {
       const xPt = f.x * scaleX;
       const yPt = height - f.y * scaleY - f.fontSize * scaleY;
 
+      const useBold = [
+        'borrower_name',
+        'co_makers_name',
+        'legal_name',
+        'personnel_name',
+      ].includes(f.name);
+
       page.drawText(val.toString(), {
         x: xPt,
         y: yPt,
         size: f.fontSize * scaleY,
-        font,
+        font: useBold ? boldFont : font,
       });
     });
 
@@ -1061,4 +1107,3 @@ export class ViewApplicationDetailComponentApplication {
       });
   }
 }
-

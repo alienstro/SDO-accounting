@@ -93,20 +93,29 @@
   border: 1px solid #ccc;
   padding: 0.5rem;
   font-size: 0.8rem;
-  white-space: nowrap;
 }
 
-.details-table td:first-child {
+.details-table tr td:first-child,
+.details-table tr th:first-child {
   font-weight: 600;
   background-color: #f2f2f2;
   color: #333;
-  width: 20rem;
-  white-space: normal; 
+  width: 24rem !important;
+  min-width: 24rem !important;
+  max-width: 24rem !important;
+  white-space: normal;
+}
+
+.details-table th {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .details-table td:nth-child(2) {
   background-color: #f9f9f9;
-  width: 100rem;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .buttons {
