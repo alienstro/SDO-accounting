@@ -188,9 +188,36 @@ export class ViewApplicationDetailComponentApplication {
 
     // Embed images first - make sure to await and handle null values
     const d_reviewed_signature = this.signatureDetails[0]?.signature_admin;
+    const b_reviewed_signature = this.signatureDetails[0]?.signature_accounting;
+    const a_reviewed_signature = this.signatureDetails[0]?.signature_asds;
+    const a_processed_signature =
+      this.signatureDetails[0]?.signature_accounting;
+    const recommending_signature_asds =
+      this.signatureDetails[0]?.signature_asds;
+    const recommending_signature_sds = this.signatureDetails[0]?.signature_sds;
 
     const dReviewedSignatureImage = d_reviewed_signature
       ? await this.convertBase64ToImage(pdfDoc, d_reviewed_signature)
+      : null;
+
+    const bReviewedSignatureImage = b_reviewed_signature
+      ? await this.convertBase64ToImage(pdfDoc, b_reviewed_signature)
+      : null;
+
+    const aReviewedSignatureImage = a_reviewed_signature
+      ? await this.convertBase64ToImage(pdfDoc, a_reviewed_signature)
+      : null;
+
+    const aProcessedSignatureImage = a_processed_signature
+      ? await this.convertBase64ToImage(pdfDoc, a_processed_signature)
+      : null;
+
+    const recommendingSignatureImageSDS = recommending_signature_sds
+      ? await this.convertBase64ToImage(pdfDoc, recommending_signature_sds)
+      : null;
+
+    const recommendingSignatureImageASDS = recommending_signature_asds
+      ? await this.convertBase64ToImage(pdfDoc, recommending_signature_asds)
       : null;
 
     // Prepare assessment data only
@@ -288,6 +315,16 @@ export class ViewApplicationDetailComponentApplication {
       for_renewal: this.assessmentDetails[0]?.paid_30_percent === 'Yes',
       percentage_of_principal:
         this.assessmentDetails[0]?.percentage_of_principal_paid,
+      b_date_reviewed: this.signatureDetails[0].accounting_date
+        ? new Date(
+            this.assessmentDetails[0]?.computation_date_processed
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        : '',
+      b_reviewed_signature: bReviewedSignatureImage,
 
       // Computation of Loan
       principal_amount: this.assessmentDetails[0]?.principal_loan_amount,
@@ -298,8 +335,41 @@ export class ViewApplicationDetailComponentApplication {
         this.assessmentDetails[0]?.net_take_home_pay_after_deduction,
       monthly_amortization: this.assessmentDetails[0]?.monthly_amortization,
       period_of_loan: this.assessmentDetails[0]?.period_of_loan,
-      date_processed: this.assessmentDetails[0]?.computation_date_processed,
+      a_processed_signature: aProcessedSignatureImage,
+      a_reviewed_signature: aReviewedSignatureImage,
+      date_processed: this.assessmentDetails[0]?.computation_date_processed
+        ? new Date(
+            this.assessmentDetails[0]?.computation_date_processed
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        : '',
       remarks: this.assessmentDetails[0]?.remarks,
+
+      // Recommending Approval
+      recommending_signature_asds: recommendingSignatureImageASDS,
+      recommending_signature_sds: recommendingSignatureImageSDS,
+      date_asds: this.signatureDetails[0]?.asds_date
+        ? new Date(
+            this.signatureDetails[0]?.asds_date
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        : '',
+
+      date_sds: this.signatureDetails[0]?.sds_date
+        ? new Date(
+            this.signatureDetails[0]?.sds_date
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        : '',
     };
 
     const fields = [
@@ -386,7 +456,7 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'd_reviewed_designation', x: 530, y: 331, fontSize: 8 },
       {
         name: 'd_reviewed_signature',
-        x: 525,
+        x: 520,
         y: 308,
         fontSize: 8,
         isImage: true,
@@ -419,7 +489,7 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'c_reviewed_designation', x: 530, y: 423, fontSize: 8 },
       {
         name: 'c_reviewed_signature',
-        x: 525,
+        x: 520,
         y: 398,
         fontSize: 8,
         isImage: true,
@@ -466,7 +536,14 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'borrower_net', x: 144.3, y: 527.5, fontSize: 8, checkbox: true },
       { name: 'for_renewal', x: 145.3, y: 549.7, fontSize: 8, checkbox: true },
       { name: 'percentage_of_principal', x: 301, y: 564, fontSize: 8 },
-      { name: 'c_date_reviewed', x: 620, y: 593, fontSize: 8 },
+      { name: 'b_date_reviewed', x: 620, y: 593, fontSize: 8 },
+      {
+        name: 'b_reviewed_signature',
+        x: 507,
+        y: 565,
+        fontSize: 8,
+        isImage: true,
+      },
 
       // Computation of Loan
       { name: 'principal_amount', x: 293, y: 637, fontSize: 8 },
@@ -478,15 +555,32 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'monthly_amortization', x: 640, y: 648, fontSize: 8 },
       { name: 'period_of_loan', x: 640, y: 659, fontSize: 8 },
 
+      {
+        name: 'a_processed_signature',
+        x: 225,
+        y: 681,
+        fontSize: 8,
+        isImage: true,
+      },
+      {
+        name: 'a_reviewed_signature',
+        x: 225,
+        y: 740,
+        fontSize: 8,
+        isImage: true,
+      },
       { name: 'date_processed', x: 485, y: 681, fontSize: 8 },
       { name: 'remarks', x: 415, y: 715, fontSize: 8 },
 
-      // Action Taken
+      // Recommending Approval
+      { name: 'recommending_signature_asds', x: 195, y: 848, fontSize: 8, isImage: true },
+      { name: 'recommending_signature_sds', x: 550, y: 865, fontSize: 8, isImage: true },
+
       { name: 'approved', x: 438, y: 857, fontSize: 8, checkbox: true },
       { name: 'disapproved', x: 438, y: 868, fontSize: 8, checkbox: true },
 
-      { name: 'head_signature_date', x: 188, y: 915, fontSize: 8 },
-      { name: 'chairperson_signature_date', x: 538, y: 955.8, fontSize: 8 },
+      { name: 'date_asds', x: 188, y: 915, fontSize: 8 },
+      { name: 'date_sds', x: 538, y: 955.8, fontSize: 8 },
     ];
 
     const scaleX = width / 800;
@@ -524,12 +618,25 @@ export class ViewApplicationDetailComponentApplication {
       const xPt = f.x * scaleX;
       const yPt = height - f.y * scaleY - f.fontSize * scaleY;
 
+      if (f.name === 'remarks' && val) {
+        const lines = this.wrapText(val.toString(), 80);
+        lines.forEach((line, i) => {
+          page.drawText(line, {
+            x: xPt,
+            y: yPt - i * (f.fontSize + 0.7), // 0.7 is line spacing
+            size: f.fontSize * scaleY,
+            font,
+          });
+        });
+        return;
+      }
+
       // Add bold styling for specific fields
       const useBold = [
-        'borrower_name',
-        'co_makers_name',
-        'legal_name',
-        'personnel_name',
+        'c_reviewed_by',
+        'd_reviewed_by',
+        'c_reviewed_designation',
+        'd_reviewed_designation',
       ].includes(f.name);
 
       page.drawText(val.toString(), {
