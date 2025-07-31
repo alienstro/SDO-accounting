@@ -63,6 +63,8 @@ export class AssessFormComponent {
     this.roleId = this.tokenService.userRoleToken(
       this.tokenService.decodeToken()
     );
+
+    console.log(data)
   }
 
   ngOnInit(): void {
@@ -117,12 +119,12 @@ export class AssessFormComponent {
     });
 
     this.fourthFormGroup = this._formBuilder.group({
-      principalLoanAmount: [0, Validators.required],
+      principalLoanAmount: [this.data.loan.loan_amount, Validators.required],
       principal: [0, Validators.required],
       interest: [0, Validators.required],
       netProceeds: [0, Validators.required],
       netTakeHomePayAfterAmortization: [0, Validators.required],
-      monthlyAmortization: [0, Validators.required],
+      monthlyAmortization: [this.computeMonthlyAmortization(this.data.loan.loan_amount, this.data.loan.term), Validators.required],
       periodOfLoan: [0, Validators.required],
       dateProcessed: [
         new Date().toISOString().substring(0, 16),
@@ -132,6 +134,22 @@ export class AssessFormComponent {
       reviewedBy: ['', Validators.required],
       remarks: [''],
     });
+  }
+
+  computeMonthlyAmortization(loan_amount: number, term: number) {
+    const months = term * 12;
+
+    const interest = loan_amount * term * 0.06;
+
+    const total = interest + loan_amount;
+
+    const monthlyAmortization = Number((total / months).toFixed(2));
+
+    return monthlyAmortization;
+  }
+
+  computeNetTakeHomePay() {
+    // const monthlyAmor = this.computeMonthlyAmortization()
   }
 
   closeDialog(): void {
