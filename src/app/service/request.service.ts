@@ -38,22 +38,6 @@ export class RequestService {
     );
   }
 
-  updateApprovalSecretariat(data: any): Observable<any> {
-    console.log(data);
-    return this.http.post(
-      `${API_URL}` + `/loanApplication/submitSignatureSecretariat`,
-      data
-    );
-  }
-
-  rejectApprovalSecretariat(data: any): Observable<any> {
-    console.log(data);
-    return this.http.post(
-      `${API_URL}` + `/loanApplication/rejectSecretariat`,
-      data
-    );
-  }
-
   get<T>(endpoint: string) {
     return this.http.get<Response<T>>(`${API_URL}` + `${endpoint}`);
   }

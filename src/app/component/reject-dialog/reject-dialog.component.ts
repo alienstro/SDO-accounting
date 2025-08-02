@@ -87,34 +87,6 @@ export class RejectDialogComponent {
           );
         },
       });
-    } else if (departmentId === 1) {
-      console.log('Secretariat');
-      this.requestService.rejectApprovalSecretariat(data).subscribe({
-        next: (res) => {
-          console.log(res);
-          if (res.success) {
-            this.snackbar.open('Rejected Application Successfully!', '', {
-              duration: 3000,
-            });
-            this.dialogRef.close();
-            this.router.navigate(['/forward']);
-          } else {
-            this.snackbar.open('Failed to reject. Please try again.', '', {
-              duration: 3000,
-            });
-          }
-        },
-        error: (err) => {
-          console.error(err);
-          this.snackbar.open(
-            'An error occurred while rejected the application.',
-            '',
-            {
-              duration: 3000,
-            }
-          );
-        },
-      });
     } else {
       this.snackbar.open('Error Department Role', 'Close', {
         duration: 3000,

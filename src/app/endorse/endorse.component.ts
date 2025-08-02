@@ -167,51 +167,7 @@ export class EndorseComponent {
               );
             },
           });
-        } else if (departmentId === 1) {
-          console.log('Secretariat');
-          if (loanAssessment && loanAssessment.length > 0) {
-            this.requestService.updateApprovalSecretariat(data).subscribe({
-              next: (res) => {
-                console.log(res);
-
-                if (res.success) {
-                  this.snackbar.open(
-                    'Forwarded to Signature successfully!',
-                    '',
-                    {
-                      duration: 3000,
-                    }
-                  );
-                  // this.applicationService.updateDepartmentStatus(data.application_id)
-                  this.dialogRef.close();
-                  this.router.navigate(['/forward']);
-                } else {
-                  this.snackbar.open(
-                    'Failed to forward to Accounting. Please try again.',
-                    '',
-                    {
-                      duration: 3000,
-                    }
-                  );
-                }
-              },
-              error: (err) => {
-                console.error(err);
-                this.snackbar.open(
-                  'An error occurred while forwarding the application.',
-                  '',
-                  {
-                    duration: 3000,
-                  }
-                );
-              },
-            });
-          } else {
-            this.snackbar.open('Fill out the assessment form', 'Close', {
-              duration: 3000,
-            });
-          }
-        }
+        } 
       },
       error: (err) => {
         console.error(err);

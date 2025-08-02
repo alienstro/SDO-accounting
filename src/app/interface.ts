@@ -403,14 +403,12 @@ export interface SignatureDetails {
     signature_id: number;
     application_id: number;
     staff_id_accounting: number;
-    staff_id_secretariat: number;
     staff_id_hr: number;
     staff_id_admin: number;
     staff_id_legal: number;
     staff_id_asds: number;
     staff_id_sds: number;
     signature_accounting: string;
-    signature_secretariat: string;
     signature_hr: string;
     signature_admin: string;
     signature_legal: string;
@@ -419,7 +417,6 @@ export interface SignatureDetails {
 
     // Add date columns for each signature
     accounting_date?: Date;
-    secretariat_date?: Date;
     hr_date?: Date;
     legal_date?: Date;
     admin_date?: Date;
@@ -433,13 +430,7 @@ export interface SignatureDetails {
     accounting_last_name?: string;
     accounting_ext_name?: string;
     accounting_designation?: string;
-
-    secretariat_first_name?: string;
-    secretariat_middle_name?: string;
-    secretariat_last_name?: string;
-    secretariat_ext_name?: string;
-    secretariat_designation?: string;
-
+    
     hr_first_name?: string;
     hr_middle_name?: string;
     hr_last_name?: string;
