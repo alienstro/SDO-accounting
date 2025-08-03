@@ -48,8 +48,8 @@ export class RequestService {
 
   assessLoanApplication(data: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(
-      `${API_URL}/loanApplication/assessLoanApplication`,
+    return this.http.patch(
+      `${API_URL}/loanApplication/assessLoanApplication/${data.application_id}`,
       data,
       { headers }
     );

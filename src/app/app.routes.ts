@@ -6,7 +6,7 @@ import { ReviewComponent } from './component/review/review.component';
 import { ForwardComponent } from './forward/forward.component';
 import { AssessmentComponent } from './assessment/assessment.component';
 import { SignatureComponent } from './signature/signature.component';
-import { EndorsementComponent } from './endorsement/endorsement.component';
+import { EndorsementComponent } from './approval/endorsement.component';
 import { PaymentComponent } from './payment/payment.component';
 import { DeclineComponent } from './decline/decline.component';
 import { ViewApplicationDetailComponent } from './component/view-application-detail-accounting/view-application-detail.component';
@@ -26,7 +26,7 @@ export const routes: Routes = [
       { path: 'assessment/:id', component: ViewApplicationDetailComponentAssessment },
       { path: 'assessment', component: AssessmentComponent },
       { path: 'signature', component: SignatureComponent },
-      { path: 'endorsement', component: EndorsementComponent },
+      { path: 'approval', component: EndorsementComponent },
       { path: 'payment', component: PaymentComponent },
       { path: 'reject', component: DeclineComponent },
       { path: 'paid', component: PaidComponent },

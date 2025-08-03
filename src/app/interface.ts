@@ -130,6 +130,9 @@ export interface BorrowersInformation {
   position: string;
   signature: string;
   date: Date;
+  employment_status_hr: string;
+  net_pay: number;
+  payroll_date: Date;
 }
 
 export interface Staff {

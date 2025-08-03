@@ -122,52 +122,61 @@ export class EndorseComponent {
       department_id: department_id,
       staff_id: staff_id,
     };
-    
-    console.log(data);
 
-    // return;
+    console.log(data);
 
     this.applicationService.getLoanAssessment(this.application_id).subscribe({
       next: (loanAssessment) => {
-        if (departmentId === 5) {
-          console.log('Accounting');
-          this.requestService.updateApprovalAccounting(data).subscribe({
-            next: (res) => {
-              console.log(res);
+        if (loanAssessment.length === 0) {
+           this.snackbar.open(
+              'Kindly complete the assessment form before proceeding.', 'close', {duration: 3000}
+            );
+            return;
+        } else {
+          if (departmentId === 4) {
+            console.log('Accounting');
+            this.requestService.updateApprovalAccounting(data).subscribe({
+              next: (res) => {
+                console.log(res);
 
-              if (res.success) {
-                this.snackbar.open(
-                  'Forwarded to Accounting successfully!',
-                  '',
-                  {
-                    duration: 3000,
-                  }
-                );
-                // this.applicationService.updateDepartmentStatus(data.application_id)
-                this.dialogRef.close();
-                this.router.navigate(['/forward']);
-              } else {
-                this.snackbar.open(
-                  'Failed to forward to Accounting. Please try again.',
-                  '',
-                  {
-                    duration: 3000,
-                  }
-                );
-              }
-            },
-            error: (err) => {
-              console.error(err);
-              this.snackbar.open(
-                'An error occurred while forwarding the application.',
-                '',
-                {
-                  duration: 3000,
+                if (res.success) {
+                  this.snackbar.open(
+                    'Forwarded to Accounting successfully!',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  // this.applicationService.updateDepartmentStatus(data.application_id)
+                  this.dialogRef.close();
+                  this.router.navigate(['/forward']);
+                } else {
+                  this.snackbar.open(
+                    'Failed to forward to Accounting. Please try again.',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
                 }
-              );
-            },
-          });
-        } 
+              },
+              error: (err) => {
+                console.error(err);
+                this.snackbar.open(
+                  'An error occurred while forwarding the application.',
+                  '',
+                  {
+                    duration: 3000,
+                  }
+                );
+              },
+            });
+          } else {
+            this.snackbar.open(
+              'Not allowed to assess due to role restriction.'
+            );
+          }
+        }
       },
       error: (err) => {
         console.error(err);

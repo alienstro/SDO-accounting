@@ -44,10 +44,9 @@ export class SidebarComponent {
 
   paths = [
     "application",
-    "assessment",
     "signature",
     "forward",
-    "endorsement",
+    "approval",
     "pending",
     "payment",
     "reject",

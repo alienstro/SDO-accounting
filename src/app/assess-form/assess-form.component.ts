@@ -37,8 +37,6 @@ export class AssessFormComponent {
   application_id: number = 0;
   roleId: string = '';
 
-  firstFormGroup!: FormGroup;
-  secondFormGroup!: FormGroup;
   thirdFormGroup!: FormGroup;
   fourthFormGroup!: FormGroup;
 
@@ -68,36 +66,6 @@ export class AssessFormComponent {
   }
 
   ngOnInit(): void {
-    this.firstFormGroup = this._formBuilder.group({
-      loanApplicationForm: ['', Validators.required],
-      authorizationToDeduct: ['', Validators.required],
-      latestPaySlip: ['', Validators.required],
-      photocopyDepEdId: ['', Validators.required],
-      approvedAppointment: ['', Validators.required],
-      proofCoTerminus: [''],
-      othersSpecify: [''],
-      letterOfRequest: ['', Validators.required],
-      hospitalization: ['', Validators.required],
-      medicalAbstract: ['', Validators.required],
-      barangayCertificate: ['', Validators.required],
-      reviewedBy: ['', Validators.required],
-      reviewDate: [
-        new Date().toISOString().substring(0, 16),
-        Validators.required,
-      ],
-    });
-
-    this.secondFormGroup = this._formBuilder.group({
-      signedFilledLaf: ['', Validators.required],
-      completeSupportingDocs: ['', Validators.required],
-      authorizedSignatureLaf: ['', Validators.required],
-      reviewedBy: ['', Validators.required],
-      reviewDate: [
-        new Date().toISOString().substring(0, 16),
-        Validators.required,
-      ],
-    });
-
     this.thirdFormGroup = this._formBuilder.group({
       borrowerReachesRetirement: ['', Validators.required],
       borrowersAge: [0, Validators.required],
@@ -164,8 +132,6 @@ export class AssessFormComponent {
 
   confirmDialog(): void {
     const assessment: Assessment = {
-      ...this.firstFormGroup.value,
-      ...this.secondFormGroup.value,
       ...this.thirdFormGroup.value,
       ...this.fourthFormGroup.value,
       assessment_id: this.data?.assessment_id,
