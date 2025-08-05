@@ -1,78 +1,181 @@
+/* Enhanced Table Styles */
 .thead {
-  background-color: #0165b2;
+  background: linear-gradient(135deg, #0165b2 0%, #005493 100%);
   color: white;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   font-size: 14px;
   font-weight: normal;
-  
+  position: relative;
+}
+
+.thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.2) 100%);
 }
 
 .thead th {
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 1.2em 1em;
+  position: relative;
+}
+
+.thead th:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 table {
-  table-layout: auto; /* Allow columns to adjust based on content */
+  table-layout: auto;
   border-collapse: collapse;
-  box-shadow: 6px 9px 21px -4px rgba(0, 0, 0, 0.39);
-  -webkit-box-shadow: 6px 9px 21px -4px rgba(0, 0, 0, 0.39);
-  -moz-box-shadow: 6px 9px 21px -4px rgba(0, 0, 0, 0.39);
+  box-shadow: 
+    0 10px 25px rgba(1, 101, 178, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
   width: 100%;
-  border-radius: 5px;
+  border-radius: 12px;
   overflow: hidden;
+  background: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 td,
 th {
-  padding: 1em 0.5em;
+  padding: 1.2em 1em;
   text-align: center;
-  text-transform: capitalize;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(1, 101, 178, 0.08);
+}
 
+td {
+  font-size: 14px;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.row {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.row:nth-child(even) {
+  background-color: rgba(1, 101, 178, 0.02);
 }
 
 .row:nth-child(odd) {
-  background-color: #f2f2f2; /* Light gray background for even columns */
+  background-color: white;
 }
 
+.row:hover {
+  background: linear-gradient(90deg, rgba(1, 101, 178, 0.05) 0%, rgba(1, 101, 178, 0.08) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(1, 101, 178, 0.1);
+}
+
+.row:hover td {
+  color: #1a202c;
+}
+
+.row:last-child td {
+  border-bottom: none;
+}
+
+/* Enhanced Button Styles */
 button {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 #empty {
-  font-size: 1.5rem;
-  font-weight: bold;
-  opacity: 50%;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #a0aec0;
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 12px;
+  margin: 2rem 0;
+  border: 2px dashed #cbd5e0;
 }
 
+/* Enhanced Input Container */
 .input_container {
-  background-color: white;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   width: 100%;
-  max-width: 350px;
-  min-width: 180px;
-  border: 1px solid #0165b2;
+  max-width: 380px;
+  min-width: 200px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
   display: flex;
   align-items: center;
-  border-radius: 24px;
-  padding: 0.2em 0.5em;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(1, 101, 178, 0.08);
-  transition: box-shadow 0.2s;
+  border-radius: 50px;
+  padding: 0.3em 0.8em;
+  margin-bottom: 2rem;
+  box-shadow: 
+    0 4px 14px rgba(1, 101, 178, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.input_container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #0165b2, #005493);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.input_container:focus-within::before {
+  opacity: 1;
 }
 
 .input_container:focus-within {
-  box-shadow: 0 4px 16px rgba(1, 101, 178, 0.15);
-  border-color: #005493;
+  box-shadow: 
+    0 8px 25px rgba(1, 101, 178, 0.15),
+    0 0 0 3px rgba(1, 101, 178, 0.1);
+  transform: translateY(-2px);
 }
 
 .input_container input {
   background-color: transparent;
   border: none;
-  height: 40px;
+  height: 44px;
   flex: 1;
   font-size: 1rem;
-  padding: 0 0.5em;
+  padding: 0 1em;
+  color: #2d3748;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.input_container input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
 }
 
 .input_container input:focus {
@@ -80,45 +183,122 @@ button {
 }
 
 .input_container button {
-  height: 36px;
-  width: 36px;
-  border-left: none;
-  background: #0165b2;
+  height: 40px;
+  width: 40px;
+  background: linear-gradient(135deg, #0165b2 0%, #005493 100%);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: 0.5em;
-  transition: background 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(1, 101, 178, 0.3);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .input_container button:hover {
-  background: #005493;
+  background: linear-gradient(135deg, #005493 0%, #003d6b 100%);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(1, 101, 178, 0.4);
+}
+
+.input_container button:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .input_container img {
   width: 1.2rem;
   height: 1.2rem;
   filter: invert(1);
+  transition: transform 0.2s ease;
 }
 
+.input_container button:hover img {
+  transform: scale(1.1);
+}
+
+/* Enhanced Action Button */
 .button-action {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: none;
-  background-color: white;
-  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
-  border-radius: 5px;
-  transition: 0.2s ease;
-  gap: 0.3rem;
+  border: 2px solid #e2e8f0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #4a5568;
+  min-width: 80px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.button-action img {
+  width: 16px;
+  height: 16px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
 }
 
 .button-action:hover {
-  background-color: #0165b2;
+  background: linear-gradient(135deg, #0165b2 0%, #005493 100%);
   color: white;
+  border-color: #0165b2;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(1, 101, 178, 0.25);
+}
+
+.button-action:hover img {
+  filter: invert(1);
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .button-action:active {
-  background-color: #005493;
+  background: linear-gradient(135deg, #005493 0%, #003d6b 100%);
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(1, 101, 178, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  table {
+    font-size: 12px;
+  }
+  
+  td, th {
+    padding: 0.8em 0.5em;
+  }
+  
+  .button-action {
+    padding: 0.4rem 0.8rem;
+    font-size: 11px;
+    min-width: 60px;
+  }
+  
+  .button-action span {
+    display: none;
+  }
+  
+  .input_container {
+    max-width: 300px;
+  }
+}
+
+/* Loading Animation (bonus) */
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.loading-row {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
 }

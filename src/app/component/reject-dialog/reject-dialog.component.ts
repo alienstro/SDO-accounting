@@ -58,7 +58,7 @@ export class RejectDialogComponent {
       remarks: remarks,
     };
 
-    if (departmentId === 5) {
+    if (departmentId === 4) {
       console.log('Accounting');
       this.requestService.rejectApprovalAccounting(data).subscribe({
         next: (res) => {

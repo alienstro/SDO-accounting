@@ -190,6 +190,7 @@ export interface Application {
   first_name: string,
   last_name: string,
   purpose: string
+  remarks_message: string;
 }
 
 export interface UserProfile {
@@ -375,9 +376,9 @@ export interface Assessment {
 
   //
   borrower_reaches_retirement: string;
-  borrowers_age: number;
+  borrowers_age: number | null | undefined;
   comakers_reaches_retirement: string;
-  comakers_age: number;
+  comakers_age: number | null | undefined;
   borrowers_has_outstanding_balance: string;
   current_loan: string;
   current_loan_balance: number;

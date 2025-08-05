@@ -58,7 +58,7 @@ export class TableComponent {
 
     console.log(currentUrl);
 
-    if (currentUrl === '/application' || currentUrl === "/paid") {
+    if (currentUrl === '/application' || currentUrl === '/paid') {
       this.router.navigate([`/application/${route}`], {
         state: { loanDetails: loan },
       });
@@ -95,5 +95,24 @@ export class TableComponent {
     } else {
       this.rows = this.baseRows;
     }
+  }
+
+  getReasonFromData(rowIndex: number): string {
+    // Get the reason directly from the original data array
+    if (this.data && this.data[rowIndex]) {
+      const item = this.data[rowIndex] as any;
+
+      // Try different possible field names for the reason
+      const reason =
+        item.remarks_message ||
+        item.reason ||
+        item.remarks ||
+        item.rejection_reason ||
+        'No reason provided';
+
+      return reason;
+    }
+
+    return 'No reason provided';
   }
 }

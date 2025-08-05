@@ -1173,7 +1173,7 @@ export class ViewApplicationDetailComponent {
       width: '90rem',
       maxWidth: '90rem',
       height: '55rem',
-      data: { loan: this.loanDetails[0] },
+      data: { loan: this.loanDetails[0], borrower: this.borrowersInformation[0], coMaker: this.coMakersInformation[0] },
     });
   }
 

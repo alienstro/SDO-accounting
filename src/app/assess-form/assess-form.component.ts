@@ -1,5 +1,10 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RequestService } from '../service/request.service';
 import { SnackbarService } from '../service/snackbar.service';
@@ -26,7 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './assess-form.component.html',
   styleUrl: './assess-form.component.css',
@@ -39,7 +44,6 @@ export class AssessFormComponent {
 
   thirdFormGroup!: FormGroup;
   fourthFormGroup!: FormGroup;
-
 
   constructor(
     public dialogRef: MatDialogRef<AssessFormComponent>,
@@ -56,21 +60,26 @@ export class AssessFormComponent {
     //   ' ' +
     //   this.tokenService.lastNameToken(this.tokenService.decodeToken());
 
-
     this.application_id = data.loan.application_id;
     this.roleId = this.tokenService.userRoleToken(
       this.tokenService.decodeToken()
     );
 
-    console.log(data)
+    console.log(data);
   }
 
   ngOnInit(): void {
     this.thirdFormGroup = this._formBuilder.group({
-      borrowerReachesRetirement: ['', Validators.required],
-      borrowersAge: [0, Validators.required],
-      comakersReachesRetirement: ['', Validators.required],
-      comakersAge: [0, Validators.required],
+      borrowerReachesRetirement: [
+        this.updateBorrowerMandatoryAge(),
+        Validators.required,
+      ],
+      borrowersAge: [this.updateBorrowerAge(), Validators.required],
+      comakersReachesRetirement: [
+        this.updateCoMakerMandoryAge(),
+        Validators.required,
+      ],
+      comakersAge: [this.updateCoMakerAge(), Validators.required],
       currentLoanBalance: [0, Validators.required],
       pastDueLoan: [0],
       numberOfYearsPastDue: [0],
@@ -90,9 +99,22 @@ export class AssessFormComponent {
       principalLoanAmount: [this.data.loan.loan_amount, Validators.required],
       principal: [0, Validators.required],
       interest: [0, Validators.required],
-      netProceeds: [0, Validators.required],
-      netTakeHomePayAfterAmortization: [0, Validators.required],
-      monthlyAmortization: [this.computeMonthlyAmortization(this.data.loan.loan_amount, this.data.loan.term), Validators.required],
+      outstandingBalance: [0, Validators.required],
+      netProceeds: [
+        this.computeNetProceeds(0, this.data.loan.loan_amount),
+        Validators.required,
+      ],
+      netTakeHomePayAfterAmortization: [
+        this.computeNetTakeHomePay(),
+        Validators.required,
+      ],
+      monthlyAmortization: [
+        this.computeMonthlyAmortization(
+          this.data.loan.loan_amount,
+          this.data.loan.term
+        ),
+        Validators.required,
+      ],
       periodOfLoan: [0, Validators.required],
       dateProcessed: [
         new Date().toISOString().substring(0, 16),
@@ -102,6 +124,18 @@ export class AssessFormComponent {
       reviewedBy: ['', Validators.required],
       remarks: [''],
     });
+
+    // Updates the netProceeds every time it changes value in these fields
+    this.fourthFormGroup
+      .get('outstandingBalance')!
+      .valueChanges.subscribe(() => {
+        this.updateNetProceeds();
+      });
+    this.fourthFormGroup
+      .get('principalLoanAmount')!
+      .valueChanges.subscribe(() => {
+        this.updateNetProceeds();
+      });
   }
 
   computeMonthlyAmortization(loan_amount: number, term: number) {
@@ -117,17 +151,91 @@ export class AssessFormComponent {
   }
 
   computeNetTakeHomePay() {
-    // const monthlyAmor = this.computeMonthlyAmortization()
+    const loanType = this.data.loan.type_of_loan;
+
+    const monthlyAmor = this.computeMonthlyAmortization(
+      this.data.loan.loan_amount,
+      this.data.loan.term
+    );
+    const netPay = this.data.borrower.net_pay;
+
+    if (loanType === 'Multi-Purpose (renewal)') {
+      console.log('renewal');
+      const netTakeHomePay = netPay;
+
+      return netTakeHomePay;
+    } else {
+      const netTakeHomePay = netPay - monthlyAmor;
+
+      return netTakeHomePay;
+      console.log('new');
+    }
+  }
+
+  computeNetProceeds(outstandingBalance: number, principalLoanAmount: number) {
+    const netProceeds = principalLoanAmount - outstandingBalance;
+
+    return netProceeds;
+  }
+
+  updateNetProceeds() {
+    const outstandingBalance =
+      Number(this.fourthFormGroup.get('outstandingBalance')!.value) || 0;
+    const principalLoanAmount =
+      Number(this.fourthFormGroup.get('principalLoanAmount')!.value) || 0;
+    const netProceeds = this.computeNetProceeds(
+      outstandingBalance,
+      principalLoanAmount
+    );
+    this.fourthFormGroup
+      .get('netProceeds')!
+      .setValue(netProceeds, { emitEvent: false });
+  }
+
+  updateBorrowerAge() {
+    const borrowerAge =
+      Number(this.data.borrower.age) + Number(this.data.loan.term);
+
+    return borrowerAge;
+  }
+
+  updateCoMakerAge() {
+    const coMakerAge =
+      Number(this.data.coMaker.co_age) + Number(this.data.loan.term);
+
+    return coMakerAge;
+  }
+
+  updateBorrowerMandatoryAge() {
+    const borrowerAge = this.updateBorrowerAge();
+
+    if (borrowerAge >= 65) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  updateCoMakerMandoryAge() {
+    const coMakerAge = this.updateCoMakerAge();
+
+    if (coMakerAge >= 65) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   closeDialog(): void {
     this.dialogRef.close();
     const loanApplications = this.applicationService.getApplicationState();
     console.log(loanApplications);
-    
-    const application = loanApplications.find((app) => Number(app.application_id) === this.application_id);
 
-    console.log("current application: ", application);
+    const application = loanApplications.find(
+      (app) => Number(app.application_id) === this.application_id
+    );
+
+    console.log('current application: ', application);
   }
 
   confirmDialog(): void {

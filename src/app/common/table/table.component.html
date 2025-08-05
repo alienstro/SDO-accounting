@@ -12,9 +12,12 @@
   <tr class="thead">
     @for (item of header; track $index) {
     <th>{{ item }}</th>
-    } @if(router.url === "/forward" || router.url === "/payment" || router.url
-    === "/assessment" || router.url === "/application" || router.url === "/paid") {
-    <th>Action</th>
+    }
+    @if(router.url === "/forward" || router.url === "/payment" || router.url === "/assessment" || router.url === "/application" || router.url === "/paid") {
+      <th>Action</th>
+    }
+    @else if(router.url === "/reject") {
+      <th>Reason</th>
     }
   </tr>
   <ng-container *ngFor="let row of rows; let idx = index">
@@ -27,18 +30,19 @@
             : item
         }}
       </td>
-      } @if(router.url === "/forward" || router.url === "/assessment" ||
-      router.url === "/application" || router.url === "/paid") {
-      <td>
-        <button (click)="navigateRoute(row[0], row[0])" class="button-action">
-          <img src="../../../assets/previewpane.svg" alt="eye button icon" />
-          <span>View</span>
-        </button>
-      </td>
-      } @else if(router.url === "/payment") {
-      <td>
-        <button (click)="openDialog(row[0], row[5])">Pay</button>
-      </td>
+      }
+      @if(router.url === "/forward" || router.url === "/assessment" || router.url === "/application" || router.url === "/paid") {
+        <td>
+          <button (click)="navigateRoute(row[0], row[0])" class="button-action">
+            <img src="../../../assets/previewpane.svg" alt="eye button icon" />
+            <span>View</span>
+          </button>
+        </td>
+      }
+      @else if(router.url === "/reject") {
+        <td>
+          {{ getReasonFromData(idx) }}
+        </td>
       }
     </tr>
   </ng-container>
