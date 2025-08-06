@@ -615,6 +615,8 @@ export class ViewApplicationDetailComponentApplication {
         if (!val) return;
       }
 
+      if (val === undefined || val === null) return;
+
       const xPt = f.x * scaleX;
       const yPt = height - f.y * scaleY - f.fontSize * scaleY;
 
@@ -1040,6 +1042,8 @@ export class ViewApplicationDetailComponentApplication {
       } else {
         if (!val) return;
       }
+
+      if (val === undefined || val === null) return;
 
       const xPt = f.x * scaleX;
       const yPt = height - f.y * scaleY - f.fontSize * scaleY;

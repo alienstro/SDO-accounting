@@ -58,7 +58,7 @@ export class TableComponent {
 
     console.log(currentUrl);
 
-    if (currentUrl === '/application' || currentUrl === '/paid') {
+    if (currentUrl === '/application' || currentUrl === '/complete') {
       this.router.navigate([`/application/${route}`], {
         state: { loanDetails: loan },
       });

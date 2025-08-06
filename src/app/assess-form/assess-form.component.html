@@ -72,14 +72,25 @@
               >For renewal of loans: Borrower has paid at least 30% of the
               principal...</mat-checkbox
             >
-            <mat-form-field appearance="outline">
-              <mat-label>Percentage of Principal Paid</mat-label>
-              <input
-                matInput
-                type="number"
-                formControlName="percentageOfPrincipalPaid"
-              />
-            </mat-form-field>
+            <div>
+              <mat-form-field appearance="outline">
+                <mat-label>Percentage of Principal Paid</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="percentageOfPrincipalPaid"
+                />
+              </mat-form-field>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="
+                  computePercentagePrincipalPaid(0, this.data.loan.loan_amount)
+                "
+              >
+                Compute
+              </button>
+            </div>
           </div>
           <div class="form-split">
             <!-- <mat-form-field appearance="outline">
@@ -119,7 +130,11 @@
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Outstanding Loan Balance</mat-label>
-                <input matInput type="number" formControlName="outstandingBalance" />
+                <input
+                  matInput
+                  type="number"
+                  formControlName="outstandingBalance"
+                />
               </mat-form-field>
             </div>
             <mat-form-field appearance="outline">
@@ -144,7 +159,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Period of Loan</mat-label>
-              <input matInput type="number" formControlName="periodOfLoan" />
+              <input matInput type="string" formControlName="periodOfLoan" />
             </mat-form-field>
             <!-- <mat-form-field appearance="outline">
                             <mat-label>Date Processed</mat-label>

@@ -38,8 +38,12 @@ export class ViewApplicationDetailComponent {
   @ViewChild('pdfPreviewAssessment', { static: false })
   pdfPreviewAssessment!: ElementRef<HTMLIFrameElement>;
 
+  @ViewChild('pdfPreviewAuthorization', { static: false })
+  pdfPreviewAuthorization!: ElementRef<HTMLIFrameElement>;
+
   private formPdfBytesLoan: ArrayBuffer | null = null;
   private formPdfBytesAssessment: ArrayBuffer | null = null;
+  private formPdfBytesAuthorization: ArrayBuffer | null = null;
 
   application_id!: any;
   applicant_id!: any;
@@ -80,6 +84,25 @@ export class ViewApplicationDetailComponent {
         responseType: 'arraybuffer',
       })
       .subscribe((bytes) => (this.formPdfBytesAssessment = bytes));
+
+    this.http
+      .get('../../../assets/Provident-Loan-Form_New-Template-2025-3.pdf', {
+        responseType: 'arraybuffer',
+      })
+      .subscribe((bytes) => (this.formPdfBytesAuthorization = bytes));
+  }
+
+  numberToWordsWithDecimal(num: number): string {
+    const integerPart = Math.floor(num);
+    const decimalPart = Math.round((num - integerPart) * 100);
+
+    let words = this.numberToWords(integerPart).replace(/-/g, ' ');
+
+    if (decimalPart > 0) {
+      words += ' POINT ' + this.numberToWords(decimalPart).replace(/-/g, ' ');
+    }
+
+    return words.toUpperCase();
   }
 
   numberToWords(num: number): string {
@@ -353,13 +376,14 @@ export class ViewApplicationDetailComponent {
       percentage_of_principal:
         this.assessmentDetails[0]?.percentage_of_principal_paid,
       b_date_reviewed: this.signatureDetails[0].accounting_date
-        ? new Date(
-            this.signatureDetails[0].accounting_date
-          ).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })
+        ? new Date(this.signatureDetails[0].accounting_date).toLocaleDateString(
+            'en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }
+          )
         : '',
       b_reviewed_signature: bReviewedSignatureImage,
 
@@ -707,6 +731,7 @@ export class ViewApplicationDetailComponent {
     this.pdfPreviewAssessment.nativeElement.src = url;
   }
 
+  // For Loan Application Form
   async generateAndPreviewPdf() {
     if (!this.formPdfBytesLoan) {
       console.error('PDF template not loaded yet.');
@@ -1124,6 +1149,152 @@ export class ViewApplicationDetailComponent {
     this.pdfPreview.nativeElement.src = url;
   }
 
+  // For Authorization To Deduct Form
+  async generateAndPreviewPdfAuthorization() {
+    console.log('working authorization button');
+
+    if (!this.formPdfBytesAuthorization) {
+      console.error('PDF template not loaded yet.');
+      return;
+    }
+
+    const pdfDoc = await PDFDocument.load(this.formPdfBytesAuthorization);
+    const page = pdfDoc.getPages()[0];
+    const { width, height } = page.getSize();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const borrowerSignature = this.borrowersInformation[0]?.signature;
+
+    const borrowerSignatureImage = borrowerSignature
+      ? await this.convertBase64ToImage(pdfDoc, borrowerSignature)
+      : null;
+
+    const monthsTerm = this.loanDetails[0].term * 12;
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const nextMonthName = nextMonth.toLocaleString('en-US', { month: 'long' });
+    const currentYearTwoDigits = now.getFullYear().toString().slice(-2);
+
+    // Prepare authorization data only
+    const data = {
+      deduction_amount_words: this.numberToWordsWithDecimal(
+        this.computeMonthlyAmortization(
+          this.loanDetails[0].loan_amount,
+          this.loanDetails[0].term
+        )
+      ),
+      deduction_amount: this.computeMonthlyAmortization(
+        this.loanDetails[0].loan_amount,
+        this.loanDetails[0].term
+      ),
+      deduction_months: monthsTerm,
+      deduction_start_month: nextMonthName,
+      deduction_start_year: currentYearTwoDigits,
+      outstanding_loan_words: this.numberToWords(
+        this.loanDetails[0].loan_amount
+      ),
+      outstanding_loan_amount: this.loanDetails[0].loan_amount,
+      signature: borrowerSignatureImage,
+      signature_name: [
+        this.borrowersInformation[0]?.first_name ?? '',
+        this.borrowersInformation[0]?.middle_initial ?? '',
+        this.borrowersInformation[0]?.last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+      employee_no: this.borrowersInformation[0].employee_number,
+      status: this.borrowersInformation[0].employment_status,
+      designation: this.borrowersInformation[0].position,
+      division: 'Olongapo City',
+      code: 'OC-01',
+      service: 'Elementary',
+    };
+
+    const fields = [
+      { name: 'deduction_amount_words', x: 425, y: 358, fontSize: 8 },
+      { name: 'deduction_amount', x: 170, y: 371, fontSize: 12 },
+      { name: 'deduction_months', x: 425, y: 371, fontSize: 12 },
+      { name: 'deduction_start_month', x: 565, y: 371, fontSize: 12 },
+      { name: 'deduction_start_year', x: 680, y: 371, fontSize: 12 },
+      { name: 'outstanding_loan_words', x: 370, y: 392, fontSize: 8 },
+      { name: 'outstanding_loan_amount', x: 115, y: 405, fontSize: 12 },
+      { name: 'signature', x: 530, y: 508, fontSize: 12, isImage: true },
+      { name: 'signature_name', x: 520, y: 522, fontSize: 12 },
+      { name: 'employee_no', x: 220, y: 625, fontSize: 12 },
+      { name: 'status', x: 392, y: 625, fontSize: 12 },
+      { name: 'designation', x: 575, y: 625, fontSize: 12 },
+      { name: 'division', x: 175, y: 642, fontSize: 12 },
+      { name: 'code', x: 380, y: 642, fontSize: 12 },
+      { name: 'service', x: 545, y: 642, fontSize: 12 },
+    ];
+
+    const scaleX = width / 800;
+    const scaleY = height / 1100;
+
+    fields.forEach((f) => {
+      let val = (data as any)[f.name];
+
+      if (f.isImage && val) {
+        const xPt = f.x * scaleX;
+        const yPt = height - f.y * scaleY - 20;
+
+        if (typeof val !== 'object' || typeof val.embed !== 'function') {
+          console.warn(`Expected PDFImage for ${f.name}, but got`, val);
+          return;
+        }
+
+        page.drawImage(val, {
+          x: xPt,
+          y: yPt,
+          width: 80,
+          height: 30,
+        });
+        return;
+      }
+
+      if (val === undefined || val === null) return;
+
+      const xPt = f.x * scaleX;
+      const yPt = height - f.y * scaleY - f.fontSize * scaleY;
+
+      // Add bold styling for specific fields
+      const useBold = [
+        'c_reviewed_by',
+        'd_reviewed_by',
+        'c_reviewed_designation',
+        'd_reviewed_designation',
+      ].includes(f.name);
+
+      page.drawText(val.toString(), {
+        x: xPt,
+        y: yPt,
+        size: f.fontSize * scaleY,
+        font: useBold ? boldFont : font,
+      });
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const buffer = pdfBytes.buffer as ArrayBuffer;
+    const blob = new Blob([buffer], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    // set iframe source
+    this.pdfPreviewAuthorization.nativeElement.src = url;
+  }
+
+  computeMonthlyAmortization(loan_amount: number, term: number) {
+    const months = term * 12;
+
+    const interest = loan_amount * term * 0.06;
+
+    const total = interest + loan_amount;
+
+    const monthlyAmortization = Number((total / months).toFixed(2));
+
+    return monthlyAmortization;
+  }
+
   goBack(): void {
     this.router.navigate(['/forward']);
   }
@@ -1173,7 +1344,11 @@ export class ViewApplicationDetailComponent {
       width: '90rem',
       maxWidth: '90rem',
       height: '55rem',
-      data: { loan: this.loanDetails[0], borrower: this.borrowersInformation[0], coMaker: this.coMakersInformation[0] },
+      data: {
+        loan: this.loanDetails[0],
+        borrower: this.borrowersInformation[0],
+        coMaker: this.coMakersInformation[0],
+      },
     });
   }
 

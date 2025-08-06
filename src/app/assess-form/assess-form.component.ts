@@ -115,7 +115,7 @@ export class AssessFormComponent {
         ),
         Validators.required,
       ],
-      periodOfLoan: [0, Validators.required],
+      periodOfLoan: ['', Validators.required],
       dateProcessed: [
         new Date().toISOString().substring(0, 16),
         Validators.required,
@@ -130,11 +130,20 @@ export class AssessFormComponent {
       .get('outstandingBalance')!
       .valueChanges.subscribe(() => {
         this.updateNetProceeds();
+        this.updatePercentagePrincipalPaid();
       });
+
     this.fourthFormGroup
       .get('principalLoanAmount')!
       .valueChanges.subscribe(() => {
         this.updateNetProceeds();
+        this.updatePercentagePrincipalPaid();
+      });
+
+    this.fourthFormGroup
+      .get('periodOfLoan')!
+      .setValue(this.getPeriodOfLoan(this.data.loan.term), {
+        emitEvent: false,
       });
   }
 
@@ -165,10 +174,10 @@ export class AssessFormComponent {
 
       return netTakeHomePay;
     } else {
+      console.log('new');
       const netTakeHomePay = netPay - monthlyAmor;
 
       return netTakeHomePay;
-      console.log('new');
     }
   }
 
@@ -176,6 +185,36 @@ export class AssessFormComponent {
     const netProceeds = principalLoanAmount - outstandingBalance;
 
     return netProceeds;
+  }
+
+  computePercentagePrincipalPaid(
+    outstandingBalance: number,
+    principalLoanAmount: number
+  ) {
+    const netProceeds = principalLoanAmount - outstandingBalance;
+
+    const percentage =
+      principalLoanAmount > 0
+        ? ((netProceeds / principalLoanAmount) * 100).toFixed(0)
+        : 0;
+
+    this.thirdFormGroup
+      .get('percentageOfPrincipalPaid')!
+      .setValue(percentage, { emitEvent: false });
+  }
+
+  updatePercentagePrincipalPaid() {
+    const outstandingBalance =
+      Number(this.fourthFormGroup.get('outstandingBalance')!.value) || 0;
+    const principalLoanAmount =
+      Number(this.fourthFormGroup.get('principalLoanAmount')!.value) || 0;
+    const percentage = this.computePercentagePrincipalPaid(
+      outstandingBalance,
+      principalLoanAmount
+    );
+    this.thirdFormGroup
+      .get('percentageOfPrincipalPaid')!
+      .setValue(percentage, { emitEvent: false });
   }
 
   updateNetProceeds() {
@@ -190,6 +229,27 @@ export class AssessFormComponent {
     this.fourthFormGroup
       .get('netProceeds')!
       .setValue(netProceeds, { emitEvent: false });
+  }
+
+  getPeriodOfLoan(term: number): string {
+    
+    const now = new Date();
+    const startMonth = now
+      .toLocaleString('en-US', { month: 'long' })
+      .toUpperCase();
+    const startYear = now.getFullYear();
+
+    const termNum = Number(term);
+
+    const endDate = new Date(now.getFullYear() + termNum, now.getMonth(), 1);
+    endDate.setMonth(endDate.getMonth() - 1);
+
+    const endMonth = endDate
+      .toLocaleString('en-US', { month: 'long' })
+      .toUpperCase();
+    const endYear = endDate.getFullYear();
+
+    return `${startMonth} ${startYear} – ${endMonth} ${endYear}`;
   }
 
   updateBorrowerAge() {

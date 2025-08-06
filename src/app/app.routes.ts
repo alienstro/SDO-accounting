@@ -29,7 +29,7 @@ export const routes: Routes = [
       { path: 'approval', component: EndorsementComponent },
       { path: 'payment', component: PaymentComponent },
       { path: 'reject', component: DeclineComponent },
-      { path: 'paid', component: PaidComponent },
+      { path: 'done', component: PaidComponent },
       { path: '**', redirectTo: '/login' },
     ]
   }

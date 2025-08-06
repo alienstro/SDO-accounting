@@ -48,9 +48,8 @@ export class SidebarComponent {
     "forward",
     "approval",
     "pending",
-    "payment",
+    "done",
     "reject",
-    "paid"
   ]
 
   logout(): void {

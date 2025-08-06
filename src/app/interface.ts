@@ -133,6 +133,9 @@ export interface BorrowersInformation {
   employment_status_hr: string;
   net_pay: number;
   payroll_date: Date;
+  division: string;
+  code: string;
+  service: string;
 }
 
 export interface Staff {

@@ -308,7 +308,7 @@
 
             <mat-tab label="Assessment Form">
               <mat-tab-group>
-                <mat-tab label="Form Details">
+                <mat-tab label="Assessment Details">
                   <!-- Documents Submitted -->
                   <h3 style="margin-top: 1rem">Documents Submitted</h3>
                   <table class="details-table">
@@ -564,18 +564,30 @@
                         maturity
                       </td>
                       <td>
-                        <ng-container *ngIf="assessmentDetails[0].borrower_reaches_retirement === 'Yes'; else blankBorrowerRetirement">
+                        <ng-container
+                          *ngIf="
+                            assessmentDetails[0].borrower_reaches_retirement ===
+                              'Yes';
+                            else blankBorrowerRetirement
+                          "
+                        >
                           <mat-icon>check_box</mat-icon>
                         </ng-container>
                         <ng-template #blankBorrowerRetirement>
-                          <ng-container *ngIf="assessmentDetails[0].borrower_reaches_retirement === 'No'; else emptyCell">
+                          <ng-container
+                            *ngIf="
+                              assessmentDetails[0]
+                                .borrower_reaches_retirement === 'No';
+                              else emptyCell
+                            "
+                          >
                             <mat-icon>close</mat-icon>
                           </ng-container>
                           <ng-template #emptyCell></ng-template>
                         </ng-template>
                       </td>
                       <td class="number-highlight">
-                        {{ assessmentDetails[0].borrowers_age ?? '' }}
+                        {{ assessmentDetails[0].borrowers_age ?? "" }}
                       </td>
                     </tr>
                     <tr>
@@ -584,28 +596,52 @@
                         maturity
                       </td>
                       <td>
-                        <ng-container *ngIf="assessmentDetails[0].comakers_reaches_retirement === 'Yes'; else blankCoMakerRetirement">
+                        <ng-container
+                          *ngIf="
+                            assessmentDetails[0].comakers_reaches_retirement ===
+                              'Yes';
+                            else blankCoMakerRetirement
+                          "
+                        >
                           <mat-icon>check_box</mat-icon>
                         </ng-container>
                         <ng-template #blankCoMakerRetirement>
-                          <ng-container *ngIf="assessmentDetails[0].comakers_reaches_retirement === 'No'; else emptyCell2">
+                          <ng-container
+                            *ngIf="
+                              assessmentDetails[0]
+                                .comakers_reaches_retirement === 'No';
+                              else emptyCell2
+                            "
+                          >
                             <mat-icon>close</mat-icon>
                           </ng-container>
                           <ng-template #emptyCell2></ng-template>
                         </ng-template>
                       </td>
                       <td class="number-highlight">
-                        {{ assessmentDetails[0].comakers_age ?? '' }}
+                        {{ assessmentDetails[0].comakers_age ?? "" }}
                       </td>
                     </tr>
                     <tr>
                       <td>Borrower has Outstanding PF Loan Balance</td>
                       <td>
-                        <ng-container *ngIf="assessmentDetails[0].borrowers_has_outstanding_balance === 'Yes'; else blankOutstanding">
+                        <ng-container
+                          *ngIf="
+                            assessmentDetails[0]
+                              .borrowers_has_outstanding_balance === 'Yes';
+                            else blankOutstanding
+                          "
+                        >
                           <mat-icon>check_box</mat-icon>
                         </ng-container>
                         <ng-template #blankOutstanding>
-                          <ng-container *ngIf="assessmentDetails[0].borrowers_has_outstanding_balance === 'No'; else emptyCell3">
+                          <ng-container
+                            *ngIf="
+                              assessmentDetails[0]
+                                .borrowers_has_outstanding_balance === 'No';
+                              else emptyCell3
+                            "
+                          >
                             <mat-icon>close</mat-icon>
                           </ng-container>
                           <ng-template #emptyCell3></ng-template>
@@ -685,15 +721,36 @@
               </mat-tab-group>
             </mat-tab>
 
+            <mat-tab label="Salary Deduction Form">
+              <mat-tab-group>
+                <mat-tab label="Salary Deduction Form PDF">
+                  <div class="pdf-preview-container">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="generateAndPreviewPdfAuthorization()"
+                      class="button-generate"
+                    >
+                      Generate & Preview PDF Authorization to Deduct
+                    </button>
+                    <iframe
+                      #pdfPreviewAuthorization
+                      title="PDF Preview Authorization"
+                      width="595"
+                      height="842"
+                      style="
+                        border: 1px solid #ccc;
+                        display: block;
+                        margin-top: 1rem;
+                      "
+                    ></iframe>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </mat-tab>
+
             <mat-tab label="Uploaded Documents">
               <mat-tab-group>
-                <mat-tab label="Authority To Deduct">
-                  <iframe
-                    [src]="url.authorityToDeduct"
-                    frameborder="0"
-                  ></iframe>
-                </mat-tab>
-
                 <mat-tab label="Payslip of Applicant">
                   <iframe [src]="url.payslipApplicant" frameborder="0"></iframe>
                 </mat-tab>
