@@ -10,6 +10,7 @@ import {
   BorrowersInformation,
   CoMakersInformation,
   DepartmentStatus,
+  Documents,
   LoanApplication,
   LoanDetails,
   MergedLoanApplicationDetails,
@@ -188,6 +189,12 @@ export class ApplicationService {
   ): Observable<SignatureDetails[]> {
     return this.http.get<SignatureDetails[]>(
       `${this.apiLoanApplication}/getSignatureDetailsApplicationId/${application_id}`
+    );
+  }
+
+  getDocumentsByApplicationId(application_id: number): Observable<Documents[]> {
+    return this.http.get<Documents[]>(
+      `${this.apiLoanApplication}/getDocuments/${application_id}`
     );
   }
 

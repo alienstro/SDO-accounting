@@ -398,6 +398,7 @@ export interface Assessment {
   principal_loan_amount: number;
   principal: number;
   interest: number;
+  outstanding_balance: number;
   net_proceeds: number;
   net_take_home_pay_after_deduction: number;
   monthly_amortization: number;
@@ -528,4 +529,15 @@ export interface AssessmentForm {
   processed_by: string;
   reviewed_by: string;
   remarks: string;
+}
+
+export interface Documents {
+  idComaker_path: string;
+  idApplicant_path: string;
+  payslipApplicant_path: string;
+  payslipComaker_path: string;
+  cscAppointment_path: string;
+  emergency_path: string;
+  document_id: number;
+  application_id: number;
 }

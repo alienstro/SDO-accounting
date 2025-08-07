@@ -51,6 +51,7 @@ export class TableComponent {
       this.rows = parseRes.rows;
       this.baseRows = parseRes.rows;
     }
+    console.log('Table data:', this.data);
   }
 
   navigateRoute(route: string, loan: any) {
@@ -58,7 +59,7 @@ export class TableComponent {
 
     console.log(currentUrl);
 
-    if (currentUrl === '/application' || currentUrl === '/complete') {
+    if (currentUrl === '/application' || currentUrl === '/done' || currentUrl === '/reject') {
       this.router.navigate([`/application/${route}`], {
         state: { loanDetails: loan },
       });
@@ -97,22 +98,21 @@ export class TableComponent {
     }
   }
 
-  getReasonFromData(rowIndex: number): string {
-    // Get the reason directly from the original data array
-    if (this.data && this.data[rowIndex]) {
-      const item = this.data[rowIndex] as any;
-
-      // Try different possible field names for the reason
-      const reason =
-        item.remarks_message ||
-        item.reason ||
-        item.remarks ||
-        item.rejection_reason ||
-        'No reason provided';
-
-      return reason;
+  getReasonFromData(application_id: any): string {
+    if (this.data) {
+      const item = (this.data as any[]).find(
+        (d) => d.application_id === application_id
+      );
+      if (item) {
+        return (
+          item.remarks_message ||
+          item.reason ||
+          item.remarks ||
+          item.rejection_reason ||
+          'No reason provided'
+        );
+      }
     }
-
     return 'No reason provided';
   }
 }

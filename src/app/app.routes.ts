@@ -7,12 +7,10 @@ import { ForwardComponent } from './forward/forward.component';
 import { AssessmentComponent } from './assessment/assessment.component';
 import { SignatureComponent } from './signature/signature.component';
 import { EndorsementComponent } from './approval/endorsement.component';
-import { PaymentComponent } from './payment/payment.component';
 import { DeclineComponent } from './decline/decline.component';
 import { ViewApplicationDetailComponent } from './component/view-application-detail-accounting/view-application-detail.component';
 import { PaidComponent } from './paid/paid.component';
 import { ViewApplicationDetailComponentApplication } from './component/view-application-detail-application/view-application-detail-application.component';
-import { ViewApplicationDetailComponentAssessment } from './component/view-application-detail-assessment/view-application-detail-assessment.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,11 +21,9 @@ export const routes: Routes = [
       { path: 'forward', component: ForwardComponent },
       { path: 'forward/:id', component: ViewApplicationDetailComponent },
       { path: 'application/:id', component: ViewApplicationDetailComponentApplication },
-      { path: 'assessment/:id', component: ViewApplicationDetailComponentAssessment },
       { path: 'assessment', component: AssessmentComponent },
       { path: 'signature', component: SignatureComponent },
       { path: 'approval', component: EndorsementComponent },
-      { path: 'payment', component: PaymentComponent },
       { path: 'reject', component: DeclineComponent },
       { path: 'done', component: PaidComponent },
       { path: '**', redirectTo: '/login' },

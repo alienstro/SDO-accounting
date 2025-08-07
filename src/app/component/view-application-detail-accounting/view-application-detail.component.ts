@@ -4,6 +4,7 @@ import {
   Assessment,
   BorrowersInformation,
   CoMakersInformation,
+  Documents,
   LoanDetails,
   SignatureDetails,
 } from '../../interface';
@@ -59,6 +60,9 @@ export class ViewApplicationDetailComponent {
   assessmentDetails: Assessment[] = [{} as Assessment];
   applicantDetails: Applicant[] = [{} as Applicant];
   signatureDetails: SignatureDetails[] = [{} as SignatureDetails];
+  documentsDetails: Documents[] = [{} as Documents];
+
+  private pdfCache: { [key: string]: SafeResourceUrl } = {};
 
   constructor(
     private router: Router,
@@ -391,6 +395,7 @@ export class ViewApplicationDetailComponent {
       principal_amount: this.assessmentDetails[0]?.principal_loan_amount,
       outstanding_principal: this.assessmentDetails[0]?.principal,
       outstanding_interest: this.assessmentDetails[0]?.interest,
+      outstanding_balance: this.assessmentDetails[0]?.outstanding_balance,
       net_proceeds: this.assessmentDetails[0]?.net_proceeds,
       net_take_home_pay:
         this.assessmentDetails[0]?.net_take_home_pay_after_deduction,
@@ -612,6 +617,7 @@ export class ViewApplicationDetailComponent {
       { name: 'principal_amount', x: 293, y: 637, fontSize: 8 },
       { name: 'outstanding_principal', x: 207, y: 659, fontSize: 8 },
       { name: 'outstanding_interest', x: 207, y: 670, fontSize: 8 },
+      { name: 'outstanding_balance', x: 307, y: 670, fontSize: 8 },
       { name: 'net_proceeds', x: 307, y: 682, fontSize: 8 },
 
       { name: 'net_take_home_pay', x: 640, y: 636, fontSize: 8 },
@@ -871,7 +877,7 @@ export class ViewApplicationDetailComponent {
         .join(' '),
       co_makers_date: this.coMakersInformation[0]?.co_date
         ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString())
-        : 'No Date Yet',
+        : '',
 
       personnel_signature: hrSignatureImage,
       personnel_name: [
@@ -884,10 +890,14 @@ export class ViewApplicationDetailComponent {
       personnel_designation: this.signatureDetails[0]?.hr_designation,
       personnel_date: this.signatureDetails[0]?.hr_date
         ? this.formatDateToLong(this.signatureDetails[0]?.hr_date.toString())
-        : 'No Date Yet',
+        : '',
       permanent:
+        typeof this.borrowersInformation[0]?.employment_status_hr ===
+          'string' &&
         this.borrowersInformation[0].employment_status_hr.includes('permanent'),
       co_terminus:
+        typeof this.borrowersInformation[0]?.employment_status_hr ===
+          'string' &&
         this.borrowersInformation[0].employment_status_hr.includes(
           'co-terminus'
         ),
@@ -896,7 +906,7 @@ export class ViewApplicationDetailComponent {
         ? this.formatDateToMonthYear(
             this.borrowersInformation[0]?.payroll_date.toString()
           )
-        : 'No Date Yet',
+        : '',
 
       legal_signature: legalSignatureImage,
       legal_name: [
@@ -909,7 +919,7 @@ export class ViewApplicationDetailComponent {
       legal_designation: this.signatureDetails[0]?.legal_designation,
       legal_date: this.signatureDetails[0]?.legal_date
         ? this.formatDateToLong(this.signatureDetails[0]?.legal_date.toString())
-        : 'No Date Yet',
+        : '',
     };
 
     const fields = [
@@ -1206,9 +1216,9 @@ export class ViewApplicationDetailComponent {
       employee_no: this.borrowersInformation[0].employee_number,
       status: this.borrowersInformation[0].employment_status,
       designation: this.borrowersInformation[0].position,
-      division: 'Olongapo City',
-      code: 'OC-01',
-      service: 'Elementary',
+      division: '',
+      code: '',
+      service: '',
     };
 
     const fields = [
@@ -1317,20 +1327,15 @@ export class ViewApplicationDetailComponent {
     });
   }
 
-  transform(url: string) {
-    return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+  transform(url: string): SafeResourceUrl {
+    if (!this.pdfCache[url]) {
+      this.pdfCache[url] =
+        this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+    return this.pdfCache[url];
   }
 
-  url: {
-    authorityToDeduct: SafeResourceUrl;
-    csc: SafeResourceUrl;
-    emergency: SafeResourceUrl;
-    idApplicant: SafeResourceUrl;
-    idComaker: SafeResourceUrl;
-    payslipApplicant: SafeResourceUrl;
-    payslipComaker: SafeResourceUrl;
-  } = {
-    authorityToDeduct: '',
+  url = {
     csc: '',
     emergency: '',
     idApplicant: '',
@@ -1375,19 +1380,6 @@ export class ViewApplicationDetailComponent {
         this.applicant_id = this.loanDetails[0].applicant_id;
         console.log(this.applicant_id);
         console.log('department number', this.roleId);
-
-        const baseUrl = `${DOC_URL}/${this.applicant_id}/documents/${this.application_id}`;
-
-        this.url = {
-          authorityToDeduct: this.transform(`${baseUrl}/authorityToDeduct.pdf`),
-          csc: this.transform(`${baseUrl}/csc.pdf`),
-          emergency: this.transform(`${baseUrl}/emergency.pdf`),
-          idApplicant: this.transform(`${baseUrl}/idApplicant.pdf`),
-          idComaker: this.transform(`${baseUrl}/idComaker.pdf`),
-          payslipApplicant: this.transform(`${baseUrl}/payslipApplicant.pdf`),
-          payslipComaker: this.transform(`${baseUrl}/payslipComaker.pdf`),
-        };
-
         console.log('view application: ', this.application_id);
 
         this.applicationService
@@ -1441,6 +1433,23 @@ export class ViewApplicationDetailComponent {
             this.signatureDetails = Array.isArray(signature)
               ? signature
               : [signature];
+          });
+
+        this.applicationService
+          .getDocumentsByApplicationId(this.application_id)
+          .subscribe((documents) => {
+            this.documentsDetails = Array.isArray(documents)
+              ? documents
+              : [documents];
+
+            this.url = {
+              csc: `${DOC_URL}/${this.documentsDetails[0].cscAppointment_path}`,
+              emergency: `${DOC_URL}/${this.documentsDetails[0].emergency_path}`,
+              idApplicant: `${DOC_URL}/${this.documentsDetails[0].idApplicant_path}`,
+              idComaker: `${DOC_URL}/${this.documentsDetails[0].idComaker_path}`,
+              payslipApplicant: `${DOC_URL}/${this.documentsDetails[0].payslipApplicant_path}`,
+              payslipComaker: `${DOC_URL}/${this.documentsDetails[0].payslipComaker_path}`,
+            };
           });
 
         console.log(this.assessmentDetails[0]);

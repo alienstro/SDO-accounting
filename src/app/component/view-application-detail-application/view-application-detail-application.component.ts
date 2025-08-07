@@ -4,6 +4,7 @@ import {
   Assessment,
   BorrowersInformation,
   CoMakersInformation,
+  Documents,
   LoanDetails,
   SignatureDetails,
 } from '../../interface';
@@ -21,6 +22,7 @@ import { PDFDocument, StandardFonts } from 'pdf-lib';
 import { HttpClient } from '@angular/common/http';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { TokenService } from '../../service/token.service';
 
 @Component({
   selector: 'app-view-application-detail-application',
@@ -36,14 +38,20 @@ export class ViewApplicationDetailComponentApplication {
   @ViewChild('pdfPreviewAssessment', { static: false })
   pdfPreviewAssessment!: ElementRef<HTMLIFrameElement>;
 
+  @ViewChild('pdfPreviewAuthorization', { static: false })
+  pdfPreviewAuthorization!: ElementRef<HTMLIFrameElement>;
+
   private formPdfBytesLoan: ArrayBuffer | null = null;
   private formPdfBytesAssessment: ArrayBuffer | null = null;
+  private formPdfBytesAuthorization: ArrayBuffer | null = null;
 
   application_id!: any;
   applicant_id!: any;
+  noData: string = 'No Data Yet';
 
   currentUrl = '';
-  noData: string = 'No Data Yet';
+
+  roleId: number = 0;
 
   loanDetails?: any;
   borrowersInformation: BorrowersInformation[] = [{} as BorrowersInformation];
@@ -51,6 +59,9 @@ export class ViewApplicationDetailComponentApplication {
   assessmentDetails: Assessment[] = [{} as Assessment];
   applicantDetails: Applicant[] = [{} as Applicant];
   signatureDetails: SignatureDetails[] = [{} as SignatureDetails];
+  documentsDetails: Documents[] = [{} as Documents];
+
+  private pdfCache: { [key: string]: SafeResourceUrl } = {};
 
   constructor(
     private router: Router,
@@ -58,8 +69,13 @@ export class ViewApplicationDetailComponentApplication {
     private applicationService: ApplicationService,
     private domSanitizer: DomSanitizer,
     private route: ActivatedRoute,
+    private tokenService: TokenService,
     private http: HttpClient
   ) {
+    this.roleId = Number(
+      this.tokenService.userRoleToken(this.tokenService.decodeToken())
+    );
+
     this.http
       .get('../../../assets/Provident-Loan-Form_New-Template-2025-1.pdf', {
         responseType: 'arraybuffer',
@@ -71,15 +87,25 @@ export class ViewApplicationDetailComponentApplication {
         responseType: 'arraybuffer',
       })
       .subscribe((bytes) => (this.formPdfBytesAssessment = bytes));
+
+    this.http
+      .get('../../../assets/Provident-Loan-Form_New-Template-2025-3.pdf', {
+        responseType: 'arraybuffer',
+      })
+      .subscribe((bytes) => (this.formPdfBytesAuthorization = bytes));
   }
 
-  formatDateToLong(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+  numberToWordsWithDecimal(num: number): string {
+    const integerPart = Math.floor(num);
+    const decimalPart = Math.round((num - integerPart) * 100);
+
+    let words = this.numberToWords(integerPart).replace(/-/g, ' ');
+
+    if (decimalPart > 0) {
+      words += ' POINT ' + this.numberToWords(decimalPart).replace(/-/g, ' ');
+    }
+
+    return words.toUpperCase();
   }
 
   numberToWords(num: number): string {
@@ -152,6 +178,43 @@ export class ViewApplicationDetailComponentApplication {
       .replace(/\s+/g, ' ')
       .trim()
       .toUpperCase();
+  }
+
+  formatDateToLong(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+
+  formatDateToMonthYear(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+    });
+  }
+
+  async convertBase64ToImage(pdfDoc: PDFDocument, base64: string) {
+    if (!base64) return null;
+
+    try {
+      const imageData = base64.split(',')[1];
+      const byteArray = Uint8Array.from(atob(imageData), (c) =>
+        c.charCodeAt(0)
+      );
+
+      if (base64.includes('jpeg') || base64.includes('jpg')) {
+        return await pdfDoc.embedJpg(byteArray);
+      } else {
+        return await pdfDoc.embedPng(byteArray);
+      }
+    } catch (error) {
+      console.error('Error converting base64 to image:', error);
+      return null;
+    }
   }
 
   wrapText(text: string, maxLength: number): string[] {
@@ -316,13 +379,14 @@ export class ViewApplicationDetailComponentApplication {
       percentage_of_principal:
         this.assessmentDetails[0]?.percentage_of_principal_paid,
       b_date_reviewed: this.signatureDetails[0].accounting_date
-        ? new Date(
-            this.assessmentDetails[0]?.computation_date_processed
-          ).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })
+        ? new Date(this.signatureDetails[0].accounting_date).toLocaleDateString(
+            'en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }
+          )
         : '',
       b_reviewed_signature: bReviewedSignatureImage,
 
@@ -330,6 +394,7 @@ export class ViewApplicationDetailComponentApplication {
       principal_amount: this.assessmentDetails[0]?.principal_loan_amount,
       outstanding_principal: this.assessmentDetails[0]?.principal,
       outstanding_interest: this.assessmentDetails[0]?.interest,
+      outstanding_balance: this.assessmentDetails[0]?.outstanding_balance,
       net_proceeds: this.assessmentDetails[0]?.net_proceeds,
       net_take_home_pay:
         this.assessmentDetails[0]?.net_take_home_pay_after_deduction,
@@ -352,23 +417,25 @@ export class ViewApplicationDetailComponentApplication {
       recommending_signature_asds: recommendingSignatureImageASDS,
       recommending_signature_sds: recommendingSignatureImageSDS,
       date_asds: this.signatureDetails[0]?.asds_date
-        ? new Date(
-            this.signatureDetails[0]?.asds_date
-          ).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })
+        ? new Date(this.signatureDetails[0]?.asds_date).toLocaleDateString(
+            'en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }
+          )
         : '',
 
       date_sds: this.signatureDetails[0]?.sds_date
-        ? new Date(
-            this.signatureDetails[0]?.sds_date
-          ).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })
+        ? new Date(this.signatureDetails[0]?.sds_date).toLocaleDateString(
+            'en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }
+          )
         : '',
     };
 
@@ -549,6 +616,7 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'principal_amount', x: 293, y: 637, fontSize: 8 },
       { name: 'outstanding_principal', x: 207, y: 659, fontSize: 8 },
       { name: 'outstanding_interest', x: 207, y: 670, fontSize: 8 },
+      { name: 'outstanding_balance', x: 307, y: 670, fontSize: 8 },
       { name: 'net_proceeds', x: 307, y: 682, fontSize: 8 },
 
       { name: 'net_take_home_pay', x: 640, y: 636, fontSize: 8 },
@@ -573,8 +641,20 @@ export class ViewApplicationDetailComponentApplication {
       { name: 'remarks', x: 415, y: 715, fontSize: 8 },
 
       // Recommending Approval
-      { name: 'recommending_signature_asds', x: 195, y: 848, fontSize: 8, isImage: true },
-      { name: 'recommending_signature_sds', x: 550, y: 865, fontSize: 8, isImage: true },
+      {
+        name: 'recommending_signature_asds',
+        x: 195,
+        y: 848,
+        fontSize: 8,
+        isImage: true,
+      },
+      {
+        name: 'recommending_signature_sds',
+        x: 550,
+        y: 865,
+        fontSize: 8,
+        isImage: true,
+      },
 
       { name: 'approved', x: 438, y: 857, fontSize: 8, checkbox: true },
       { name: 'disapproved', x: 438, y: 868, fontSize: 8, checkbox: true },
@@ -614,8 +694,6 @@ export class ViewApplicationDetailComponentApplication {
       } else {
         if (!val) return;
       }
-
-      if (val === undefined || val === null) return;
 
       const xPt = f.x * scaleX;
       const yPt = height - f.y * scaleY - f.fontSize * scaleY;
@@ -798,7 +876,7 @@ export class ViewApplicationDetailComponentApplication {
         .join(' '),
       co_makers_date: this.coMakersInformation[0]?.co_date
         ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString())
-        : 'No Date Yet',
+        : '',
 
       personnel_signature: hrSignatureImage,
       personnel_name: [
@@ -811,13 +889,23 @@ export class ViewApplicationDetailComponentApplication {
       personnel_designation: this.signatureDetails[0]?.hr_designation,
       personnel_date: this.signatureDetails[0]?.hr_date
         ? this.formatDateToLong(this.signatureDetails[0]?.hr_date.toString())
-        : 'No Date Yet',
+        : '',
       permanent:
-        this.borrowersInformation[0].employment_status.includes('Permanent'),
+        typeof this.borrowersInformation[0]?.employment_status_hr ===
+          'string' &&
+        this.borrowersInformation[0].employment_status_hr.includes('permanent'),
       co_terminus:
-        this.borrowersInformation[0].employment_status.includes('Co-Terminus'),
-      net_pay: 'PLACEHOLDER',
-      year_of: 'PLACEHOLDER',
+        typeof this.borrowersInformation[0]?.employment_status_hr ===
+          'string' &&
+        this.borrowersInformation[0].employment_status_hr.includes(
+          'co-terminus'
+        ),
+      net_pay: this.borrowersInformation[0].net_pay,
+      year_of: this.borrowersInformation[0].payroll_date
+        ? this.formatDateToMonthYear(
+            this.borrowersInformation[0]?.payroll_date.toString()
+          )
+        : '',
 
       legal_signature: legalSignatureImage,
       legal_name: [
@@ -830,7 +918,7 @@ export class ViewApplicationDetailComponentApplication {
       legal_designation: this.signatureDetails[0]?.legal_designation,
       legal_date: this.signatureDetails[0]?.legal_date
         ? this.formatDateToLong(this.signatureDetails[0]?.legal_date.toString())
-        : 'No Date Yet',
+        : '',
     };
 
     const fields = [
@@ -1043,8 +1131,6 @@ export class ViewApplicationDetailComponentApplication {
         if (!val) return;
       }
 
-      if (val === undefined || val === null) return;
-
       const xPt = f.x * scaleX;
       const yPt = height - f.y * scaleY - f.fontSize * scaleY;
 
@@ -1072,53 +1158,165 @@ export class ViewApplicationDetailComponentApplication {
     this.pdfPreview.nativeElement.src = url;
   }
 
-  async convertBase64ToImage(pdfDoc: PDFDocument, base64: string) {
-    if (!base64) return null;
+  // For Authorization To Deduct Form
+  async generateAndPreviewPdfAuthorization() {
+    console.log('working authorization button');
 
-    try {
-      const imageData = base64.split(',')[1];
-      const byteArray = Uint8Array.from(atob(imageData), (c) =>
-        c.charCodeAt(0)
-      );
-
-      if (base64.includes('jpeg') || base64.includes('jpg')) {
-        return await pdfDoc.embedJpg(byteArray);
-      } else {
-        return await pdfDoc.embedPng(byteArray);
-      }
-    } catch (error) {
-      console.error('Error converting base64 to image:', error);
-      return null;
+    if (!this.formPdfBytesAuthorization) {
+      console.error('PDF template not loaded yet.');
+      return;
     }
+
+    const pdfDoc = await PDFDocument.load(this.formPdfBytesAuthorization);
+    const page = pdfDoc.getPages()[0];
+    const { width, height } = page.getSize();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const borrowerSignature = this.borrowersInformation[0]?.signature;
+
+    const borrowerSignatureImage = borrowerSignature
+      ? await this.convertBase64ToImage(pdfDoc, borrowerSignature)
+      : null;
+
+    const monthsTerm = this.loanDetails[0].term * 12;
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const nextMonthName = nextMonth.toLocaleString('en-US', { month: 'long' });
+    const currentYearTwoDigits = now.getFullYear().toString().slice(-2);
+
+    // Prepare authorization data only
+    const data = {
+      deduction_amount_words: this.numberToWordsWithDecimal(
+        this.computeMonthlyAmortization(
+          this.loanDetails[0].loan_amount,
+          this.loanDetails[0].term
+        )
+      ),
+      deduction_amount: this.computeMonthlyAmortization(
+        this.loanDetails[0].loan_amount,
+        this.loanDetails[0].term
+      ),
+      deduction_months: monthsTerm,
+      deduction_start_month: nextMonthName,
+      deduction_start_year: currentYearTwoDigits,
+      outstanding_loan_words: this.numberToWords(
+        this.loanDetails[0].loan_amount
+      ),
+      outstanding_loan_amount: this.loanDetails[0].loan_amount,
+      signature: borrowerSignatureImage,
+      signature_name: [
+        this.borrowersInformation[0]?.first_name ?? '',
+        this.borrowersInformation[0]?.middle_initial ?? '',
+        this.borrowersInformation[0]?.last_name ?? '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+      employee_no: this.borrowersInformation[0].employee_number,
+      status: this.borrowersInformation[0].employment_status,
+      designation: this.borrowersInformation[0].position,
+      division: '',
+      code: '',
+      service: '',
+    };
+
+    const fields = [
+      { name: 'deduction_amount_words', x: 425, y: 358, fontSize: 8 },
+      { name: 'deduction_amount', x: 170, y: 371, fontSize: 12 },
+      { name: 'deduction_months', x: 425, y: 371, fontSize: 12 },
+      { name: 'deduction_start_month', x: 565, y: 371, fontSize: 12 },
+      { name: 'deduction_start_year', x: 680, y: 371, fontSize: 12 },
+      { name: 'outstanding_loan_words', x: 370, y: 392, fontSize: 8 },
+      { name: 'outstanding_loan_amount', x: 115, y: 405, fontSize: 12 },
+      { name: 'signature', x: 530, y: 508, fontSize: 12, isImage: true },
+      { name: 'signature_name', x: 520, y: 522, fontSize: 12 },
+      { name: 'employee_no', x: 220, y: 625, fontSize: 12 },
+      { name: 'status', x: 392, y: 625, fontSize: 12 },
+      { name: 'designation', x: 575, y: 625, fontSize: 12 },
+      { name: 'division', x: 175, y: 642, fontSize: 12 },
+      { name: 'code', x: 380, y: 642, fontSize: 12 },
+      { name: 'service', x: 545, y: 642, fontSize: 12 },
+    ];
+
+    const scaleX = width / 800;
+    const scaleY = height / 1100;
+
+    fields.forEach((f) => {
+      let val = (data as any)[f.name];
+
+      if (f.isImage && val) {
+        const xPt = f.x * scaleX;
+        const yPt = height - f.y * scaleY - 20;
+
+        if (typeof val !== 'object' || typeof val.embed !== 'function') {
+          console.warn(`Expected PDFImage for ${f.name}, but got`, val);
+          return;
+        }
+
+        page.drawImage(val, {
+          x: xPt,
+          y: yPt,
+          width: 80,
+          height: 30,
+        });
+        return;
+      }
+
+      if (val === undefined || val === null) return;
+
+      const xPt = f.x * scaleX;
+      const yPt = height - f.y * scaleY - f.fontSize * scaleY;
+
+      // Add bold styling for specific fields
+      const useBold = [
+        'c_reviewed_by',
+        'd_reviewed_by',
+        'c_reviewed_designation',
+        'd_reviewed_designation',
+      ].includes(f.name);
+
+      page.drawText(val.toString(), {
+        x: xPt,
+        y: yPt,
+        size: f.fontSize * scaleY,
+        font: useBold ? boldFont : font,
+      });
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const buffer = pdfBytes.buffer as ArrayBuffer;
+    const blob = new Blob([buffer], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    // set iframe source
+    this.pdfPreviewAuthorization.nativeElement.src = url;
+  }
+
+  computeMonthlyAmortization(loan_amount: number, term: number) {
+    const months = term * 12;
+
+    const interest = loan_amount * term * 0.06;
+
+    const total = interest + loan_amount;
+
+    const monthlyAmortization = Number((total / months).toFixed(2));
+
+    return monthlyAmortization;
   }
 
   goBack(): void {
     this.router.navigate(['/forward']);
   }
 
-  openEndorse(): void {
-    this.dialog.open(EndorseComponent, {
-      width: '50rem',
-      maxWidth: '50rem',
-      height: '21.5rem',
-      data: { application_id: this.application_id },
-    });
+  transform(url: string): SafeResourceUrl {
+    if (!this.pdfCache[url]) {
+      this.pdfCache[url] =
+        this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+    return this.pdfCache[url];
   }
 
-  transform(url: string) {
-    return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-
-  url: {
-    authorityToDeduct: SafeResourceUrl;
-    csc: SafeResourceUrl;
-    emergency: SafeResourceUrl;
-    idApplicant: SafeResourceUrl;
-    idComaker: SafeResourceUrl;
-    payslipApplicant: SafeResourceUrl;
-    payslipComaker: SafeResourceUrl;
-  } = {
-    authorityToDeduct: '',
+  url = {
     csc: '',
     emergency: '',
     idApplicant: '',
@@ -1132,7 +1330,11 @@ export class ViewApplicationDetailComponentApplication {
       width: '90rem',
       maxWidth: '90rem',
       height: '55rem',
-      data: { loan: this.loanDetails[0] },
+      data: {
+        loan: this.loanDetails[0],
+        borrower: this.borrowersInformation[0],
+        coMaker: this.coMakersInformation[0],
+      },
     });
   }
 
@@ -1158,19 +1360,7 @@ export class ViewApplicationDetailComponentApplication {
         console.log('loan details: ', this.loanDetails);
         this.applicant_id = this.loanDetails[0].applicant_id;
         console.log(this.applicant_id);
-
-        const baseUrl = `${DOC_URL}/${this.applicant_id}/documents/${this.application_id}`;
-
-        this.url = {
-          authorityToDeduct: this.transform(`${baseUrl}/authorityToDeduct.pdf`),
-          csc: this.transform(`${baseUrl}/csc.pdf`),
-          emergency: this.transform(`${baseUrl}/emergency.pdf`),
-          idApplicant: this.transform(`${baseUrl}/idApplicant.pdf`),
-          idComaker: this.transform(`${baseUrl}/idComaker.pdf`),
-          payslipApplicant: this.transform(`${baseUrl}/payslipApplicant.pdf`),
-          payslipComaker: this.transform(`${baseUrl}/payslipComaker.pdf`),
-        };
-
+        console.log('department number', this.roleId);
         console.log('view application: ', this.application_id);
 
         this.applicationService
@@ -1195,6 +1385,18 @@ export class ViewApplicationDetailComponentApplication {
             this.assessmentDetails = Array.isArray(assessment)
               ? assessment
               : [assessment];
+
+            if (
+              !this.assessmentDetails[0] ||
+              this.assessmentDetails.length === 0 ||
+              this.assessmentDetails[0].loan_application_form === undefined
+            ) {
+              this.assessmentDetails[0] = {
+                ...this.assessmentDetails[0],
+                loan_application_form: '',
+              };
+            }
+
             console.log(assessment);
           });
 
@@ -1212,6 +1414,23 @@ export class ViewApplicationDetailComponentApplication {
             this.signatureDetails = Array.isArray(signature)
               ? signature
               : [signature];
+          });
+
+        this.applicationService
+          .getDocumentsByApplicationId(this.application_id)
+          .subscribe((documents) => {
+            this.documentsDetails = Array.isArray(documents)
+              ? documents
+              : [documents];
+
+            this.url = {
+              csc: `${DOC_URL}/${this.documentsDetails[0].cscAppointment_path}`,
+              emergency: `${DOC_URL}/${this.documentsDetails[0].emergency_path}`,
+              idApplicant: `${DOC_URL}/${this.documentsDetails[0].idApplicant_path}`,
+              idComaker: `${DOC_URL}/${this.documentsDetails[0].idComaker_path}`,
+              payslipApplicant: `${DOC_URL}/${this.documentsDetails[0].payslipApplicant_path}`,
+              payslipComaker: `${DOC_URL}/${this.documentsDetails[0].payslipComaker_path}`,
+            };
           });
 
         console.log(this.assessmentDetails[0]);

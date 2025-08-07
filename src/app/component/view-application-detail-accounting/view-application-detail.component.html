@@ -111,9 +111,9 @@
                     <tr>
                       <td>Address</td>
                       <td>
-                        {{ borrowersInformation[0].region }},
+                        {{ borrowersInformation[0].street }},
                         {{ borrowersInformation[0].province }},
-                        {{ borrowersInformation[0].street }}
+                        {{ borrowersInformation[0].region }}
                       </td>
                     </tr>
                     <tr>
@@ -197,12 +197,12 @@
                       <td>Address</td>
                       <td>
                         {{
-                          coMakersInformation[0].co_region
-                            ? coMakersInformation[0].co_region +
+                          coMakersInformation[0].co_street
+                            ? coMakersInformation[0].co_street +
                               ", " +
                               coMakersInformation[0].co_province +
                               ", " +
-                              coMakersInformation[0].co_street
+                              coMakersInformation[0].co_region
                             : noData
                         }}
                       </td>
@@ -669,6 +669,12 @@
                       <td>{{ assessmentDetails[0].interest }}</td>
                     </tr>
                     <tr>
+                      <td>Outstanding Balance</td>
+                      <td>
+                        {{ assessmentDetails[0].outstanding_balance || "" }}
+                      </td>
+                    </tr>
+                    <tr>
                       <td>Net Take Home Pay After Deduction</td>
                       <td>
                         {{
@@ -752,27 +758,87 @@
             <mat-tab label="Uploaded Documents">
               <mat-tab-group>
                 <mat-tab label="Payslip of Applicant">
-                  <iframe [src]="url.payslipApplicant" frameborder="0"></iframe>
+                  <iframe
+                    *ngIf="this.documentsDetails[0].payslipApplicant_path"
+                    [src]="transform(url.payslipApplicant)"
+                    frameborder="0"
+                  ></iframe>
+                  <div
+                    class="no-uploaded-document"
+                    *ngIf="!this.documentsDetails[0].payslipApplicant_path"
+                  >
+                    No Uploaded Document
+                  </div>
                 </mat-tab>
 
                 <mat-tab label="Payslip of CoMaker">
-                  <iframe [src]="url.payslipComaker" frameborder="0"></iframe>
+                  <iframe
+                    *ngIf="this.documentsDetails[0].payslipComaker_path"
+                    [src]="transform(url.payslipComaker)"
+                    frameborder="0"
+                  ></iframe>
+                  <div
+                    class="no-uploaded-document"
+                    *ngIf="!this.documentsDetails[0].payslipComaker_path"
+                  >
+                    No Uploaded Document
+                  </div>
                 </mat-tab>
 
                 <mat-tab label="Id of Applicant">
-                  <iframe [src]="url.idApplicant" frameborder="0"></iframe>
+                  <iframe
+                    *ngIf="this.documentsDetails[0].idApplicant_path"
+                    [src]="transform(url.idApplicant)"
+                    frameborder="0"
+                  ></iframe>
+                  <div
+                    class="no-uploaded-document"
+                    *ngIf="!this.documentsDetails[0].idApplicant_path"
+                  >
+                    No Uploaded Document
+                  </div>
                 </mat-tab>
 
                 <mat-tab label="Id of CoMaker">
-                  <iframe [src]="url.idComaker" frameborder="0"></iframe>
+                  <iframe
+                    *ngIf="this.documentsDetails[0].idComaker_path"
+                    [src]="transform(url.idComaker)"
+                    frameborder="0"
+                  ></iframe>
+                  <div
+                    class="no-uploaded-document"
+                    *ngIf="!this.documentsDetails[0].idComaker_path"
+                  >
+                    No Uploaded Document
+                  </div>
                 </mat-tab>
 
                 <mat-tab label="CSC Appointment">
-                  <iframe [src]="url.csc" frameborder="0"></iframe>
+                  <iframe
+                    *ngIf="this.documentsDetails[0].cscAppointment_path"
+                    [src]="transform(url.csc)"
+                    frameborder="0"
+                  ></iframe>
+                  <div
+                    class="no-uploaded-document"
+                    *ngIf="!this.documentsDetails[0].cscAppointment_path"
+                  >
+                    No Uploaded Document
+                  </div>
                 </mat-tab>
 
                 <mat-tab label="Emergency Loan">
-                  <iframe [src]="url.emergency" frameborder="0"></iframe>
+                  <iframe
+                    *ngIf="this.documentsDetails[0].emergency_path"
+                    [src]="transform(url.emergency)"
+                    frameborder="0"
+                  ></iframe>
+                  <div
+                    class="no-uploaded-document"
+                    *ngIf="!this.documentsDetails[0].emergency_path"
+                  >
+                    No Uploaded Document
+                  </div>
                 </mat-tab>
               </mat-tab-group>
             </mat-tab>

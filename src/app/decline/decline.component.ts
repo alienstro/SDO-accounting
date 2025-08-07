@@ -12,7 +12,7 @@ import { ApplicationService } from '../service/application.service';
   styleUrl: './decline.component.css'
 })
 export class DeclineComponent implements OnInit{
-  offices = ['accounting', 'admin'];
+  offices = ['accounting', 'admin', 'hr', 'legal'];
 
   applications: Application[] = []
   constructor(private applicationService: ApplicationService, private cdr: ChangeDetectorRef) {

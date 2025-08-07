@@ -195,12 +195,14 @@ export class AssessFormComponent {
 
     const percentage =
       principalLoanAmount > 0
-        ? ((netProceeds / principalLoanAmount) * 100).toFixed(0)
+        ? Number(((netProceeds / principalLoanAmount) * 100).toFixed(0))
         : 0;
 
     this.thirdFormGroup
       .get('percentageOfPrincipalPaid')!
       .setValue(percentage, { emitEvent: false });
+
+    return percentage;
   }
 
   updatePercentagePrincipalPaid() {
@@ -232,7 +234,6 @@ export class AssessFormComponent {
   }
 
   getPeriodOfLoan(term: number): string {
-    
     const now = new Date();
     const startMonth = now
       .toLocaleString('en-US', { month: 'long' })
@@ -299,6 +300,8 @@ export class AssessFormComponent {
   }
 
   confirmDialog(): void {
+    this.updatePercentagePrincipalPaid();
+
     const assessment: Assessment = {
       ...this.thirdFormGroup.value,
       ...this.fourthFormGroup.value,
@@ -318,10 +321,6 @@ export class AssessFormComponent {
         if (res.success) {
           this.snackbarService.showSnackbar(
             'Assessed Loan Application Successfully!'
-          );
-          this.applicationService.updateAssessStatus(
-            'Approved',
-            this.application_id
           );
           this.dialogRef.close(assessment);
         } else {
