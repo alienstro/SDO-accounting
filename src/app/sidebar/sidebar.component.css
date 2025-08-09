@@ -16,7 +16,7 @@ hr {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  background-color: #0165B2;
+  background-color: #0165b2;
   overflow: hidden;
   justify-content: space-between;
   height: 93%;
@@ -34,6 +34,17 @@ hr {
   padding-bottom: 1rem;
 }
 
+.account-container {
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid white;
+  width: 80%;
+  padding-top: 1rem;
+}
+
 .profile-info {
   display: flex;
   flex-direction: column;
@@ -42,7 +53,6 @@ hr {
 }
 
 .profile-name {
-  
   font-weight: bold;
   font-size: 1rem;
 }
@@ -52,6 +62,7 @@ hr {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding-bottom: 1rem;
 }
 
 .button-logout {
@@ -74,6 +85,38 @@ hr {
 }
 
 .button-action:hover {
-    cursor: pointer;
-    background-color: #004e89;
+  cursor: pointer;
+  background-color: #004e89;
+}
+
+/* accounts nav div */
+
+.nav-div {
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  width: 11rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0165B2;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-div:hover {
+  background-color: #004e89;
+  cursor: pointer;
+}
+
+.nav-text {
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+}
+
+.pathname {
+  text-transform: capitalize;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
 }

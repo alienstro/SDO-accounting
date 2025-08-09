@@ -16,6 +16,7 @@ import {
   MergedLoanApplicationDetails,
   PaidApplication,
   SignatureDetails,
+  Staff,
 } from '../interface';
 import { RequestService } from './request.service';
 import { API_URL } from '../env';
@@ -40,6 +41,8 @@ export class ApplicationService {
   private _signatureDetails = new BehaviorSubject<SignatureDetails[]>([]);
   private _approvalDetails = new BehaviorSubject<ApprovalDetails[]>([]);
   private _departmentStatus = new BehaviorSubject<DepartmentStatus[]>([]);
+  private _accountsApplicant = new BehaviorSubject<Applicant[]>([]);
+  private _accountsStaff = new BehaviorSubject<Staff[]>([]);
 
   paidApplications$ = this._paidApplications.asObservable();
   applications$ = this._applications.asObservable();
@@ -53,6 +56,8 @@ export class ApplicationService {
   signatureDetails$ = this._signatureDetails.asObservable();
   approvalDetails$ = this._approvalDetails.asObservable();
   departmentStatus$ = this._departmentStatus.asObservable();
+  accountsApplicant$ = this._accountsApplicant.asObservable();
+  accountsStaff$ = this._accountsStaff.asObservable();
 
   constructor(
     private requestService: RequestService,
@@ -81,6 +86,18 @@ export class ApplicationService {
   getPaidApplication(): Observable<PaidApplication[]> {
     return this.http.get<PaidApplication[]>(
       `${this.apiLoanApplication}/getPaidApplication`
+    );
+  }
+
+  getAccountsApplicant(): Observable<Applicant[]> {
+    return this.http.get<Applicant[]>(
+      `${API_URL}/applicantUser`
+    );
+  }
+
+    getAccountsStaff(): Observable<Staff[]> {
+    return this.http.get<Staff[]>(
+      `${API_URL}/staffUser`
     );
   }
 
@@ -228,6 +245,15 @@ export class ApplicationService {
     return this._signatureDetails.getValue();
   }
 
+   getAccountsApplicantState() {
+    return this._accountsApplicant.getValue();
+  }
+
+  getAccountsStaffState() {
+    return this._accountsStaff.getValue();
+  }
+
+
   /// SET NEW DATA TO STATE
 
   setLoanApplicationState(setLoanApplicationState: LoanApplication[]) {
@@ -236,6 +262,14 @@ export class ApplicationService {
 
   setPaidApplications(data: PaidApplication[]) {
     this._paidApplications.next(data);
+  }
+
+  setAccountsApplicant(data: Applicant[]) {
+    this._accountsApplicant.next(data);
+  }
+
+  setAccountsStaff(data: Staff[]) {
+    this._accountsStaff.next(data);
   }
 
   setDepartmentStatusState(setDepartmentStatusState: DepartmentStatus[]) {

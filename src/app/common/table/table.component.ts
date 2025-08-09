@@ -14,11 +14,12 @@ import {
 } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationDialogComponent } from '../../component/confirmation-dialog/confirmation-dialog.component';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatPaginatorModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',
 })
@@ -34,6 +35,14 @@ export class TableComponent {
   header: string[] = [];
   rows: string[][] = [];
   baseRows: string[][] = [];
+
+  // Pagination properties
+  paginatedRows: string[][] = [];
+  pageSize = 5;
+  pageIndex = 0;
+  totalItems = 0;
+  pageSizeOptions = [5, 10, 20];
+
   constructor(private utilService: UtilsService, public router: Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,6 +59,7 @@ export class TableComponent {
       this.header = parseRes.headers;
       this.rows = parseRes.rows;
       this.baseRows = parseRes.rows;
+      this.updatePagination();
     }
     console.log('Table data:', this.data);
   }
@@ -96,6 +106,24 @@ export class TableComponent {
     } else {
       this.rows = this.baseRows;
     }
+
+    // Reset pagination after search
+    this.pageIndex = 0;
+    this.updatePagination();
+  }
+
+  // Pagination methods
+  updatePagination() {
+    this.totalItems = this.rows.length;
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedRows = this.rows.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagination();
   }
 
   getReasonFromData(application_id: any): string {

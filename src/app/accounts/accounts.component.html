@@ -1,0 +1,235 @@
+<div class="accounts-view">
+  <div class="main-content">
+    <app-title-view [title]="'Accounts'"></app-title-view>
+
+    <!-- Shared search + status filter (applies to active tab) -->
+    <div class="search">
+      <div class="search">
+        <div class="input_container">
+          <input
+            type="text"
+            placeholder="Search Employee"
+            class="search-input"
+            [(ngModel)]="searchKey"
+            (input)="applyFilter()"
+          />
+        </div>
+      </div>
+
+      <div class="right-container">
+        <div class="add-button">
+          <div class="add_button_container">
+            <button class="add-btn" (click)="openCreateDialog()">Add</button>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <div class="select_container">
+            <select [(ngModel)]="filterStatus" (change)="applyFilter()">
+              <option value="">Filter Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+      <!-- Applicants Tab -->
+      <mat-tab label="Applicants">
+        <div class="table">
+          <table
+            mat-table
+            [dataSource]="dataSourceApplicants"
+            matSort
+            #sortApplicants="matSort"
+          >
+            <!-- Email -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.email || "-" }}
+              </td>
+            </ng-container>
+
+            <!-- First Name -->
+            <ng-container matColumnDef="first_name">
+              <th mat-header-cell *matHeaderCellDef>First Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.first_name || "-" }}
+              </td>
+            </ng-container>
+
+            <!-- Last Name -->
+            <ng-container matColumnDef="last_name">
+              <th mat-header-cell *matHeaderCellDef>Last Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.last_name || "-" }}
+              </td>
+            </ng-container>
+
+            <!-- Ext Name -->
+            <ng-container matColumnDef="ext_name">
+              <th mat-header-cell *matHeaderCellDef>Ext Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.ext_name || "-" }}
+              </td>
+            </ng-container>
+
+            <!-- Institution -->
+            <ng-container matColumnDef="institution">
+              <th mat-header-cell *matHeaderCellDef>Institution</th>
+              <td mat-cell *matCellDef="let element">-</td>
+            </ng-container>
+
+            <!-- Designation -->
+            <ng-container matColumnDef="designation">
+              <th mat-header-cell *matHeaderCellDef>Designation</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.designation || "-" }}
+              </td>
+            </ng-container>
+
+            <!-- Status -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.emp_status || "-" }}
+              </td>
+            </ng-container>
+
+            <!-- Action -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  class="button-action"
+                  (click)="openDialogApplicant(element)"
+                >
+                  <img src="/assets/previewpane.svg" alt="view icon" />
+                  <span>View</span>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumnsApplicants"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumnsApplicants"
+            ></tr>
+
+            <tr class="no-data" *matNoDataRow>
+              <td colspan="100%">No Records</td>
+            </tr>
+          </table>
+
+          <mat-paginator
+            #paginatorApplicants
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Applicants pagination"
+          >
+          </mat-paginator>
+        </div>
+      </mat-tab>
+
+      <!-- Staff Tab -->
+      <mat-tab label="Staff">
+        <div class="table">
+          <div class="mat-elevation-z8">
+            <table
+              mat-table
+              [dataSource]="dataSourceStaff"
+              matSort
+              #sortStaff="matSort"
+            >
+              <!-- Email -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.email || "-" }}
+                </td>
+              </ng-container>
+
+              <!-- First Name -->
+              <ng-container matColumnDef="first_name">
+                <th mat-header-cell *matHeaderCellDef>First Name</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.first_name || "-" }}
+                </td>
+              </ng-container>
+
+              <!-- Last Name -->
+              <ng-container matColumnDef="last_name">
+                <th mat-header-cell *matHeaderCellDef>Last Name</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.last_name || "-" }}
+                </td>
+              </ng-container>
+
+              <!-- Ext Name -->
+              <ng-container matColumnDef="ext_name">
+                <th mat-header-cell *matHeaderCellDef>Ext Name</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.ext_name || "-" }}
+                </td>
+              </ng-container>
+
+              <!-- Designation -->
+              <ng-container matColumnDef="designation">
+                <th mat-header-cell *matHeaderCellDef>Designation</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.designation || "-" }}
+                </td>
+              </ng-container>
+
+              <!-- Status -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.emp_status || "-" }}
+                </td>
+              </ng-container>
+
+              <!-- Action -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    class="button-action"
+                    (click)="openDialogStaff(element)"
+                  >
+                    <img src="/assets/previewpane.svg" alt="view icon" />
+                    <span>View</span>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsStaff"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumnsStaff"
+              ></tr>
+
+              <tr class="no-data" *matNoDataRow>
+                <td colspan="100%">No Records</td>
+              </tr>
+            </table>
+
+            <mat-paginator
+              #paginatorStaff
+              [pageSizeOptions]="[5, 10, 20]"
+              showFirstLastButtons
+              aria-label="Staff pagination"
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

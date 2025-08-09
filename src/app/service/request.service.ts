@@ -19,7 +19,7 @@ export class RequestService {
   constructor(private http: HttpClient) {}
 
   login(data: LoginRequest) {
-    return this.http.post<LoginResponse>(API_URL + '/login', data);
+    return this.http.post<LoginResponse>(API_URL + '/staffLogin', data);
   }
 
   updateApprovalAccounting(data: any): Observable<any> {
@@ -52,6 +52,13 @@ export class RequestService {
       `${API_URL}/loanApplication/assessLoanApplication/${data.application_id}`,
       data,
       { headers }
+    );
+  }
+
+  addStaffAccount(data: any): Observable<any> {
+    return this.http.post(
+      `${API_URL}` + `/staffUser`,
+      data
     );
   }
 }

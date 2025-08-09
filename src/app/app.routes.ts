@@ -11,6 +11,7 @@ import { DeclineComponent } from './decline/decline.component';
 import { ViewApplicationDetailComponent } from './component/view-application-detail-accounting/view-application-detail.component';
 import { PaidComponent } from './paid/paid.component';
 import { ViewApplicationDetailComponentApplication } from './component/view-application-detail-application/view-application-detail-application.component';
+import { AccountsComponent } from './accounts/accounts.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'approval', component: EndorsementComponent },
       { path: 'reject', component: DeclineComponent },
       { path: 'done', component: PaidComponent },
+      { path: 'accounts', component: AccountsComponent },
       { path: '**', redirectTo: '/login' },
     ]
   }

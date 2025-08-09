@@ -139,6 +139,8 @@ export interface BorrowersInformation {
 }
 
 export interface Staff {
+  status: string;
+  institution: string;
   staff_id: number;
   first_name: string;
   middle_name: string;
@@ -258,6 +260,8 @@ export interface LoanApplication {
 // }
 
 export interface Applicant {
+  status: string;
+  institution: string;
   applicant_id: number;
   first_name: string;
   middle_name: string;
@@ -265,7 +269,6 @@ export interface Applicant {
   ext_name: string;
   email: string;
   institution_name: string;
-  position_id: number;
   designation: string;
 }
 
@@ -349,6 +352,8 @@ export interface Staff {
   email: string;
   password: string;
   department_id: number;
+  designation: string;
+  emp_status: string;
 }
 
 export interface Assessment {

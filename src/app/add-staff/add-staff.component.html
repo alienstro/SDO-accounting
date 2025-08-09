@@ -1,0 +1,151 @@
+<div class="main">
+  <form class="form-container" [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="first_name">First Name</label>
+      <input
+        class="input"
+        id="first_name"
+        formControlName="first_name"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          staffForm.get('first_name')?.invalid &&
+          staffForm.get('first_name')?.touched
+        "
+        class="error-message"
+      >
+        First Name is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="middle_name">Middle Name</label>
+      <input
+        class="input"
+        id="middle_name"
+        formControlName="middle_name"
+        type="text"
+      />
+    </div>
+    <div class="form-group">
+      <label for="last_name">Last Name</label>
+      <input
+        class="input"
+        id="last_name"
+        formControlName="last_name"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          staffForm.get('last_name')?.invalid &&
+          staffForm.get('last_name')?.touched
+        "
+        class="error-message"
+      >
+        Last Name is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="ext_name">Extension Name</label>
+      <input
+        class="input"
+        id="ext_name"
+        formControlName="ext_name"
+        type="text"
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        class="input"
+        id="email"
+        formControlName="email"
+        type="email"
+        required
+      />
+      <div
+        *ngIf="
+          staffForm.get('email')?.invalid && staffForm.get('email')?.touched
+        "
+        class="error-message"
+      >
+        <span *ngIf="staffForm.get('email')?.errors?.['required']">
+          Email is required.
+        </span>
+        <span *ngIf="staffForm.get('email')?.errors?.['email']">
+          Invalid email format.
+        </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        class="input"
+        id="password"
+        formControlName="password"
+        type="password"
+        required
+      />
+      <div
+        *ngIf="
+          staffForm.get('password')?.invalid &&
+          staffForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        Password is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="department_id">Department</label>
+      <select
+        class="input"
+        id="department_id"
+        formControlName="department_id"
+        required
+      >
+        <option value="">Select Department</option>
+        <option value="1">HR</option>
+        <option value="2">Legal</option>
+        <option value="3">Admin</option>
+        <option value="4">Accounting</option>
+        <option value="5">ASDS</option>
+        <option value="6">OSDS</option>
+      </select>
+      <div
+        *ngIf="
+          staffForm.get('department_id')?.invalid &&
+          staffForm.get('department_id')?.touched
+        "
+        class="error-message"
+      >
+        Department is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="designation">Designation</label>
+      <input
+        class="input"
+        id="designation"
+        formControlName="designation"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          staffForm.get('designation')?.invalid &&
+          staffForm.get('designation')?.touched
+        "
+        class="error-message"
+      >
+        Designation is required.
+      </div>
+    </div>
+    <button class="button-65" type="submit" [disabled]="!staffForm.valid">
+      Add Staff
+    </button>
+    <button class="button-65" type="submit" (click)="cancel()">Cancel</button>
+  </form>
+</div>

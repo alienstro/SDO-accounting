@@ -52,6 +52,10 @@ export class SidebarComponent {
     "reject",
   ]
 
+  openAccounts() {
+    this.router.navigate(['/accounts'])
+  }
+
   logout(): void {
     this.tokenService.flushToken()
     this.router.navigate(['/login']);

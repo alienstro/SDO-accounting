@@ -1,0 +1,327 @@
+table {
+  width: 100%;
+}
+
+.header-text {
+  font-size: 2rem;
+  opacity: 60%;
+  border-bottom: 1px solid rgba(1, 101, 178, 0.08);
+}
+
+.right-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.forward-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem 1rem 2rem;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.search {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.search-input {
+  border: solid 1px black;
+  border-radius: 50px;
+  padding: 0.5rem 1rem 0.5rem 2.5rem;
+  width: 20rem;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-img {
+  position: absolute;
+  left: 16px;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.form-field select {
+  width: 8rem;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.form-field select:focus {
+  outline: none;
+}
+
+.table {
+  overflow: hidden;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.mat-mdc-header-row.mdc-data-table__header-row.cdk-header-row {
+  color: white;
+  background-color: #0165b2;
+}
+
+.button-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: white;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  border-radius: 5px;
+  transition: 0.2s ease;
+  gap: 0.3rem;
+  cursor: pointer;
+}
+
+.button-action:hover {
+  background-color: #0165b2;
+  color: white;
+}
+
+.button-action:active {
+  background-color: #005493;
+}
+
+.no-data td {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+  padding: 1rem;
+}
+
+mat-tab-group {
+  box-shadow: 0 10px 25px rgba(1, 101, 178, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+  border-radius: 12px;
+}
+
+.mat-mdc-paginator,
+.mat-mdc-paginator-outer-container {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(1, 101, 178, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+}
+
+/* Input Container */
+
+.input_container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  width: 100%;
+  max-width: 380px;
+  min-width: 200px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  padding: 0.3em 0.8em;
+  box-shadow: 0 4px 14px rgba(1, 101, 178, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.input_container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #0165b2, #005493);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.input_container:focus-within::before {
+  opacity: 1;
+}
+
+.input_container:focus-within {
+  box-shadow: 0 8px 25px rgba(1, 101, 178, 0.15),
+    0 0 0 3px rgba(1, 101, 178, 0.1);
+  transform: translateY(-2px);
+}
+
+.input_container input {
+  background-color: transparent;
+  border: none;
+  height: 44px;
+  flex: 1;
+  font-size: 1rem;
+  padding: 0 1em;
+  color: #2d3748;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.input_container input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+.input_container input:focus {
+  outline: none;
+}
+
+.select_container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  max-width: 180px;
+  min-width: 120px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 0.3em 0.8em;
+  box-shadow: 0 4px 14px rgba(1, 101, 178, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.select_container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #0165b2, #005493);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.select_container:focus-within::before {
+  opacity: 1;
+}
+
+.select_container:focus-within {
+  box-shadow: 0 8px 25px rgba(1, 101, 178, 0.15),
+    0 0 0 3px rgba(1, 101, 178, 0.1);
+  transform: translateY(-2px);
+}
+
+.select_container select {
+  background-color: transparent;
+  border: none;
+  height: 44px;
+  width: 100%;
+  font-size: 1rem;
+  color: #2d3748;
+  font-weight: 500;
+  border-radius: 50px;
+  padding: 0 1em;
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.select_container select:focus {
+  outline: none;
+}
+
+.select_container option {
+  color: #2d3748;
+}
+
+.add_button_container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  max-width: 180px;
+  min-width: 120px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 0.3em 0.8em;
+  box-shadow: 0 4px 14px rgba(1, 101, 178, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.add_button_container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #0165b2, #005493);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.add_button_container:focus-within::before,
+.add_button_container:hover::before {
+  opacity: 1;
+}
+
+.add-btn {
+  background: transparent;
+  border: none;
+  height: 44px;
+  width: 100%;
+  font-size: 1rem;
+  color: #2d3748;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0 1em;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  outline: none;
+  letter-spacing: 0.5px;
+}
+
+.add-btn:hover {
+  /* background: linear-gradient(135deg, #0165b2 0%, #005493 100%); */
+  color: #0165b2;
+}
+
+.add-btn:active {
+  /* background: linear-gradient(135deg, #005493 0%, #0165b2 100%); */
+  color: #005493;
+}
