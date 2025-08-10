@@ -86,5 +86,20 @@ export class RequestService {
   deleteApplicantAccount(applicant_id: number): Observable<any> {
     return this.http.delete(`${API_URL}/applicantUser/${applicant_id}`);
   }
-}
 
+  editPasswordStaff(data: any): Observable<any> {
+    console.log('request service staff: ', data);
+    return this.http.put(
+      `${API_URL}` + `/staffUser/change-password/${data.staff_id}`,
+      data
+    );
+  }
+
+  editPasswordApplicant(data: any): Observable<any> {
+    console.log('request service applicant: ', data);
+    return this.http.put(
+      `${API_URL}` + `/applicantUser/change-password/${data.applicant_id}`,
+      data
+    );
+  }
+}

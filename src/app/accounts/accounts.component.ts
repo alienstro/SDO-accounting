@@ -64,7 +64,7 @@ export class AccountsComponent implements OnInit {
     'ext_name',
     'institution',
     'designation',
-    'status',
+    // 'status',
     'action',
   ];
   displayedColumnsStaff: string[] = [
@@ -74,7 +74,7 @@ export class AccountsComponent implements OnInit {
     'middle_name',
     'ext_name',
     'designation',
-    'status',
+    // 'status',
     'action',
   ];
 
