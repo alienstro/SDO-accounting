@@ -61,6 +61,14 @@
               </td>
             </ng-container>
 
+            <!-- Middle Name -->
+            <ng-container matColumnDef="middle_name">
+              <th mat-header-cell *matHeaderCellDef>Middle Initial</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.middle_name || "-" }}
+              </td>
+            </ng-container>
+
             <!-- Last Name -->
             <ng-container matColumnDef="last_name">
               <th mat-header-cell *matHeaderCellDef>Last Name</th>
@@ -80,7 +88,9 @@
             <!-- Institution -->
             <ng-container matColumnDef="institution">
               <th mat-header-cell *matHeaderCellDef>Institution</th>
-              <td mat-cell *matCellDef="let element">-</td>
+              <td mat-cell *matCellDef="let element">
+                {{ element.institution_name || "-" }}
+              </td>
             </ng-container>
 
             <!-- Designation -->
@@ -103,13 +113,24 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef>Action</th>
               <td mat-cell *matCellDef="let element">
-                <button
-                  class="button-action"
-                  (click)="openDialogApplicant(element)"
-                >
-                  <img src="/assets/previewpane.svg" alt="view icon" />
-                  <span>View</span>
-                </button>
+                <div class="buttons-icon">
+                  <button
+                    class="button-action"
+                    (click)="editAccount(element, 'applicant')"
+                    style="margin-left: 4px"
+                    title="Edit"
+                  >
+                    <img src="/assets/edit.svg" alt="edit icon" />
+                  </button>
+                  <button
+                    class="button-action"
+                    (click)="deleteAccount(element, 'applicant')"
+                    style="margin-left: 4px"
+                    title="Delete"
+                  >
+                    <img src="/assets/delete.svg" alt="delete icon" />
+                  </button>
+                </div>
               </td>
             </ng-container>
 
@@ -163,6 +184,14 @@
                 </td>
               </ng-container>
 
+              <!-- Middle Name -->
+              <ng-container matColumnDef="middle_name">
+                <th mat-header-cell *matHeaderCellDef>Middle Initial</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.middle_name || "-" }}
+                </td>
+              </ng-container>
+
               <!-- Last Name -->
               <ng-container matColumnDef="last_name">
                 <th mat-header-cell *matHeaderCellDef>Last Name</th>
@@ -199,13 +228,24 @@
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>Action</th>
                 <td mat-cell *matCellDef="let element">
-                  <button
-                    class="button-action"
-                    (click)="openDialogStaff(element)"
-                  >
-                    <img src="/assets/previewpane.svg" alt="view icon" />
-                    <span>View</span>
-                  </button>
+                  <div class="buttons-icon">
+                    <button
+                      class="button-action"
+                      (click)="editAccount(element, 'staff')"
+                      style="margin-left: 4px"
+                      title="Edit"
+                    >
+                      <img src="../../assets/edit.svg" alt="edit icon" />
+                    </button>
+                    <button
+                      class="button-action"
+                      (click)="deleteAccount(element, 'staff')"
+                      style="margin-left: 4px"
+                      title="Delete"
+                    >
+                      <img src="../../assets/delete.svg" alt="delete icon" />
+                    </button>
+                  </div>
                 </td>
               </ng-container>
 

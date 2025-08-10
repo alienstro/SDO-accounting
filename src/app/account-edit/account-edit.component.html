@@ -86,20 +86,31 @@
         id="password"
         formControlName="password"
         type="password"
-        autocomplete="on" 
+        autocomplete="on"
+        required
+        placeholder="Leave blank to keep current"
+      />
+    </div>
+    <div class="form-group" *ngIf="this.flag === 'applicant'">
+      <label for="designation">Institution</label>
+      <input
+        class="input"
+        id="institution_name"
+        formControlName="institution_name"
+        type="text"
         required
       />
       <div
         *ngIf="
-          staffForm.get('password')?.invalid &&
-          staffForm.get('password')?.touched
+          staffForm.get('institution_name')?.invalid &&
+          staffForm.get('institution_name')?.touched
         "
         class="error-message"
       >
-        Password is required.
+        Institution is required.
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="this.flag === 'staff'">
       <label for="department_id">Department</label>
       <select
         class="input"
@@ -144,9 +155,20 @@
         Designation is required.
       </div>
     </div>
-    <button class="button-65" type="submit" [disabled]="!staffForm.valid">
-      Add Staff
+    <button
+      *ngIf="this.flag === 'staff'"
+      class="button-65"
+      type="submit"
+    >
+      Edit Staff
     </button>
-    <button class="button-65" type="submit" (click)="cancel()">Cancel</button>
+    <button
+      *ngIf="this.flag === 'applicant'"
+      class="button-65"
+      type="submit"
+    >
+      Edit Applicant
+    </button>
+    <button class="button-65" type="button" (click)="cancel()">Cancel</button>
   </form>
 </div>

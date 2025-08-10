@@ -1,39 +1,145 @@
-<form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="first_name">First Name</label>
-    <input id="first_name" formControlName="first_name" type="text" required />
-  </div>
-  <div class="form-group">
-    <label for="middle_name">Middle Name</label>
-    <input id="middle_name" formControlName="middle_name" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="last_name">Last Name</label>
-    <input id="last_name" formControlName="last_name" type="text" required />
-  </div>
-  <div class="form-group">
-    <label for="ext_name">Extension Name</label>
-    <input id="ext_name" formControlName="ext_name" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input id="email" formControlName="email" type="email" required />
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input id="password" formControlName="password" type="password" required />
-  </div>
-  <div class="form-group">
-    <label for="department_id">Department ID</label>
-    <input id="department_id" formControlName="department_id" type="number" required />
-  </div>
-  <div class="form-group">
-    <label for="designation">Designation</label>
-    <input id="designation" formControlName="designation" type="text" required />
-  </div>
-  <div class="form-group">
-    <label for="emp_status">Employment Status</label>
-    <input id="emp_status" formControlName="emp_status" type="text" required />
-  </div>
-  <button type="submit" [disabled]="!staffForm.valid">Add Staff</button>
-</form>
+<div class="main">
+  <form class="form-container" [formGroup]="applicantForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="first_name">First Name</label>
+      <input
+        class="input"
+        id="first_name"
+        formControlName="first_name"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          applicantForm.get('first_name')?.invalid &&
+          applicantForm.get('first_name')?.touched
+        "
+        class="error-message"
+      >
+        First Name is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="middle_name">Middle Initial</label>
+      <input
+        class="input"
+        id="middle_name"
+        formControlName="middle_name"
+        type="text"
+      />
+    </div>
+    <div class="form-group">
+      <label for="last_name">Last Name</label>
+      <input
+        class="input"
+        id="last_name"
+        formControlName="last_name"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          applicantForm.get('last_name')?.invalid &&
+          applicantForm.get('last_name')?.touched
+        "
+        class="error-message"
+      >
+        Last Name is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="ext_name">Extension Name</label>
+      <input
+        class="input"
+        id="ext_name"
+        formControlName="ext_name"
+        type="text"
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        class="input"
+        id="email"
+        formControlName="email"
+        type="email"
+        required
+      />
+      <div
+        *ngIf="
+          applicantForm.get('email')?.invalid && applicantForm.get('email')?.touched
+        "
+        class="error-message"
+      >
+        <span *ngIf="applicantForm.get('email')?.errors?.['required']">
+          Email is required.
+        </span>
+        <span *ngIf="applicantForm.get('email')?.errors?.['email']">
+          Invalid email format.
+        </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        class="input"
+        id="password"
+        formControlName="password"
+        type="password"
+        autocomplete="on"
+        required
+      />
+      <div
+        *ngIf="
+          applicantForm.get('password')?.invalid &&
+          applicantForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        Password is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="designation">Institution</label>
+      <input
+        class="input"
+        id="institution_name"
+        formControlName="institution_name"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          applicantForm.get('institution_name')?.invalid &&
+          applicantForm.get('institution_name')?.touched
+        "
+        class="error-message"
+      >
+        Institution is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="designation">Designation</label>
+      <input
+        class="input"
+        id="designation"
+        formControlName="designation"
+        type="text"
+        required
+      />
+      <div
+        *ngIf="
+          applicantForm.get('designation')?.invalid &&
+          applicantForm.get('designation')?.touched
+        "
+        class="error-message"
+      >
+        Designation is required.
+      </div>
+    </div>
+    <button class="button-65" type="submit" [disabled]="!applicantForm.valid">
+      Add Applicant
+    </button>
+    <button class="button-65" type="submit" (click)="cancel()">Cancel</button>
+  </form>
+</div>

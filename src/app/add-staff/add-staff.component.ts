@@ -60,8 +60,24 @@ export class AddStaffComponent {
             });
           }
         },
+        error: (err) => {
+          if (err.status === 409) {
+            this.snackBar.open(
+              'Email already exists. Please use a different email.',
+              'Close',
+              {
+                duration: 3000,
+                panelClass: 'snackbar-error',
+              }
+            );
+          } else {
+            this.snackBar.open('Failed to add. Please try again.', 'Close', {
+              duration: 3000,
+            });
+          }
+        },
       });
-    } 
+    }
   }
 
   cancel() {

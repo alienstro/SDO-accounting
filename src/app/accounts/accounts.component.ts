@@ -18,6 +18,9 @@ import { ApplicationService } from '../service/application.service';
 import { ConfirmationDialogComponent } from '../component/confirmation-dialog/confirmation-dialog.component';
 import { AddApplicantComponent } from '../add-applicant/add-applicant.component';
 import { AddStaffComponent } from '../add-staff/add-staff.component';
+import { AccountEditComponent } from '../account-edit/account-edit.component';
+import { AccountDeleteComponent } from '../account-delete/account-delete.component';
+import { TokenService } from '../service/token.service';
 
 @Component({
   selector: 'app-accounts',
@@ -42,6 +45,8 @@ export class AccountsComponent implements OnInit {
   applicants: Applicant[] = [];
   staff: Staff[] = [];
 
+  staff_id: number = 0;
+
   // Two separate data sources
   dataSourceApplicants = new MatTableDataSource<Applicant>([]);
   dataSourceStaff = new MatTableDataSource<Staff>([]);
@@ -55,6 +60,7 @@ export class AccountsComponent implements OnInit {
     'email',
     'first_name',
     'last_name',
+    'middle_name',
     'ext_name',
     'institution',
     'designation',
@@ -65,6 +71,7 @@ export class AccountsComponent implements OnInit {
     'email',
     'first_name',
     'last_name',
+    'middle_name',
     'ext_name',
     'designation',
     'status',
@@ -80,8 +87,13 @@ export class AccountsComponent implements OnInit {
 
   constructor(
     private applicationService: ApplicationService,
-    public dialog: MatDialog
-  ) {}
+    public dialog: MatDialog,
+    private tokenService: TokenService
+
+  ) {
+    this.staff_id = this.tokenService.userIDToken(this.tokenService.decodeToken())
+    console.log("staff_id: ", this.staff_id);
+  }
 
   ngOnInit(): void {
     // Load Applicants
@@ -93,7 +105,7 @@ export class AccountsComponent implements OnInit {
     });
 
     // Load Staff
-    this.applicationService.getAccountsStaff().subscribe((res) => {
+    this.applicationService.getAccountsStaff(this.staff_id).subscribe((res) => {
       this.staff = res;
       this.dataSourceStaff.data = this.staff;
       this.setStaffFilterPredicate();
@@ -117,7 +129,7 @@ export class AccountsComponent implements OnInit {
       filter: string
     ) => {
       const [searchValue, statusFilter] = filter.split('§§');
-      const status = (data.status || '').trim();
+      const status = (data.emp_status || '').trim(); // <-- FIXED LINE
       const matchesSearch =
         (data.first_name || '').toLowerCase().includes(searchValue) ||
         (data.last_name || '').toLowerCase().includes(searchValue) ||
@@ -145,13 +157,12 @@ export class AccountsComponent implements OnInit {
     const packed = `${this.searchKey.trim().toLowerCase()}§§${
       this.filterStatus
     }`;
-    if (this.selectedIndex === 0) {
-      this.dataSourceApplicants.filter = packed;
-      this.dataSourceApplicants.paginator?.firstPage();
-    } else {
-      this.dataSourceStaff.filter = packed;
-      this.dataSourceStaff.paginator?.firstPage();
-    }
+
+    this.dataSourceApplicants.filter = packed;
+    this.dataSourceApplicants.paginator?.firstPage();
+
+    this.dataSourceStaff.filter = packed;
+    this.dataSourceStaff.paginator?.firstPage();
   }
 
   onTabChange(index: number) {
@@ -172,15 +183,41 @@ export class AccountsComponent implements OnInit {
     });
   }
 
-  openDialogApplicant(row: Applicant): void {
-    this.dialog.open(AddApplicantComponent, {
-      data: { applicant: row },
+  editAccount(account: any, flag: string) {
+    let dialogRef;
+    if (flag === 'applicant') {
+      console.log('applicant: ', account);
+      dialogRef = this.dialog.open(AccountEditComponent, {
+        data: { account, flag },
+      });
+    } else {
+      console.log('staff: ', account);
+      dialogRef = this.dialog.open(AccountEditComponent, {
+        data: { account, flag },
+      });
+    }
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.ngOnInit();
     });
   }
 
-  openDialogStaff(row: Staff): void {
-    this.dialog.open(AddStaffComponent, {
-      data: { staff: row },
+  deleteAccount(account: any, flag: string) {
+    let dialogRef;
+    if (flag === 'applicant') {
+      console.log('applicant: ', account);
+      dialogRef = this.dialog.open(AccountDeleteComponent, {
+        data: { account, flag },
+      });
+    } else {
+      console.log('staff: ', account);
+      dialogRef = this.dialog.open(AccountDeleteComponent, {
+        data: { account, flag },
+      });
+    }
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.ngOnInit();
     });
   }
 }

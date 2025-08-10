@@ -95,9 +95,9 @@ export class ApplicationService {
     );
   }
 
-    getAccountsStaff(): Observable<Staff[]> {
+    getAccountsStaff(staff_id: number): Observable<Staff[]> {
     return this.http.get<Staff[]>(
-      `${API_URL}/staffUser`
+      `${API_URL}/staffUser/${staff_id}`
     );
   }
 

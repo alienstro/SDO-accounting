@@ -147,7 +147,6 @@ export interface Staff {
   last_name: string;
   ext_name: string;
   email: string;
-  password: string;
   department_id: number;
 }
 
@@ -270,6 +269,7 @@ export interface Applicant {
   email: string;
   institution_name: string;
   designation: string;
+  emp_status: string;
 }
 
 export interface MergedLoanApplicationDetails {
@@ -350,7 +350,6 @@ export interface Staff {
   last_name: string;
   ext_name: string;
   email: string;
-  password: string;
   department_id: number;
   designation: string;
   emp_status: string;

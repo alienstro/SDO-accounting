@@ -56,9 +56,35 @@ export class RequestService {
   }
 
   addStaffAccount(data: any): Observable<any> {
-    return this.http.post(
-      `${API_URL}` + `/staffUser`,
+    return this.http.post(`${API_URL}` + `/staffUser`, data);
+  }
+
+  addApplicantAccount(data: any): Observable<any> {
+    return this.http.post(`${API_URL}` + `/applicantUser`, data);
+  }
+
+  editApplicantAccount(data: any): Observable<any> {
+    console.log('request service applicant: ', data);
+    return this.http.put(
+      `${API_URL}` + `/applicantUser/${data.applicant_id}`,
       data
     );
   }
+
+  editStaffAccount(data: any): Observable<any> {
+    console.log('request service staff: ', data);
+    return this.http.put(
+      `${API_URL}` + `/applicantUser/${data.staff_id}`,
+      data
+    );
+  }
+
+  deleteStaffAccount(staff_id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/staffUser/${staff_id}`);
+  }
+
+  deleteApplicantAccount(applicant_id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/applicantUser/${applicant_id}`);
+  }
 }
+
