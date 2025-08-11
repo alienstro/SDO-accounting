@@ -13,9 +13,9 @@
       @for (item of header; track $index) {
         <th>{{ item }}</th>
       } 
-      @if(router.url === "/forward" || router.url === "/payment" || router.url === "/assessment" || router.url === "/application" || router.url === "/done") {
+      @if(router.url === "/forward" || router.url === "/payment" || router.url === "/assessment" || router.url === "/application" || router.url === "/done" || router.url === "/reject") {
         <th>Action</th>
-      } @else if(router.url === "/reject") {
+      } @if(router.url === "/reject") {
         <th>Reason</th>
       }
     </tr>
@@ -38,7 +38,7 @@
               <span>View</span>
             </button>
           </td>
-        } @else if(router.url === "/reject") {
+        } @if(router.url === "/reject") {
           <td>
             {{ getReasonFromData(row[0]) }}
           </td>

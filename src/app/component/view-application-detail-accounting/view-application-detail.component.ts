@@ -315,7 +315,8 @@ export class ViewApplicationDetailComponent {
         this.signatureDetails[0]?.admin_last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       d_reviewed_designation: this.signatureDetails[0]?.admin_designation,
       d_reviewed_signature: dReviewedSignatureImage,
       d_date_reviewed: this.signatureDetails[0]?.admin_date
@@ -342,7 +343,8 @@ export class ViewApplicationDetailComponent {
         this.signatureDetails[0]?.admin_last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       c_reviewed_designation: this.signatureDetails[0]?.admin_designation,
       c_reviewed_signature: dReviewedSignatureImage,
       c_date_reviewed: this.signatureDetails[0]?.admin_date
@@ -366,9 +368,9 @@ export class ViewApplicationDetailComponent {
       borrower_has_outstanding:
         this.assessmentDetails[0]?.borrowers_has_outstanding_balance === 'Yes',
       current_loan: !!this.assessmentDetails[0]?.current_loan_balance,
-      current_loan_balance: this.assessmentDetails[0]?.current_loan_balance,
+      current_loan_balance: Number(this.assessmentDetails[0]?.current_loan_balance).toFixed(2),
       past_due: !!this.assessmentDetails[0]?.past_due_loan,
-      past_due_loans: this.assessmentDetails[0]?.past_due_loan,
+      past_due_loans: Number(this.assessmentDetails[0]?.past_due_loan).toFixed(2),
       no_of_years_months:
         this.assessmentDetails[0]?.number_of_years_past_due > 0 ||
         this.assessmentDetails[0]?.number_of_months_past_due > 0,
@@ -392,14 +394,14 @@ export class ViewApplicationDetailComponent {
       b_reviewed_signature: bReviewedSignatureImage,
 
       // Computation of Loan
-      principal_amount: this.assessmentDetails[0]?.principal_loan_amount,
-      outstanding_principal: this.assessmentDetails[0]?.principal,
-      outstanding_interest: this.assessmentDetails[0]?.interest,
-      outstanding_balance: this.assessmentDetails[0]?.outstanding_balance,
-      net_proceeds: this.assessmentDetails[0]?.net_proceeds,
+      principal_amount: Number(this.assessmentDetails[0]?.principal_loan_amount).toFixed(2),
+      outstanding_principal: Number(this.assessmentDetails[0]?.principal).toFixed(2),
+      outstanding_interest: Number(this.assessmentDetails[0]?.interest).toFixed(2),
+      outstanding_balance: Number(this.assessmentDetails[0]?.outstanding_balance).toFixed(2),
+      net_proceeds: Number(this.assessmentDetails[0]?.net_proceeds).toFixed(2),
       net_take_home_pay:
-        this.assessmentDetails[0]?.net_take_home_pay_after_deduction,
-      monthly_amortization: this.assessmentDetails[0]?.monthly_amortization,
+        Number(this.assessmentDetails[0]?.net_take_home_pay_after_deduction).toFixed(2),
+      monthly_amortization: Number(this.assessmentDetails[0]?.monthly_amortization).toFixed(2),
       period_of_loan: this.assessmentDetails[0]?.period_of_loan,
       a_processed_signature: aProcessedSignatureImage,
       a_reviewed_signature: aReviewedSignatureImage,
@@ -771,7 +773,7 @@ export class ViewApplicationDetailComponent {
 
     const data = {
       date_submitted: this.formatDateToLong(this.loanDetails[0].date_submitted),
-      loan_amount: this.loanDetails[0].loan_amount,
+      loan_amount: Number(this.loanDetails[0].loan_amount).toFixed(2),
       term: this.loanDetails[0].term,
       loan_application_number: this.loanDetails[0].loan_application_number,
       multi_purpose: this.loanDetails[0].type_of_loan.includes(
@@ -855,7 +857,7 @@ export class ViewApplicationDetailComponent {
       co_makers_specimen_signature_2: coMakerSignatureImage,
 
       pesos_word: this.numberToWords(this.loanDetails[0].loan_amount),
-      pesos_number: this.loanDetails[0].loan_amount,
+      pesos_number: Number(this.loanDetails[0].loan_amount).toFixed(2),
       borrower_signature: borrowerSignatureImage,
       borrower_name: [
         this.borrowersInformation[0]?.first_name ?? '',
@@ -863,7 +865,8 @@ export class ViewApplicationDetailComponent {
         this.borrowersInformation[0]?.last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       borrower_date: this.formatDateToLong(
         this.borrowersInformation[0]?.date.toString()
       ),
@@ -874,7 +877,8 @@ export class ViewApplicationDetailComponent {
         this.coMakersInformation[0]?.co_last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       co_makers_date: this.coMakersInformation[0]?.co_date
         ? this.formatDateToLong(this.coMakersInformation[0].co_date.toString())
         : '',
@@ -886,7 +890,8 @@ export class ViewApplicationDetailComponent {
         this.signatureDetails[0]?.hr_last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       personnel_designation: this.signatureDetails[0]?.hr_designation,
       personnel_date: this.signatureDetails[0]?.hr_date
         ? this.formatDateToLong(this.signatureDetails[0]?.hr_date.toString())
@@ -915,7 +920,8 @@ export class ViewApplicationDetailComponent {
         this.signatureDetails[0]?.legal_last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       legal_designation: this.signatureDetails[0]?.legal_designation,
       legal_date: this.signatureDetails[0]?.legal_date
         ? this.formatDateToLong(this.signatureDetails[0]?.legal_date.toString())
@@ -1063,7 +1069,7 @@ export class ViewApplicationDetailComponent {
       { name: 'pesos_word', x: 65, y: 584, fontSize: 8 },
       { name: 'pesos_number', x: 280, y: 584, fontSize: 8 },
       { name: 'borrower_signature', x: 95, y: 715, fontSize: 8, isImage: true },
-      { name: 'borrower_name', x: 95, y: 727, fontSize: 8 },
+      { name: 'borrower_name', x: 80, y: 727, fontSize: 8 },
       { name: 'borrower_date', x: 310, y: 726, fontSize: 8 },
       {
         name: 'co_makers_signature',
@@ -1074,7 +1080,7 @@ export class ViewApplicationDetailComponent {
       },
       {
         name: 'co_makers_name',
-        x: 445,
+        x: 430,
         y: 728,
         fontSize: 8,
       },
@@ -1095,7 +1101,7 @@ export class ViewApplicationDetailComponent {
       { name: 'personnel_designation', x: 205, y: 945, fontSize: 8 },
       { name: 'personnel_date', x: 180, y: 957, fontSize: 8 },
       { name: 'legal_signature', x: 545, y: 910, fontSize: 8, isImage: true },
-      { name: 'legal_name', x: 560, y: 923, fontSize: 8 },
+      { name: 'legal_name', x: 545, y: 923, fontSize: 8 },
       { name: 'legal_designation', x: 555, y: 945, fontSize: 8 },
       { name: 'legal_date', x: 530, y: 957, fontSize: 8 },
     ];
@@ -1204,7 +1210,7 @@ export class ViewApplicationDetailComponent {
       outstanding_loan_words: this.numberToWords(
         this.loanDetails[0].loan_amount
       ),
-      outstanding_loan_amount: this.loanDetails[0].loan_amount,
+      outstanding_loan_amount: Number(this.loanDetails[0].loan_amount).toFixed(2),
       signature: borrowerSignatureImage,
       signature_name: [
         this.borrowersInformation[0]?.first_name ?? '',
@@ -1212,7 +1218,8 @@ export class ViewApplicationDetailComponent {
         this.borrowersInformation[0]?.last_name ?? '',
       ]
         .filter(Boolean)
-        .join(' '),
+        .join(' ')
+        .toUpperCase(),
       employee_no: this.borrowersInformation[0].employee_number,
       status: this.borrowersInformation[0].employment_status,
       designation: this.borrowersInformation[0].position,
@@ -1230,7 +1237,7 @@ export class ViewApplicationDetailComponent {
       { name: 'outstanding_loan_words', x: 370, y: 392, fontSize: 8 },
       { name: 'outstanding_loan_amount', x: 115, y: 405, fontSize: 12 },
       { name: 'signature', x: 530, y: 508, fontSize: 12, isImage: true },
-      { name: 'signature_name', x: 520, y: 522, fontSize: 12 },
+      { name: 'signature_name', x: 500, y: 522, fontSize: 12 },
       { name: 'employee_no', x: 220, y: 625, fontSize: 12 },
       { name: 'status', x: 392, y: 625, fontSize: 12 },
       { name: 'designation', x: 575, y: 625, fontSize: 12 },
