@@ -96,6 +96,10 @@ export class ViewApplicationDetailComponent {
       .subscribe((bytes) => (this.formPdfBytesAuthorization = bytes));
   }
 
+  numberWithCommasAndDecimal(number: number) {
+    return Number(number).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
   numberToWordsWithDecimal(num: number): string {
     const integerPart = Math.floor(num);
     const decimalPart = Math.round((num - integerPart) * 100);
@@ -153,8 +157,8 @@ export class ViewApplicationDetailComponent {
         tens === 0
           ? ''
           : tens === 1
-          ? a[10 + ones]
-          : b[tens] + (ones === 0 ? '' : '-' + a[ones]),
+            ? a[10 + ones]
+            : b[tens] + (ones === 0 ? '' : '-' + a[ones]),
         tens === 1 ? '' : ones === 0 ? '' : tens === 0 ? a[ones] : '',
       ].join('');
     };
@@ -321,13 +325,13 @@ export class ViewApplicationDetailComponent {
       d_reviewed_signature: dReviewedSignatureImage,
       d_date_reviewed: this.signatureDetails[0]?.admin_date
         ? new Date(this.signatureDetails[0].admin_date).toLocaleDateString(
-            'en-US',
-            {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }
-          )
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }
+        )
         : '',
 
       // Completeness and Veracity of Submitted Documents
@@ -349,13 +353,13 @@ export class ViewApplicationDetailComponent {
       c_reviewed_signature: dReviewedSignatureImage,
       c_date_reviewed: this.signatureDetails[0]?.admin_date
         ? new Date(this.signatureDetails[0].admin_date).toLocaleDateString(
-            'en-US',
-            {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }
-          )
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }
+        )
         : '',
 
       // Eligibility of the Borrower and Co-Maker
@@ -368,9 +372,9 @@ export class ViewApplicationDetailComponent {
       borrower_has_outstanding:
         this.assessmentDetails[0]?.borrowers_has_outstanding_balance === 'Yes',
       current_loan: !!this.assessmentDetails[0]?.current_loan_balance,
-      current_loan_balance: Number(this.assessmentDetails[0]?.current_loan_balance).toFixed(2),
+      current_loan_balance: Number(this.assessmentDetails[0]?.current_loan_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       past_due: !!this.assessmentDetails[0]?.past_due_loan,
-      past_due_loans: Number(this.assessmentDetails[0]?.past_due_loan).toFixed(2),
+      past_due_loans: Number(this.assessmentDetails[0]?.past_due_loan).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       no_of_years_months:
         this.assessmentDetails[0]?.number_of_years_past_due > 0 ||
         this.assessmentDetails[0]?.number_of_months_past_due > 0,
@@ -383,36 +387,36 @@ export class ViewApplicationDetailComponent {
         this.assessmentDetails[0]?.percentage_of_principal_paid,
       b_date_reviewed: this.signatureDetails[0].accounting_date
         ? new Date(this.signatureDetails[0].accounting_date).toLocaleDateString(
-            'en-US',
-            {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }
-          )
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }
+        )
         : '',
       b_reviewed_signature: bReviewedSignatureImage,
 
       // Computation of Loan
-      principal_amount: Number(this.assessmentDetails[0]?.principal_loan_amount).toFixed(2),
-      outstanding_principal: Number(this.assessmentDetails[0]?.principal).toFixed(2),
-      outstanding_interest: Number(this.assessmentDetails[0]?.interest).toFixed(2),
-      outstanding_balance: Number(this.assessmentDetails[0]?.outstanding_balance).toFixed(2),
-      net_proceeds: Number(this.assessmentDetails[0]?.net_proceeds).toFixed(2),
+      principal_amount: Number(this.assessmentDetails[0]?.principal_loan_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      outstanding_principal: Number(this.assessmentDetails[0]?.principal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      outstanding_interest: Number(this.assessmentDetails[0]?.interest).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      outstanding_balance: Number(this.assessmentDetails[0]?.outstanding_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      net_proceeds: Number(this.assessmentDetails[0]?.net_proceeds).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       net_take_home_pay:
-        Number(this.assessmentDetails[0]?.net_take_home_pay_after_deduction).toFixed(2),
-      monthly_amortization: Number(this.assessmentDetails[0]?.monthly_amortization).toFixed(2),
+        Number(this.assessmentDetails[0]?.net_take_home_pay_after_deduction).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      monthly_amortization: Number(this.assessmentDetails[0]?.monthly_amortization).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       period_of_loan: this.assessmentDetails[0]?.period_of_loan,
       a_processed_signature: aProcessedSignatureImage,
       a_reviewed_signature: aReviewedSignatureImage,
       date_processed: this.assessmentDetails[0]?.computation_date_processed
         ? new Date(
-            this.assessmentDetails[0]?.computation_date_processed
-          ).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })
+          this.assessmentDetails[0]?.computation_date_processed
+        ).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })
         : '',
       remarks: this.assessmentDetails[0]?.remarks,
 
@@ -421,24 +425,24 @@ export class ViewApplicationDetailComponent {
       recommending_signature_sds: recommendingSignatureImageSDS,
       date_asds: this.signatureDetails[0]?.asds_date
         ? new Date(this.signatureDetails[0]?.asds_date).toLocaleDateString(
-            'en-US',
-            {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }
-          )
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }
+        )
         : '',
 
       date_sds: this.signatureDetails[0]?.sds_date
         ? new Date(this.signatureDetails[0]?.sds_date).toLocaleDateString(
-            'en-US',
-            {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }
-          )
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }
+        )
         : '',
     };
 
@@ -773,7 +777,7 @@ export class ViewApplicationDetailComponent {
 
     const data = {
       date_submitted: this.formatDateToLong(this.loanDetails[0].date_submitted),
-      loan_amount: Number(this.loanDetails[0].loan_amount).toFixed(2),
+      loan_amount: Number(this.loanDetails[0].loan_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       term: this.loanDetails[0].term,
       loan_application_number: this.loanDetails[0].loan_application_number,
       multi_purpose: this.loanDetails[0].type_of_loan.includes(
@@ -857,7 +861,7 @@ export class ViewApplicationDetailComponent {
       co_makers_specimen_signature_2: coMakerSignatureImage,
 
       pesos_word: this.numberToWords(this.loanDetails[0].loan_amount),
-      pesos_number: Number(this.loanDetails[0].loan_amount).toFixed(2),
+      pesos_number: Number(this.loanDetails[0].loan_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       borrower_signature: borrowerSignatureImage,
       borrower_name: [
         this.borrowersInformation[0]?.first_name ?? '',
@@ -898,19 +902,19 @@ export class ViewApplicationDetailComponent {
         : '',
       permanent:
         typeof this.borrowersInformation[0]?.employment_status_hr ===
-          'string' &&
+        'string' &&
         this.borrowersInformation[0].employment_status_hr.includes('permanent'),
       co_terminus:
         typeof this.borrowersInformation[0]?.employment_status_hr ===
-          'string' &&
+        'string' &&
         this.borrowersInformation[0].employment_status_hr.includes(
           'co-terminus'
         ),
       net_pay: this.borrowersInformation[0].net_pay,
       year_of: this.borrowersInformation[0].payroll_date
         ? this.formatDateToMonthYear(
-            this.borrowersInformation[0]?.payroll_date.toString()
-          )
+          this.borrowersInformation[0]?.payroll_date.toString()
+        )
         : '',
 
       legal_signature: legalSignatureImage,
@@ -1210,7 +1214,7 @@ export class ViewApplicationDetailComponent {
       outstanding_loan_words: this.numberToWords(
         this.loanDetails[0].loan_amount
       ),
-      outstanding_loan_amount: Number(this.loanDetails[0].loan_amount).toFixed(2),
+      outstanding_loan_amount: Number(this.loanDetails[0].loan_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       signature: borrowerSignatureImage,
       signature_name: [
         this.borrowersInformation[0]?.first_name ?? '',
