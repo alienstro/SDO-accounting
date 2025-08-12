@@ -657,16 +657,16 @@
                     <tr>
                       <td>Principal Amount of Loan</td>
                       <td>
-                        {{ assessmentDetails[0].principal_loan_amount }}
+                        {{ this.numberWithCommasAndDecimal(assessmentDetails[0].principal_loan_amount) }}
                       </td>
                     </tr>
                     <tr>
                       <td>Principal</td>
-                      <td>{{ assessmentDetails[0].principal }}</td>
+                      <td>{{ this.numberWithCommasAndDecimal(assessmentDetails[0].principal) }}</td>
                     </tr>
                     <tr>
                       <td>Interest</td>
-                      <td>{{ assessmentDetails[0].interest }}</td>
+                      <td>{{ this.numberWithCommasAndDecimal(assessmentDetails[0].interest) }}</td>
                     </tr>
                     <tr>
                       <td>Outstanding Balance</td>
@@ -678,7 +678,7 @@
                       <td>Net Take Home Pay After Deduction</td>
                       <td>
                         {{
-                          assessmentDetails[0].net_take_home_pay_after_deduction
+                          this.numberWithCommasAndDecimal(assessmentDetails[0].net_take_home_pay_after_deduction)
                         }}
                       </td>
                     </tr>

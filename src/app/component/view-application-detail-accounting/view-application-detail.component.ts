@@ -97,7 +97,14 @@ export class ViewApplicationDetailComponent {
   }
 
   numberWithCommasAndDecimal(number: number) {
-    return Number(number).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (!number || number === null) {
+      return '';
+    } else {
+      return Number(number).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
   }
 
   numberToWordsWithDecimal(num: number): string {
@@ -829,7 +836,7 @@ export class ViewApplicationDetailComponent {
       borrower_office: this.borrowersInformation[0].office,
       borrower_date_of_birth: this.borrowersInformation[0].date_of_birth,
       borrower_age: this.borrowersInformation[0].age,
-      borrower_monthly_salary: this.borrowersInformation[0].monthly_salary,
+      borrower_monthly_salary: this.numberWithCommasAndDecimal(this.borrowersInformation[0].monthly_salary),
       borrower_office_tel_no: this.borrowersInformation[0].office_tel_number,
       borrower_years_in_service: this.borrowersInformation[0].years_in_service,
       borrower_mobile_no: this.borrowersInformation[0].mobile_number,
@@ -852,7 +859,7 @@ export class ViewApplicationDetailComponent {
       co_makers_office: this.coMakersInformation[0].co_office,
       co_makers_date_of_birth: this.coMakersInformation[0].co_date_of_birth,
       co_makers_age: this.coMakersInformation[0].co_age,
-      co_makers_monthly_salary: this.coMakersInformation[0].co_monthly_salary,
+      co_makers_monthly_salary: this.numberWithCommasAndDecimal(this.coMakersInformation[0].co_monthly_salary),
       co_makers_office_tel_no: this.coMakersInformation[0].co_office_tel_number,
       co_makers_years_in_service:
         this.coMakersInformation[0].co_years_in_service,
