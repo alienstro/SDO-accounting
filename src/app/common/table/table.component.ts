@@ -47,11 +47,20 @@ export class TableComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'].currentValue) {
-      console.log('Change:');
-      console.log(changes['data'].currentValue);
+      let sortedData = changes['data'].currentValue;
+
+      if (
+        Array.isArray(sortedData) &&
+        sortedData.length > 0 &&
+        sortedData[0].application_id !== undefined
+      ) {
+        sortedData = [...sortedData].sort(
+          (a, b) => b.application_id - a.application_id
+        );
+      }
 
       const parseRes = this.utilService.parseData(
-        changes['data'].currentValue,
+        sortedData,
         this.status,
         this.office,
         this.offices
@@ -69,7 +78,11 @@ export class TableComponent {
 
     console.log(currentUrl);
 
-    if (currentUrl === '/application' || currentUrl === '/done' || currentUrl === '/reject') {
+    if (
+      currentUrl === '/application' ||
+      currentUrl === '/done' ||
+      currentUrl === '/reject'
+    ) {
       this.router.navigate([`/application/${route}`], {
         state: { loanDetails: loan },
       });
