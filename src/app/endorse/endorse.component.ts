@@ -1,4 +1,10 @@
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -10,15 +16,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
 import SignaturePad from 'signature_pad';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-endorse',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './endorse.component.html',
   styleUrl: './endorse.component.css',
 })
-export class EndorseComponent {
+export class EndorseComponent implements OnInit {
   @ViewChild('signaturePad', { static: true })
   signaturePadElement!: ElementRef<HTMLCanvasElement>;
   @ViewChild('fileInput', { static: false })
@@ -28,6 +35,8 @@ export class EndorseComponent {
   application_id!: number;
   staff_id!: number;
   department_id!: string;
+
+  staffInformation: any;
 
   constructor(
     public dialogRef: MatDialogRef<EndorseComponent>,
@@ -99,6 +108,13 @@ export class EndorseComponent {
     this.signaturePad = new SignaturePad(canvas);
   }
 
+  loadStaffSignatureToPad(): void {
+    const sig = this.staffInformation?.[0]?.signature;
+    if (sig && this.signaturePad) {
+      this.signaturePad.fromDataURL(sig);
+    }
+  }
+
   forwardToAccounting() {
     if (this.signaturePad.isEmpty()) {
       this.snackbar.open(
@@ -127,11 +143,13 @@ export class EndorseComponent {
 
     this.applicationService.getLoanAssessment(this.application_id).subscribe({
       next: (loanAssessment) => {
-        if (loanAssessment.length === 0) {
-           this.snackbar.open(
-              'Kindly complete the assessment form before proceeding.', 'close', {duration: 3000}
-            );
-            return;
+        if (loanAssessment[0].current_loan_balance === null) {
+          this.snackbar.open(
+            'Kindly complete the assessment form before proceeding.',
+            'close',
+            { duration: 3000 }
+          );
+          return;
         } else {
           if (departmentId === 4) {
             console.log('Accounting');
@@ -187,55 +205,6 @@ export class EndorseComponent {
     });
   }
 
-  // confirm(): void {
-  //   const department_id = this.department_id;
-  //   const staff_id = this.staff_id;
-  //   const approved = 'Approved';
-
-  //   const data = {
-  //     department_id: department_id,
-  //     approved: approved,
-  //     staff_id: staff_id,
-  //     application_id: this.application_id
-  //   }
-
-  //   if (department_id === "7") {
-  //     console.log("Department: ASDS")
-  //     this.requestService.submitApprovalASDS(data).subscribe(
-  //       (response) => {
-  //         this.snackbar.open('Approval updated successfully.', '', {
-  //           duration: 3000
-  //         });
-  //         this.applicationService.updateApprovalDetails(approved, this.application_id, department_id)
-  //         this.dialogRef.close();
-  //         this.router.navigate(['/forward-view']);
-  //       },
-  //       (error) => {
-  //         console.error('Error uploading signature:', error);
-  //         this.snackbar.open('Failed to upload signature.');
-  //       }
-  //     );
-  //   } else if (department_id === '8') {
-  //     console.log("Department: SDS")
-  //     this.requestService.submitApprovalSDS(data).subscribe(
-  //       (response) => {
-  //         this.snackbar.open('Approval updated successfully.', '', {
-  //           duration: 3000
-  //         });
-  //         this.applicationService.updateApprovalDetails(approved, this.application_id, department_id)
-  //         this.dialogRef.close();
-  //         this.router.navigate(['/forward-view']);
-  //       },
-  //       (error) => {
-  //         console.error('Error uploading signature:', error);
-  //         this.snackbar.open('Failed to upload signature.');
-  //       }
-  //     );
-  //   } else {
-  //     console.log('Unknown Error!')
-  //   }
-  // }
-
   cancel(): void {
     this.dialogRef.close();
 
@@ -246,5 +215,15 @@ export class EndorseComponent {
     );
 
     console.log('current application: ', application);
+  }
+
+  ngOnInit(): void {
+    this.applicationService
+      .getStaffDetailsById(this.staff_id)
+      .subscribe((staff) => {
+        this.staffInformation = Array.isArray(staff) ? staff : [staff];
+
+        console.log('staff information: ', this.staffInformation);
+      });
   }
 }

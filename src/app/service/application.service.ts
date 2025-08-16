@@ -90,15 +90,11 @@ export class ApplicationService {
   }
 
   getAccountsApplicant(): Observable<Applicant[]> {
-    return this.http.get<Applicant[]>(
-      `${API_URL}/applicantUser`
-    );
+    return this.http.get<Applicant[]>(`${API_URL}/applicantUser`);
   }
 
-    getAccountsStaff(staff_id: number): Observable<Staff[]> {
-    return this.http.get<Staff[]>(
-      `${API_URL}/staffUser/${staff_id}`
-    );
+  getAccountsStaff(staff_id: number): Observable<Staff[]> {
+    return this.http.get<Staff[]>(`${API_URL}/staffUser/${staff_id}`);
   }
 
   getLoanApplication(): Observable<LoanApplication[]> {
@@ -111,6 +107,10 @@ export class ApplicationService {
     return this.http.get<AssessmentForm[]>(
       `${this.apiLoanApplication}/getAssessmentDetailsById/${applicationId}`
     );
+  }
+
+  getStaffDetailsById(staff_id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${API_URL}/staffUser/${staff_id}`);
   }
 
   getDepartmentStatusById(
@@ -245,14 +245,13 @@ export class ApplicationService {
     return this._signatureDetails.getValue();
   }
 
-   getAccountsApplicantState() {
+  getAccountsApplicantState() {
     return this._accountsApplicant.getValue();
   }
 
   getAccountsStaffState() {
     return this._accountsStaff.getValue();
   }
-
 
   /// SET NEW DATA TO STATE
 

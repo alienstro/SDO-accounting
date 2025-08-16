@@ -1329,9 +1329,6 @@ export class ViewApplicationDetailComponent {
 
   openEndorse(): void {
     this.dialog.open(EndorseComponent, {
-      width: '50rem',
-      maxWidth: '50rem',
-      height: '21.5rem',
       data: { application_id: this.application_id },
     });
   }
