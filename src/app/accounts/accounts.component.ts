@@ -21,6 +21,7 @@ import { AddStaffComponent } from '../add-staff/add-staff.component';
 import { AccountEditComponent } from '../account-edit/account-edit.component';
 import { AccountDeleteComponent } from '../account-delete/account-delete.component';
 import { TokenService } from '../service/token.service';
+import { ImportDialogComponent } from '../import-dialog/import-dialog.component';
 
 @Component({
   selector: 'app-accounts',
@@ -89,10 +90,11 @@ export class AccountsComponent implements OnInit {
     private applicationService: ApplicationService,
     public dialog: MatDialog,
     private tokenService: TokenService
-
   ) {
-    this.staff_id = this.tokenService.userIDToken(this.tokenService.decodeToken())
-    console.log("staff_id: ", this.staff_id);
+    this.staff_id = this.tokenService.userIDToken(
+      this.tokenService.decodeToken()
+    );
+    console.log('staff_id: ', this.staff_id);
   }
 
   ngOnInit(): void {
@@ -180,6 +182,23 @@ export class AccountsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       this.ngOnInit();
+    });
+  }
+
+  importExcel() {
+    const importType = this.selectedIndex === 0 ? 'applicant' : 'staff';
+
+    const dialogRef = this.dialog.open(ImportDialogComponent, {
+      data: { type: importType },
+      width: '600px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Refresh data if import was successful
+        this.ngOnInit();
+      }
     });
   }
 

@@ -23,6 +23,12 @@
           </div>
         </div>
 
+        <div class="add-button">
+          <div class="add_button_container">
+            <button class="add-btn" (click)="importExcel()">Import</button>
+          </div>
+        </div>
+
         <div class="form-field">
           <div class="select_container">
             <select [(ngModel)]="filterStatus" (change)="applyFilter()">

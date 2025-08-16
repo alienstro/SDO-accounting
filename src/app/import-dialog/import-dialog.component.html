@@ -1,0 +1,68 @@
+<div class="import-dialog">
+  <h2>Import {{ importType === 'applicant' ? 'Applicants' : 'Staff' }} from Excel</h2>
+  
+  <div class="content">
+    <div class="template-section">
+      <p>Download the template file to see the required format:</p>
+      <button class="template-btn" (click)="downloadTemplate()">
+        Download {{ importType === 'applicant' ? 'Applicant' : 'Staff' }} Template
+      </button>
+    </div>
+
+    <div class="file-section">
+      <p>Select your Excel file:</p>
+      <input 
+        type="file" 
+        accept=".xlsx,.xls" 
+        (change)="onFileSelected($event)"
+        class="file-input"
+      />
+      <div *ngIf="selectedFile" class="file-info">
+        Selected: {{ selectedFile.name }}
+      </div>
+    </div>
+
+    <div class="format-info">
+      <h3>Required Format:</h3>
+      <div *ngIf="importType === 'applicant'">
+        <p><strong>Applicant Columns (in order):</strong></p>
+        <ul>
+          <li>First Name (required)</li>
+          <li>Middle Name (optional)</li>
+          <li>Last Name (required)</li>
+          <li>Ext Name (optional)</li>
+          <li>Email (required, valid email format)</li>
+          <li>Password (required)</li>
+          <li>Institution Name (required)</li>
+          <li>Designation (required)</li>
+        </ul>
+      </div>
+      <div *ngIf="importType === 'staff'">
+        <p><strong>Staff Columns (in order):</strong></p>
+        <ul>
+          <li>First Name (required)</li>
+          <li>Middle Name (optional)</li>
+          <li>Last Name (required)</li>
+          <li>Ext Name (optional)</li>
+          <li>Email (required, valid email format)</li>
+          <li>Password (required)</li>
+          <li>Department ID (required: 1=HR, 2=Legal, 3=Admin, 4=Accounting, 5=ASDS, 6=OSDS)</li>
+          <li>Designation (required)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button 
+      class="import-btn" 
+      (click)="importData()" 
+      [disabled]="!selectedFile || isLoading"
+    >
+      {{ isLoading ? 'Importing...' : 'Import Data' }}
+    </button>
+    <button class="cancel-btn" (click)="cancel()" [disabled]="isLoading">
+      Cancel
+    </button>
+  </div>
+</div>

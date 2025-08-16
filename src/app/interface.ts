@@ -545,3 +545,25 @@ export interface Documents {
   document_id: number;
   application_id: number;
 }
+
+export interface ApplicantImportData {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  ext_name?: string;
+  email: string;
+  password: string;
+  institution_name: string;
+  designation: string;
+}
+
+export interface StaffImportData {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  ext_name?: string;
+  email: string;
+  password: string;
+  department_id: string;
+  designation: string;
+}
