@@ -25,8 +25,8 @@ export const routes: Routes = [
       { path: 'assessment', component: AssessmentComponent },
       { path: 'signature', component: SignatureComponent },
       { path: 'approval', component: EndorsementComponent },
-      { path: 'reject', component: DeclineComponent },
-      { path: 'done', component: PaidComponent },
+      { path: 'rejected', component: DeclineComponent },
+      { path: 'completed', component: PaidComponent },
       { path: 'accounts', component: AccountsComponent },
       { path: '**', redirectTo: '/login' },
     ]

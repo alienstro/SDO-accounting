@@ -17,7 +17,7 @@ export class UtilsService {
     "status": "Status",
     "department_name": "Office",
     "purpose": "purpose",
-    "paid_date": "Paid Date"
+    "completed_date": "Completed Date"
   }
 
   constructor() { }
@@ -69,7 +69,7 @@ export class UtilsService {
       "status",
       "department_name",
       "purpose",
-      "paid_date"
+      "completed_date"
     ];
 
     // Filter sequence based on available keys in data

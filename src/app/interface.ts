@@ -186,6 +186,7 @@ export interface DisplayDocuments {
 
 export interface Application {
   application_id: string,
+  applicant_id: string,
   status: string,
   department_name: string,
   amount: string,
@@ -226,7 +227,7 @@ interface ApplicationDetails {
 
 
 export interface PaidApplication extends Application {
-  paid_date: string
+  completed_date: string
 }
 
 export interface LoanApplication {

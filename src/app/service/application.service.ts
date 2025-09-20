@@ -83,6 +83,12 @@ export class ApplicationService {
     );
   }
 
+  getApplicationRejected(): Observable<PaidApplication[]> {
+    return this.http.get<PaidApplication[]>(
+      `${this.apiLoanApplication}/getLoanApplicationAccountingRejected`
+    );
+  }
+
   getPaidApplication(): Observable<PaidApplication[]> {
     return this.http.get<PaidApplication[]>(
       `${this.apiLoanApplication}/getPaidApplication`
@@ -321,10 +327,6 @@ export class ApplicationService {
   }
 
   updatePayment(application_id: string) {
-    const date = new Date('2025-01-18T22:14:10');
-    const formattedDate = date.toISOString().split('T')[0];
-    const formattedTime = date.toTimeString().split(' ')[0];
-    const currDatetime = `${formattedDate} ${formattedTime}`;
 
     const applicationsValue = this._applications.getValue();
     const paidApplicationsValue = this._paidApplications.getValue();
@@ -349,8 +351,8 @@ export class ApplicationService {
 
     currApplicationData = {
       ...currApplicationData,
-      status: 'Paid',
-      paid_date: currDatetime,
+      status: 'Completed',
+
     };
 
     let oldStatePaidApplication = [...paidApplicationsValue].filter(

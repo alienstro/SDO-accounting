@@ -20,6 +20,7 @@ export class PaidComponent {
     this.applicationService.getPaidApplication().subscribe((res) => {
       this.applicationService.setPaidApplications(res); 
       this.paidApplications = res; 
+      console.log("paid: ", this.paidApplications)
     });
   }
 }

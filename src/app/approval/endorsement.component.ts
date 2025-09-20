@@ -11,20 +11,22 @@ import { TableComponent } from '../common/table/table.component';
   templateUrl: './endorsement.component.html',
   styleUrl: './endorsement.component.css'
 })
-export class EndorsementComponent implements OnInit{
-
-  applications: Application[] = []
-  constructor(private applicationService: ApplicationService, private cdr: ChangeDetectorRef) {
-    this.applicationService.applications$.subscribe(res => {
-      console.log(res)
-      this.applications = res
+export class EndorsementComponent implements OnInit {
+  applications: Application[] = [];
+  constructor(
+    private applicationService: ApplicationService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.applicationService.applications$.subscribe((res) => {
+      console.log(res);
+      this.applications = res;
       this.cdr.markForCheck(); // This helps notify Angular to check for changes
-    })
+    });
   }
 
-   ngOnInit(): void {
-      this.applicationService.getApplication().subscribe(res => {
-        this.applications = res;
-      })
+  ngOnInit(): void {
+    this.applicationService.getApplication().subscribe((res) => {
+      this.applications = res;
+    });
   }
 }

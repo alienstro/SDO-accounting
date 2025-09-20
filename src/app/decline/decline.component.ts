@@ -12,7 +12,7 @@ import { ApplicationService } from '../service/application.service';
   styleUrl: './decline.component.css'
 })
 export class DeclineComponent implements OnInit{
-  offices = ['accounting', 'admin', 'hr', 'legal'];
+  offices = ['accounting', 'admin', 'hr', 'legal', 'sds', 'asds'];
 
   applications: Application[] = []
   constructor(private applicationService: ApplicationService, private cdr: ChangeDetectorRef) {
@@ -24,7 +24,7 @@ export class DeclineComponent implements OnInit{
   }
 
    ngOnInit(): void {
-      this.applicationService.getApplication().subscribe(res => {
+      this.applicationService.getApplicationRejected().subscribe(res => {
         this.applications = res;
       })
   }

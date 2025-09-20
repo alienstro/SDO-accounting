@@ -59,8 +59,8 @@ export class SidebarComponent {
     'forward',
     'approval',
     'pending',
-    'done',
-    'reject',
+    'completed',
+    'rejected',
   ];
 
   openAccounts() {

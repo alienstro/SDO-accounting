@@ -1,59 +1,72 @@
-<div class="input_container">
-  <input type="text" [(ngModel)]="searchTerm" placeholder="Search Employee" />
-  <button (click)="searchEmployee()">
-    <img src="/assets/Search.svg" alt="" />
-  </button>
+<div class="container">
+  <div class="input_container">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search Employee" />
+    <button (click)="searchEmployee()">
+      <img src="/assets/Search.svg" alt="" />
+    </button>
+  </div>
+
+  <div class="export_button_container">
+    <button class="export-button" (click)="exportTableData()">
+      Export to Excel
+    </button>
+  </div>
 </div>
 
 @if(paginatedRows.length < 1) {
-  <p id="empty">No Records!</p>
+<p id="empty">No Records!</p>
 } @else {
-  <table>
-    <tr class="thead">
-      @for (item of header; track $index) {
-        <th>{{ item }}</th>
-      } 
-      @if(router.url === "/forward" || router.url === "/payment" || router.url === "/assessment" || router.url === "/application" || router.url === "/done" || router.url === "/reject") {
-        <th>Action</th>
-      } @if(router.url === "/reject") {
-        <th>Reason</th>
-      }
-    </tr>
-    
-    @for (row of paginatedRows; let idx = $index; track idx) {
-      <tr class="row">
-        @for (item of row; track $index) {
-          <td>
-            {{
-              header[$index] === "Date Submitted"
-                ? (item | date : "MMMM d, y")
-                : item
-            }}
-          </td>
-        } 
-        @if(router.url === "/forward" || router.url === "/assessment" || router.url === "/application" || router.url === "/done" || router.url === "/reject") {
-          <td>
-            <button (click)="navigateRoute(row[0], row[0])" class="button-action">
-              <img src="../../../assets/previewpane.svg" alt="eye button icon" />
-              <span>View</span>
-            </button>
-          </td>
-        } @if(router.url === "/reject") {
-          <td>
-            {{ getReasonFromData(row[0]) }}
-          </td>
-        }
-      </tr>
+<table>
+  <tr class="thead">
+    @for (item of header; track $index) {
+    <th>{{ item }}</th>
+    } @if(router.url === "/forward" || router.url === "/payment" || router.url
+    === "/assessment" || router.url === "/application" || router.url ===
+    "/completed" || router.url === "/rejected") {
+    <th>Action</th>
+    } @if(router.url === "/rejected") {
+    <th>Reason</th>
     }
-  </table>
+  </tr>
 
-  <mat-paginator
-    [length]="totalItems"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [pageSizeOptions]="pageSizeOptions"
-    (page)="onPageChange($event)"
-    showFirstLastButtons
-    aria-label="Select page">
-  </mat-paginator>
+  @for (row of paginatedRows; let idx = $index; track idx) {
+  <tr class="row">
+    @for (item of row; track $index) {
+    <td>
+      {{
+        header[$index] === "Date Submitted"
+          ? (item | date : "MMMM d, y")
+          : header[$index] === "Completed Date"
+          ? (item | date : "medium")
+          : item
+      }}
+    </td>
+    } @if(router.url === "/forward" || router.url === "/assessment" ||
+    router.url === "/application" || router.url === "/completed" || router.url
+    === "/rejected") {
+    <td>
+      <button (click)="navigateRoute(row[0], row[0])" class="button-action">
+        <img src="../../../assets/previewpane.svg" alt="eye button icon" />
+        <span>View</span>
+      </button>
+    </td>
+    } @if(router.url === "/rejected") {
+    <td>
+      {{ getReasonFromData(row[0]) }}
+    </td>
+    }
+  </tr>
+  }
+</table>
+
+<mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPageChange($event)"
+  showFirstLastButtons
+  aria-label="Select page"
+>
+</mat-paginator>
 }

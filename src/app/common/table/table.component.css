@@ -1,4 +1,11 @@
-/* Enhanced Table Styles */
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
 .thead {
   background: linear-gradient(135deg, #0165b2 0%, #005493 100%);
   color: white;
@@ -134,7 +141,6 @@ button {
   align-items: center;
   border-radius: 50px;
   padding: 0.3em 0.8em;
-  margin-bottom: 2rem;
   box-shadow: 0 4px 14px rgba(1, 101, 178, 0.08),
     0 0 0 1px rgba(1, 101, 178, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -226,7 +232,6 @@ button {
   transform: scale(1.1);
 }
 
-/* Enhanced Action Button */
 .button-action {
   display: flex;
   justify-content: center;
@@ -323,3 +328,72 @@ button {
   box-shadow: 0 10px 25px rgba(1, 101, 178, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(1, 101, 178, 0.06);
 }
+
+.export-button {
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-size: 1rem;
+  color: #2d3748;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0 1em;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  outline: none;
+  letter-spacing: 0.5px;
+}
+
+.export-button:hover {
+  /* background: linear-gradient(135deg, #0165b2 0%, #005493 100%); */
+  color: #0165b2;
+}
+
+.export-button:active {
+  /* background: linear-gradient(135deg, #005493 0%, #0165b2 100%); */
+  color: #005493;
+}
+
+.export_button_container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  max-width: 180px;
+  min-width: 120px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 0.3em 0.8em;
+  box-shadow: 0 4px 14px rgba(1, 101, 178, 0.08),
+    0 0 0 1px rgba(1, 101, 178, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.export_button_container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #0165b2, #005493);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.export_button_container:focus-within::before,
+.export_button_container:hover::before {
+  opacity: 1;
+}
+
+.upper {
+  display: flex;
+  flex-direction: row;
+}
+

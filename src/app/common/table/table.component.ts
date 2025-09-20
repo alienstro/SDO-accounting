@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { UtilsService } from '../../service/utils.service';
 import { Application, LoanDetails, PaidApplication } from '../../interface';
@@ -15,6 +15,8 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ConfirmationDialogComponent } from '../../component/confirmation-dialog/confirmation-dialog.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import * as XLSX from 'xlsx';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -22,12 +24,14 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
   imports: [CommonModule, FormsModule, MatPaginatorModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',
+  providers: [DatePipe],
 })
 export class TableComponent {
   @Input() data: Application[] | PaidApplication[] | null = null;
   @Input() status = '';
   @Input() office = '';
   @Input() offices: string[] = [];
+  @Input() fileName = '';
 
   searchTerm = '';
   readonly dialog = inject(MatDialog);
@@ -43,7 +47,11 @@ export class TableComponent {
   totalItems = 0;
   pageSizeOptions = [5, 10, 20];
 
-  constructor(private utilService: UtilsService, public router: Router) {}
+  constructor(
+    private utilService: UtilsService,
+    public router: Router,
+    private datePipe: DatePipe
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'].currentValue) {
@@ -58,6 +66,8 @@ export class TableComponent {
           (a, b) => b.application_id - a.application_id
         );
       }
+
+      console.log(sortedData);
 
       const parseRes = this.utilService.parseData(
         sortedData,
@@ -80,7 +90,7 @@ export class TableComponent {
 
     if (
       currentUrl === '/application' ||
-      currentUrl === '/done' ||
+      currentUrl === '/completed' ||
       currentUrl === '/reject'
     ) {
       this.router.navigate([`/application/${route}`], {
@@ -155,5 +165,181 @@ export class TableComponent {
       }
     }
     return 'No reason provided';
+  }
+
+  exportTableData(): void {
+    if (!this.data || this.data.length === 0) {
+      console.warn('No data to export.');
+      return;
+    }
+
+    let headers: string[] = [];
+    let dataForExcel: any[] = [];
+
+    
+
+    const filteredData =
+      this.offices && this.offices.length > 0
+        ? (this.data as Application[]).filter((app) =>
+            this.offices.includes(app.department_name.toLowerCase())
+          )
+        : this.data;
+
+    const rejectedData =
+      this.offices && this.offices.length > 0
+        ? (this.data as Application[]).filter(
+            (app) => app.status === 'Rejected'
+          )
+        : this.data;
+
+    if (this.fileName === 'Completed Applications') {
+      headers = [
+        'APPLICATION #',
+        'APPLICANT #',
+        'FIRST NAME',
+        'LAST NAME',
+        'TYPE OF LOAN',
+        'LOAN AMOUNT',
+        'DATE SUBMITTED',
+        'STATUS',
+        'OFFICE',
+        'PURPOSE',
+        'COMPLETED DATE',
+      ];
+
+      dataForExcel = (this.data as PaidApplication[]).map((app) => {
+        return {
+          'APPLICATION #': app.application_id,
+          'APPLICANT #': app.applicant_id,
+          'FIRST NAME': app.first_name,
+          'LAST NAME': app.last_name,
+          'TYPE OF LOAN': app.loan_type,
+          'LOAN AMOUNT': app.amount,
+          'DATE SUBMITTED': this.datePipe.transform(
+            app.application_date,
+            'mediumDate'
+          ),
+          STATUS: app.status,
+          OFFICE: app.department_name,
+          PURPOSE: app.purpose,
+          'COMPLETED DATE': this.datePipe.transform(
+            app.completed_date,
+            'mediumDate'
+          ),
+        };
+      });
+    } else if (this.fileName === 'Rejected Applications') {
+      headers = [
+        'APPLICATION #',
+        'APPLICANT #',
+        'FIRST NAME',
+        'LAST NAME',
+        'TYPE OF LOAN',
+        'LOAN AMOUNT',
+        'DATE SUBMITTED',
+        'STATUS',
+        'OFFICE',
+        'PURPOSE',
+        'REASON',
+      ];
+
+      console.log(filteredData);
+
+      dataForExcel = (rejectedData as Application[]).map((app) => {
+        return {
+          'APPLICATION #': app.application_id,
+          'APPLICANT #': app.applicant_id,
+          'FIRST NAME': app.first_name,
+          'LAST NAME': app.last_name,
+          'TYPE OF LOAN': app.loan_type,
+          'LOAN AMOUNT': app.amount,
+          'DATE SUBMITTED': this.datePipe.transform(
+            app.application_date,
+            'mediumDate'
+          ),
+          STATUS: app.status,
+          OFFICE: app.department_name,
+          PURPOSE: app.purpose,
+          REASON: app.remarks_message,
+        };
+      });
+    } else if (
+      this.fileName === 'Signature Applications' ||
+      this.fileName === 'Forward Applications' ||
+      this.fileName === 'Approval Applications' ||
+      this.fileName === 'Pending Applications'
+    ) {
+      headers = [
+        'APPLICATION #',
+        'APPLICANT #',
+        'FIRST NAME',
+        'LAST NAME',
+        'TYPE OF LOAN',
+        'LOAN AMOUNT',
+        'DATE SUBMITTED',
+        'STATUS',
+        'OFFICE',
+        'PURPOSE',
+      ];
+
+      console.log(filteredData);
+
+      dataForExcel = (filteredData as Application[]).map((app) => {
+        return {
+          'APPLICATION #': app.application_id,
+          'APPLICANT #': app.applicant_id,
+          'FIRST NAME': app.first_name,
+          'LAST NAME': app.last_name,
+          'TYPE OF LOAN': app.loan_type,
+          'LOAN AMOUNT': app.amount,
+          'DATE SUBMITTED': this.datePipe.transform(
+            app.application_date,
+            'mediumDate'
+          ),
+          STATUS: app.status,
+          OFFICE: app.department_name,
+          PURPOSE: app.purpose,
+        };
+      });
+    } else {
+      headers = [
+        'APPLICATION #',
+        'APPLICANT #',
+        'FIRST NAME',
+        'LAST NAME',
+        'TYPE OF LOAN',
+        'LOAN AMOUNT',
+        'DATE SUBMITTED',
+        'STATUS',
+        'OFFICE',
+        'PURPOSE',
+      ];
+
+      dataForExcel = (this.data as Application[]).map((app) => {
+        return {
+          'APPLICATION #': app.application_id,
+          'APPLICANT #': app.applicant_id,
+          'FIRST NAME': app.first_name,
+          'LAST NAME': app.last_name,
+          'TYPE OF LOAN': app.loan_type,
+          'LOAN AMOUNT': app.amount,
+          'DATE SUBMITTED': this.datePipe.transform(
+            app.application_date,
+            'mediumDate'
+          ),
+          STATUS: app.status,
+          OFFICE: app.department_name,
+          PURPOSE: app.purpose,
+        };
+      });
+    }
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataForExcel, {
+      header: headers,
+    });
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Applications');
+
+    XLSX.writeFile(wb, `${this.fileName}.xlsx`);
   }
 }

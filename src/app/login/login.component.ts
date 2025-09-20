@@ -4,6 +4,7 @@ import { AuthService } from '../service/auth.service';
 import { TokenService } from '../service//token.service';
 import { RequestService } from '../service/request.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 interface LoginRequest {
   email: string;
   password: string;
@@ -26,7 +27,8 @@ export class LoginComponent {
   constructor(
     private requestService: RequestService,
     private tokenService: TokenService,
-    private router: Router
+    private router: Router,
+    private snackbar: MatSnackBar
   ) {}
 
   userLogin = new FormGroup({
@@ -48,15 +50,21 @@ export class LoginComponent {
     this.requestService.login(loginCred).subscribe({
       next: (res: LoginResponse) => {
         this.tokenService.setToken(res.token);
-        const roleId = Number(this.tokenService.userRoleToken(
-          this.tokenService.decodeToken()
-        ));
+        const roleId = Number(
+          this.tokenService.userRoleToken(this.tokenService.decodeToken())
+        );
 
         console.log('roleId accounting page: ', roleId);
         if (roleId === 4) {
           this.router.navigate(['/application']);
+          this.snackbar.open('Successfully Logged In', 'Close', {
+            duration: 3000,
+          });
         } else {
           this.errMessage = 'No Access';
+          this.snackbar.open('Unauthorized Access', 'Close', {
+            duration: 3000,
+          });
         }
       },
       error: (err) => {
