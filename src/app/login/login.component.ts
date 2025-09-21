@@ -67,12 +67,13 @@ export class LoginComponent {
           });
         }
       },
-      error: (err) => {
-        if (err.status === 401) {
-          this.errMessage = 'Invalid Credentials';
-        } else {
-          this.errMessage = 'Error Logging in';
-        }
+      error: (error) => {
+        this.snackbar.open(
+          'Email or password is incorrect. Please try again.',
+          'Close',
+          { duration: 3000 }
+        );
+        console.error('Error creating user: ', error);
       },
     });
   }
