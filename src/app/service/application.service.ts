@@ -100,7 +100,7 @@ export class ApplicationService {
   }
 
   getAccountsStaff(staff_id: number): Observable<Staff[]> {
-    return this.http.get<Staff[]>(`${API_URL}/staffUser/${staff_id}`);
+    return this.http.get<Staff[]>(`${API_URL}/staffUserExcept/${staff_id}`);
   }
 
   getLoanApplication(): Observable<LoanApplication[]> {
