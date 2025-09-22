@@ -1,5 +1,22 @@
 hr {
   width: 100%;
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  margin: 0.5rem 0;
+}
+
+.main {
+  display: flex;
+  height: 95%;
+  width: 100%;
+  overflow-x: hidden;
+  flex-shrink: 0;
 }
 
 .main-content {
@@ -16,11 +33,25 @@ hr {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  background-color: #0165b2;
-  overflow: hidden;
   justify-content: space-between;
-  height: 93%;
   color: white;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.sidenav::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
 }
 
 .profile-container {
@@ -29,9 +60,45 @@ hr {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid white;
   width: 80%;
   padding-bottom: 1rem;
+  position: relative;
+}
+
+.profile-container::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.profile-container .img {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.profile-container .img img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-container .img:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
 .account-container {
@@ -40,9 +107,26 @@ hr {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  border-top: 1px solid white;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
   width: 80%;
   padding-top: 1rem;
+  position: relative;
+}
+
+.account-container::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
 }
 
 .profile-info {
@@ -55,14 +139,42 @@ hr {
 .profile-name {
   font-weight: bold;
   font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.profile-department {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .route-container {
-  padding-top: 1rem;
+  font-size: 0.9rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding-bottom: 1rem;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  width: 80%;
+  padding: 1rem 0;
+  position: relative;
+}
+
+.route-container::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
 }
 
 .button-logout {
@@ -74,24 +186,48 @@ hr {
 .button-action {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  border: none;
-  width: 100%;
-  background-color: #003b68;
+  align-items: center;
+  border: 1px solid #0071c8;
+  width: 90%;
+  background: linear-gradient(135deg, #003b68 0%, #004e89 100%);
   color: white;
   padding: 0.6rem 1.5rem;
-  border-radius: 5px;
+  border-radius: 8px;
   gap: 0.3rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   transition: background-color 180ms ease, transform 160ms ease,
     box-shadow 160ms ease;
   will-change: transform, box-shadow;
+  position: relative;
+  overflow: hidden;
+}
+
+.button-action::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.7s ease;
 }
 
 .button-action:hover {
   cursor: pointer;
-  background-color: #004e89;
+  background: linear-gradient(135deg, #004e89 0%, #0066b3 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.button-action:hover::before {
+  left: 100%;
 }
 
 .button-action:active {
@@ -114,20 +250,57 @@ hr {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
-  background-color: #0165b2;
-  transition: 0.2s ease;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
   cursor: pointer;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.7s ease;
 }
 
 .nav-div:hover {
-  background-color: #004e89;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-div:hover::before {
+  left: 100%;
+}
+
+.nav-div img {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.nav-div:hover img {
+  transform: scale(1.1);
 }
 
 .nav-text {
   font-size: 1rem;
   text-decoration: none;
   color: white;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .pathname {
@@ -135,6 +308,8 @@ hr {
   color: white;
   text-decoration: none;
   font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 .bottom-buttons {
@@ -142,5 +317,7 @@ hr {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+  width: 90%;
+  padding: 0.5rem;
 }

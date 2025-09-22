@@ -1,34 +1,52 @@
-<nav class="sidenav">
-  <div class="main-content">
-    <div class="profile-container">
-      <div class="img">
-        <img src="../../assets/profile.svg" alt="profile.svg" />
+<div class="main">
+  <nav class="sidenav">
+    <div class="main-content">
+      <div class="profile-container">
+        <div class="img">
+          <img src="../../assets/profile.svg" alt="profile.svg" />
+        </div>
+
+        <div class="profile-info">
+          <p class="profile-name">{{ firstName }} {{ lastName }}</p>
+          <p class="profile-department" *ngIf="department_id === 4">
+            Accounting
+          </p>
+          <p class="profile-department" *ngIf="department_id !== 4">
+            No Access
+          </p>
+        </div>
+      </div>
+      <div class="route-container">
+        <div
+          class="nav-div"
+          *ngFor="let path of paths"
+          (click)="openRoute(path)"
+        >
+          <img src="../../../assets/panel.svg" alt="panel.svg" />
+          <span class="nav-text pathname">{{ path }}</span>
+        </div>
       </div>
 
-      <div class="profile-info">
-        <p class="profile-name">{{ firstName }} {{ lastName }}</p>
-        <p class="profile-department" *ngIf="department_id === 4">Accounting</p>
-        <p class="profile-department" *ngIf="department_id !== 4">No Access</p>
+      <div class="account-container">
+        <div class="nav-div" (click)="openAccounts()">
+          <img src="../../../assets/useraccount.svg" alt="useraccount.svg" />
+          <span class="nav-text pathname">Accounts</span>
+        </div>
       </div>
     </div>
-    <div class="route-container">
-      <ng-container *ngFor="let path of paths; let i = index">
-        <app-menu-item [path]="path"></app-menu-item>
-      </ng-container>
-    </div>
 
-    <div class="account-container">
-      <div class="nav-div" (click)="openAccounts()">
-        <img src="../../../assets/useraccount.svg" alt="useraccount.svg" />
-        <span class="nav-text pathname">Accounts</span>
-      </div>
+    <div class="bottom-buttons">
+      <button
+        class="button-logout"
+        class="button-action"
+        (click)="changePassword()"
+      >
+        Change<br />
+        Password
+      </button>
+      <button class="button-logout" (click)="logout()" class="button-action">
+        Logout
+      </button>
     </div>
-  </div>
-
-  <div class="bottom-buttons">
-    <button class="button-logout" class="button-action" (click)="changePassword()">Change<br> Password</button>
-    <button class="button-logout" (click)="logout()" class="button-action">
-      Logout
-    </button>
-  </div>
-</nav>
+  </nav>
+</div>

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { MenuItemComponent } from '../component/menu-item/menu-item.component';
 
 import { CommonModule } from '@angular/common';
 import { TokenService } from '../service/token.service';
@@ -10,7 +9,7 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, MenuItemComponent],
+  imports: [CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
@@ -41,18 +40,6 @@ export class SidebarComponent {
     console.log('department id: ', this.department_id);
   }
 
-  // paths = [
-  //   "application",
-  //   "pending",
-  //   "forward",
-  //   "assessment",
-  //   "signature",
-  //   "endorsement",
-  //   "payment",
-  //   "reject",
-  //   "paid"
-  // ]
-
   paths = [
     'application',
     'signature',
@@ -66,6 +53,10 @@ export class SidebarComponent {
   openAccounts() {
     this.router.navigate(['/accounts']);
   }
+
+  openRoute(route: string) {
+    this.router.navigate([`/${route}`]);
+  } 
 
   changePassword(): void {
     this.dialog.open(ChangePasswordComponent, {
