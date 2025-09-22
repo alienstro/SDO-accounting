@@ -134,7 +134,7 @@
     parse5 "^8.0.0"
     tslib "^2.3.0"
 
-"@angular/cli@^17.1.0":
+"@angular/cli@17":
   version "17.3.17"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-17.3.17.tgz#15464e29db9a806b52d7574f46d1deb705838fbd"
   integrity sha512-FgOvf9q5d23Cpa7cjP1FYti/v8S1FTm8DEkW3TY8lkkoxh3isu28GFKcLD1p/XF3yqfPkPVHToOFla5QwsEgBQ==
