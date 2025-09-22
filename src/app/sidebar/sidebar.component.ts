@@ -11,7 +11,7 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
   standalone: true,
   imports: [CommonModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
+  styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
   firstName!: string;
