@@ -15,7 +15,7 @@ yarn install
 ## Prerequisites
 
 Before running the project, ensure you have the following installed:
-- **Node.js**: Version 22 
+- **Node.js**: Version 24
 - **Yarn**: Version 1.22
 
 ## Startup
